@@ -6,13 +6,13 @@ class PlagueSimulation:
         if not isinstance(params, PlagueParams):
             raise Exception("Params argument must be of type PlagueParams.")
 
-        self.__params = params
-        self.__days = []
+        self.__plague_params = params
+        self.__days = {}
 
     def run(self):
         self.__days = [self.day_zero()]
 
-        for i in range(1, self.__params.model_length + 1):
+        for i in range(1, self.__plague_params.model_length + 1):
             self.__days.append(
                 PlagueDay(
                     susceptible=self.susceptible(self.__days[i-1]),
