@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, make_response, request, current_app
 from plague import PlagueParams, PlagueSimulation
 import os
 import json
@@ -25,14 +25,44 @@ def main():
         )
 
         # create & run the simulation
-        try:
-            sim = PlagueSimulation(params)
-            sim.run()
-        except Exception:
-            return "Error"
+        sim = PlagueSimulation(params)
+        sim.run()
 
         # respond with json of the simulation results
-        return json.dumps(sim.get_data(), sort_keys=True, indent=4, separators=(",", ":"))
+        results = json.dumps(sim.get_data(), sort_keys=True, indent=4, separators=(",", ":"))
+
+        response = make_response(results)
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+
+        return response
+
+    @app.route("/plague", methods=["GET", "OPTIONS"])
+    def plague_query_strings():
+        print("Hello!")
+        # build params from extracted query strings
+        params = PlagueParams(
+            infection_length=float(request.args.get("infection_length")),
+            virility=float(request.args.get("virility")),
+            percent_fatal=float(request.args.get("percent_fatal")),
+            init_pop=float(request.args.get("initial_population")),
+            immune_percent=float(request.args.get("immune_percent")),
+            init_infected=float(request.args.get("initial_infected")),
+            model_length=int(request.args.get("model_length"))
+        )
+
+        # create & run the simulation
+        sim = PlagueSimulation(params)
+        sim.run()
+
+        # respond with json of the simulation results
+        results = json.dumps(sim.get_data(), sort_keys=True, indent=4, separators=(",", ":"))
+
+        response = make_response(results)
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+
+        return response
 
     port = os.environ["PORT"] if "PORT" in os.environ else 8080
     app.run(port=port, debug=True)
