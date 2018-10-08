@@ -5,13 +5,15 @@ import json
 
 
 def main():
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path="/static", static_folder="./web/build/static")
 
+    # root endpoint
     @app.route("/", methods=["GET"])
     def root():
-        return send_from_directory(directory="./web", filename="index.html")
+        return send_from_directory(directory="./web/build", filename="index.html")
 
-    @app.route("/plague/<inf_len>/<vir>/<per_fatl>/<init_pop>/<imm_per>/<init_inf>/<mod_len>", methods=["GET"])
+    # endpoint with parameters in URL path
+    @app.route("/plague/<inf_len>/<vir>/<per_fatl>/<init_pop>/<imm_per>/<init_inf>/<mod_len>", methods=["GET", "OPTIONS"])
     def plague(inf_len, vir, per_fatl, init_pop, imm_per, init_inf, mod_len):
         # build simulation parameters
         params = PlagueParams(
@@ -37,6 +39,7 @@ def main():
 
         return response
 
+    # endpoint with parameters as query strings
     @app.route("/plague", methods=["GET", "OPTIONS"])
     def plague_query_strings():
         print("Hello!")
