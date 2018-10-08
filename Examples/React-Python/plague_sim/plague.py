@@ -1,3 +1,6 @@
+from .plague_params import PlagueParams
+from .plague_model_excel import PlagueModelExcel
+
 class PlagueSimulation:
     def __init__(self, params):
         if not isinstance(params, PlagueParams):

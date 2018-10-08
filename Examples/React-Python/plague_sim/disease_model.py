@@ -1,6 +1,6 @@
 from abc import ABC, abstractstaticmethod
 
-class disease_model(ABC):
+class DiseaseModel(ABC):
  
     @abstractstaticmethod
     def calc_day_zero(self, parameter_list):

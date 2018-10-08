@@ -1,7 +1,7 @@
 from decimal import *
-from .disease_model import disease_model
+from .disease_model import DiseaseModel
 
-class plague_model_excel(disease_model):
+class PlagueModelExcel(DiseaseModel):
     
     @staticmethod
     def calc_day_zero(self, parameter_list):
