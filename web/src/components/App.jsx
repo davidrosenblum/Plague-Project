@@ -1,5 +1,6 @@
 import "../lib/bootstrap.min.css";
 import React from "react";
+import { Inputs } from "./Inputs";
 
 export class App extends React.Component{
     constructor(props){
@@ -15,6 +16,7 @@ export class App extends React.Component{
             <div className="container">
                 <div className="text-center">
                     This is a React app with Bootstrap CSS.
+                    <Inputs/>
                 </div>
             </div>
         );
