@@ -1,5 +1,5 @@
 import React from "react";
-import { Ajax } from "../Ajax";
+import Simulator from "../Simulator";
 
 export class Inputs extends React.Component{
     constructor(props){
@@ -14,9 +14,15 @@ export class Inputs extends React.Component{
         this.daysRef = React.createRef();
 
         this.state = {
-            pending: false,        // no new requests while pending (disable buttons)
-            message: null          // message to display (errors)
+            pending: false,         // no new requests while pending (disable buttons)
+            message: null,          // message to display (errors)
+            lastBtn: null
         };
+    }
+
+    componentDidMount(){
+        Simulator.on("load", this.onSimulatorLoad.bind(this));
+        Simulator.on("error", this.onSimulatorError.bind(this));
     }
 
     // creates a dictionary of all the inputs and their values (names formatted for the API call) 
@@ -33,18 +39,12 @@ export class Inputs extends React.Component{
         return {immune, virility, fatality, initial_infected, initial_population, model_length};
     }
 
-    // called when the auto run button is clicked
-    onDayByDay(){
-        this.setState({pending: true}); // disable buttons
-
-        // logic...
+    onSimulatorError(){
+        this.setState({pending: false});    // enable buttons
     }
 
-    // caled when the auto run button is clicked
-    onAutoRun(){
-        this.setState({pending: true}); // disable buttons
-
-        // logic...
+    onSimulatorLoad(){
+        this.setState({pending: false});    // enable buttons
     }
 
     // called when then the reset button is clicked
@@ -57,8 +57,8 @@ export class Inputs extends React.Component{
         this.intialPopRef.current.value = "";
         this.daysRef.current.value = "";
 
-        // cleared store simulation data
-        // logic...
+        // cleared stored simulation data
+        Simulator.reset();
     }
 
     // called when the export csv button is clicked
@@ -70,15 +70,53 @@ export class Inputs extends React.Component{
     // entire purpose is to block the sending of the form
     // (submit enforces 'required', 'min', 'max' constraints)
     onSubmit(evt){
+        console.log(evt);
         // no default submission (using ajax instead)
         evt.preventDefault();
+
+        // problem - both autorun + next day activate this... (only way to do it with using form requires)
+
+        // day-by-day was the trigger
+        if(this.state.lastBtn === "day-by-day"){
+            if(!Simulator.hasData){
+                // disable buttons for loading time
+                this.setState({pending: true});
+    
+                // load data then show next day
+                Simulator.load(this.getInputsDictionary()).then(() => Simulator.nextDay());
+            }
+            else{
+                Simulator.nextDay();
+            }
+        }
+
+        // autorun was the trigger
+        else{
+            if(!Simulator.hasData){
+                // disable buttons for loading time
+                this.setState({pending: true});
+    
+                // load data then auto run
+                Simulator.load(this.getInputsDictionary()).then(() => Simulator.autoRun());
+            }
+            else{
+                Simulator.autoRun();
+            }
+        }
+        
+    }
+
+    // sets the last button to 'day-by-day' or 'autorun'
+    // kinda ugly but its because form has 2 submit buttons
+    onFormClick(evt){
+        this.setState({lastBtn: evt.target.getAttribute("btn")});
     }
 
     render(){
         return (
             <div>
                 <h5 className="text-center">Experimental Variables</h5>
-                <form onSubmit={this.onSubmit.bind(this)}>
+                <form onSubmit={this.onSubmit.bind(this)} onClick={evt => console.log(evt)}>
                     <div className="form-group">
                         <label>Length of Infection (Days)</label>
                         <input ref={this.daysRef} className="form-control" type="number" min="1" max="365" placeholder="How many days?" required/>
@@ -104,8 +142,8 @@ export class Inputs extends React.Component{
                         <input ref={this.initialinfectedRef} className="form-control" type="number" min="0" max="9999" placeholder="How many infected people in the initial population?" required/>
                     </div>
                     <div className="form-group text-center">
-                        <button onClick={this.onDayByDay.bind(this)} className="input-btn" disabled={this.state.pending}>Day-By-Day</button>&nbsp;
-                        <button onClick={this.onAutoRun.bind(this)} className="input-btn" disabled={this.state.pending}>Auto Run</button>&nbsp;
+                        <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="day-by-day">Day-By-Day</button>&nbsp;
+                        <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="auto-run">Auto Run</button>&nbsp;
                         <button onClick={this.onReset.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Reset</button>&nbsp;
                         <button onClick={this.onExportCSV.bind(this)} className="input-btn" disabled={this.state.pending} type="button">Export CSV</button>
                     </div>

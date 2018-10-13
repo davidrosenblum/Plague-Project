@@ -1,24 +1,85 @@
 import React from "react";
+import Simulator from "../Simulator";
 
 export class Chart extends React.Component{
+	constructor(props){
+		super(props);
+
+		this.state = {
+			data: null,		// simulatoion data set
+			day: 0			// current simulation day
+		};
+	}
+
+	componentDidMount(){
+		// simulator singles data set loaded
+		Simulator.on("data", this.onSimulatorData.bind(this));
+
+		// simulator signals a reset
+		Simulator.on("reset", this.onSimulatorReset.bind(this));
+
+		// simulator signals a different day
+		Simulator.on("update", this.onSimulatorUpdate.bind(this));
+	}
+
+	// simulator got data - store it
+	onSimulatorData(){
+		this.setState({data: Simulator.data});
+	}
+
+	// simulator reset - reset this component
+	onSimulatorReset(){
+		this.setState({data: null, day: 0});
+	}
+
+	// simulator day changed - update component day
+	onSimulatorUpdate(){
+		this.setState({day: Simulator.currentDay});
+	}
+
+	// renders table rows up to the current simulation day
+	renderRows(){
+		if(Simulator.hasData){
+			let rows = new Array(Simulator.currentDay + 1);
+
+			for(let i = 0, day; i < Simulator.currentDay; i++){
+				day = Simulator.data[i];
+
+				rows[i] = (
+					<tr key={i}>
+						<td>{i + 1}</td>
+						<td>{day.susceptible.toFixed(0)}</td>
+						<td>{day.infected.toFixed(0)}</td>
+						<td>{day.immune.toFixed(0)}</td>
+						<td>{day.dead.toFixed(0)}</td>
+						<td>{day.total_population.toFixed(0)}</td>
+					</tr>
+				);
+			}
+
+			return rows;
+		}
+
+		return null;
+	}
+
 	render(){
-		// only render if rows are provided
-		return this.props.rows ? (
+		return (
 			<table className="table">
 				<thead>
-					<th>
+					<tr>
 						<th>Day</th>
 						<th>Susceptible</th>
 						<th>Infected</th>
 						<th>Immune</th>
 						<th>Dead</th>
 						<th>Total Population</th>
-					</th>
+					</tr>
 				</thead>
 				<tbody>
-					{this.props.rows}
+					{this.renderRows()}
 				</tbody>
 			</table>
-		) : null;
+		);
 	}
 }

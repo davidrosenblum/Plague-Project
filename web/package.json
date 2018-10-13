@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "react": "^16.5.2",
+    "react-d3-components": "^0.9.1",
     "react-dom": "^16.5.2"
   },
   "scripts": {
