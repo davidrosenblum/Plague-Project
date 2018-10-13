@@ -1,0 +1,19 @@
+.input-btn{
+    width: 100px;
+    background-color: white;
+    border: 1px solid silver;
+    border-radius: 6px;
+    padding: 4px;
+    transition: 0.5s;
+}
+
+.input-btn:hover{
+    background-color: black;
+    color: white;
+    border-color: white;
+}
+
+::selection{
+    background-color: black;
+    color: white;
+}
