@@ -15,16 +15,16 @@ def main():
         # send react app
         return send_from_directory(directory="./web/build", filename="index.html")
 
-    # api endpoint for plague simulation
+    # api endpoint for plague simulation (query strings)
     @app.route("/plague", methods=["GET", "OPTIONS"])
     def plague():
         # attempt query string parse
         try:
             il = int(request.args.get("infection_length"))
             v = float(request.args.get("virility"))
-            pf = float(request.args.get("percent_fatal"))
+            pf = float(request.args.get("fatality"))
             ip = int(request.args.get("initial_population"))
-            im = float(request.args.get("immune_percent"))
+            im = float(request.args.get("immune"))
             inf = int(request.args.get("initial_infected"))
             ml = int(request.args.get("model_length"))
         except ValueError:
@@ -59,6 +59,17 @@ def main():
         setup_headers(response)
 
         # respond
+        return response
+
+    # api endpoint for test response (no simulation, fake results)
+    @app.route("/test", methods=["GET", "OPTIONS"])
+    def test():
+        params = PlagueParams(5, 0.6, 0.1, 10000, 0.5, 300, 60)
+        data = json.dumps(PlagueSimulation(params).run().get_data())
+
+        response = make_response(data)
+        setup_headers(response)
+
         return response
 
     # extract config variables
