@@ -1,4 +1,3 @@
-import "../lib/bootstrap.min.css";
 import React from "react";
 
 export class Graph extends React.Component{
@@ -13,7 +12,9 @@ export class Graph extends React.Component{
 	render(){
 		return (
 			<div>
-				This is the graph
+				<div>
+					This is the graph
+				</div>
 			</div>
 		);
 	}

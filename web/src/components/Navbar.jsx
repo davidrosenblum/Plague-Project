@@ -1,4 +1,3 @@
-import "../lib/bootstrap.min.css";
 import React from "react";
 
 export class Navbar extends React.Component{
