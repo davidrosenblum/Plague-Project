@@ -23,6 +23,8 @@ class PlagueSimulation:
                 )
             )
 
+        return self     # allows chaining
+
     def day_zero(self):
         return PlagueDay(
             susceptible=self.__params.initial_population - self.__params.initial_infected,
