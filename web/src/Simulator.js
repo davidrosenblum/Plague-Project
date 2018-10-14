@@ -55,6 +55,14 @@ let Simulator = class Simulator extends EventEmitter{
         });
     }
 
+    // downloads the csv file
+    downloadCSV(query){
+        // figure out endpoint
+        let url = window.location.href.includes("localhost") ? "http://localhost:8080/plague/csv" : `${window.location.href}/plague/csv`;
+
+        return Ajax.get(url, null, query);
+    }
+
     // simulation moves to the last day
     // (triggers listeners)
     autoRun(){

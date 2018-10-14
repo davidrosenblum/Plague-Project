@@ -63,7 +63,14 @@ export class Inputs extends React.Component{
 
     // called when the export csv button is clicked
     onExportCSV(){
-        // logic...
+        if(!this.state.pending){
+            this.setState({pending: true});     // disable buttons
+
+            // async csv download request
+            Simulator.downloadCSV(this.getInputsDictionary())
+                .catch(err => this.setState({message: err.message}))    // error
+                .then(() => this.setState({pending: false}));           // enable buttons after fulfilled/rejected
+        }
     }
 
     // called when the form is 'submitted'
