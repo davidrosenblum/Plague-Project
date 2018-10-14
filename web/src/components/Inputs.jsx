@@ -61,9 +61,61 @@ export class Inputs extends React.Component{
         Simulator.reset();
     }
 
-    // called when the export csv button is clicked
-    onExportCSV(){
-        // logic...
+    dayByDay(){
+        if(!Simulator.hasData){
+            // disable buttons for loading time
+            this.setState({pending: true});
+
+            // load data then show next day
+            Simulator.load(this.getInputsDictionary())
+                .then(() => Simulator.nextDay())
+                .catch(err => this.setState({message: err.message}));
+        }
+        else{
+            Simulator.nextDay();
+        }
+    }
+
+    autoRun(){
+        if(!Simulator.hasData){
+            // disable buttons for loading time
+            this.setState({pending: true});
+
+            // load data then auto run
+            Simulator.load(this.getInputsDictionary())
+                .then(() => Simulator.autoRun())
+                .catch(err => this.setState({message: err.message}));
+        }
+        else{
+            Simulator.autoRun();
+        }
+    }
+
+    // downloads the csv file
+    downloadCSV(){
+        if(!this.state.pending){
+            // create download link (never rendered)
+            let url = Simulator.createCSVDownloadURL(this.getInputsDictionary());
+
+            // create a link tag
+            let link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("target", "_blank");
+            link.setAttribute("download", "download");
+
+            // click the tag
+            link.click();
+            link = null;
+
+            /*
+            //this.setState({pending: true});     // disable buttons
+
+            // async csv download request
+            Simulator.downloadCSV(this.getInputsDictionary())
+                .catch(err => this.setState({message: err.message}))    // error
+                .then(() => this.setState({pending: false}));           // enable buttons after fulfilled/rejected
+            */
+        }
     }
 
     // called when the form is 'submitted'
@@ -77,34 +129,17 @@ export class Inputs extends React.Component{
 
         // day-by-day was the trigger
         if(this.state.lastBtn === "day-by-day"){
-            if(!Simulator.hasData){
-                // disable buttons for loading time
-                this.setState({pending: true});
-    
-                // load data then show next day
-                Simulator.load(this.getInputsDictionary())
-                    .then(() => Simulator.nextDay())
-                    .catch(err => this.setState({message: err.message}));
-            }
-            else{
-                Simulator.nextDay();
-            }
+            this.dayByDay();
         }
 
         // autorun was the trigger
-        else{
-            if(!Simulator.hasData){
-                // disable buttons for loading time
-                this.setState({pending: true});
-    
-                // load data then auto run
-                Simulator.load(this.getInputsDictionary())
-                    .then(() => Simulator.autoRun())
-                    .catch(err => this.setState({message: err.message}));
-            }
-            else{
-                Simulator.autoRun();
-            }
+        else if(this.state.lastBtn === "auto-run"){
+            this.autoRun();
+        }
+
+        // csv export was the trigger
+        else if(this.state.lastBtn === "export-csv"){
+            this.downloadCSV();
         }
         
     }
@@ -148,7 +183,7 @@ export class Inputs extends React.Component{
                         <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="day-by-day">Day-By-Day</button>&nbsp;
                         <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="auto-run">Auto Run</button>&nbsp;
                         <button onClick={this.onReset.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Reset</button>&nbsp;
-                        <button onClick={this.onExportCSV.bind(this)} className="input-btn" disabled={this.state.pending} type="button">Export CSV</button>
+                        <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="export-csv">Export CSV</button>
                     </div>
                 </form>
                 <div>{this.state.message}</div>

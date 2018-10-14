@@ -6,51 +6,30 @@ from plague import PlagueParams, PlagueSimulation
 # flask server
 app = Flask(__name__, static_url_path="/static", static_folder="./web/build/static")
 
+
 # endpoint for web app
 @app.route("/", methods=["GET", "OPTIONS"])
 def root():
     # send react app
     return send_from_directory(directory="./web/build", filename="index.html")
 
+
 # api endpoint for plague simulation (query strings)
 @app.route("/plague", methods=["GET", "OPTIONS"])
 def plague():
-    # attempt query string parse
+    # special option - csv
+    csv_format = str(request.args.get("csv")).lower() == "true"
+
+    # run simulation and store results
     try:
-        il = int(request.args.get("infection_length"))
-        v = float(request.args.get("virility"))
-        fp = float(request.args.get("fatal_percent"))
-        imp = float(request.args.get("immune_percent"))
-        ip = int(request.args.get("initial_population"))
-        ii = int(request.args.get("initial_infected"))
-
-        csv_format = str(request.args.get("csv")).lower() == "true"
-
-    except ValueError:
-        response = make_response("Bad request - value error.")
-        setup_headers(response)
-        return response, 400
-
+        sim = run_simulation(request.args)
     except TypeError:
-        response = make_response("Bad request - bad query strings values.")
-        setup_headers(response)
-        return response, 400
+        return "Bad request - bad query string values.", 400
+    except ValueError:
+        return "Bad request - valuer error.", 400
+    except Exception:
+        return "Bad request", 400
 
-    # construct parameters
-    params = PlagueParams(
-        infection_length=il,
-        virility=v,
-        fatal_percent=fp,
-        initial_population=ip,
-        immune_percent=imp,
-        initial_infected=ii,
-    )
-
-    # run simulation
-    sim = PlagueSimulation(params)
-    sim.run()
-
-    # results json
     results = json.dumps(sim.get_data()) if not csv_format else sim.get_data_csv()
 
     # create response
@@ -59,6 +38,32 @@ def plague():
 
     # respond
     return response
+
+
+# api endpoint for CSV files
+@app.route("/plague/csv", methods=["GET", "OPTIONS"])
+def plague_csv():
+    # run simulation and store results
+    try:
+        sim = run_simulation(request.args)
+    except TypeError:
+        return "Bad request - bad query string values.", 400
+    except ValueError:
+        return "Bad request - valuer error.", 400
+    except Exception:
+        return "Bad request", 400
+
+    csv_data = sim.get_data_csv()
+
+    # create response
+    response = make_response(csv_data)
+    setup_headers(response)
+    response.headers["Content-Type"] = "text/csv"
+    response.headers["Content-Disposition"] = "attachment; filename=data.csv"
+
+    # respond
+    return response
+
 
 # api endpoint for test response (no simulation, fake results)
 @app.route("/test", methods=["GET", "OPTIONS"])
@@ -79,6 +84,31 @@ def test():
 
     return response
 
+
+# runs through a simulation based on request arguments (query string values)
+def run_simulation(request_args):
+    # attempt query string parse
+    il = int(request_args.get("infection_length"))
+    v = float(request_args.get("virility"))
+    fp = float(request_args.get("fatal_percent"))
+    imp = float(request_args.get("immune_percent"))
+    ip = int(request_args.get("initial_population"))
+    ii = int(request_args.get("initial_infected"))
+
+    # construct parameters
+    params = PlagueParams(
+        infection_length=il,
+        virility=v,
+        fatal_percent=fp,
+        initial_population=ip,
+        immune_percent=imp,
+        initial_infected=ii,
+    )
+
+    # run simulation
+    sim = PlagueSimulation(params)
+    sim.run()
+    return sim
 
 
 # applies standard headers, required for CORS
