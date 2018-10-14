@@ -29,7 +29,7 @@ export class Graph extends React.Component{
 		let data = Simulator.data.map((row, index) => {
 			return {
 				x: index,
-				y: Math.round(row.dead * 100)
+				y: row.dead
 			};
 		});
 
