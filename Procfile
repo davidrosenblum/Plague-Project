@@ -1,1 +1,1 @@
-web: unicorn server:app
+web: gunicorn server:app
