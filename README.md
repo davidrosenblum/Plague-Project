@@ -1,13 +1,16 @@
-# Plague-Project
+# Plague Project
 
 ###  Project Documents
 [UI Mockup](https://wireframe.cc/MuMHXu)
 
-### Installation & Setup
+### Requirements
 Install [Node.js](https://nodejs.org/en/) (for React development)
 
-Install [Python 3](https://www.python.org/downloads/)
+Install [Python 3](https://www.python.org/downloads/) (for server)
 
+## Plague Project - Python Flask Server
+
+### Installation & Setup
 Install pipenv ```pip install pipenv```
 
 Install required Python modules 
@@ -21,4 +24,4 @@ Run the _server.py_ file with Python
 
 Optional PORT variable (default 8080)
 
-```PORT=9999 python server.py```
+```PORT=9999 DEBUG=1 python server.py```
