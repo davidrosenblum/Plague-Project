@@ -23,7 +23,6 @@ export class App extends React.Component{
                 <main className="container card card-body bg-light">
                     <div className="row">
                         <div className="col-lg-6">
-                            <div>(ONLY USES TEST VALUES - INPUTS DONT MATTER)</div>
                             <Inputs/>
                             <Chart/>
                         </div>

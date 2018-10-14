@@ -22,17 +22,20 @@ def main():
         try:
             il = int(request.args.get("infection_length"))
             v = float(request.args.get("virility"))
-            pf = float(request.args.get("fatality"))
+            fp = float(request.args.get("fatal_percent"))
+            imp = float(request.args.get("immune_percent"))
             ip = int(request.args.get("initial_population"))
-            im = float(request.args.get("immune"))
-            inf = int(request.args.get("initial_infected"))
-            ml = int(request.args.get("model_length"))
+            ii = int(request.args.get("initial_infected"))
+
+            csv_format = str(request.args.get("csv")).lower() == "true"
+
         except ValueError:
-            response = make_response("Bad request - query strings value error.")
+            response = make_response("Bad request - value error.")
             setup_headers(response)
             return response, 400
+
         except TypeError:
-            response = make_response("Bad request - query strings type error.")
+            response = make_response("Bad request - bad query strings values.")
             setup_headers(response)
             return response, 400
 
@@ -40,11 +43,10 @@ def main():
         params = PlagueParams(
             infection_length=il,
             virility=v,
-            percent_fatal=pf,
-            init_pop=ip,
-            immune_percent=im,
-            init_infected=inf,
-            model_length=ml
+            fatal_percent=fp,
+            initial_population=ip,
+            immune_percent=imp,
+            initial_infected=ii,
         )
 
         # run simulation
@@ -52,7 +54,7 @@ def main():
         sim.run()
 
         # results json
-        results = json.dumps(sim.get_data())
+        results = json.dumps(sim.get_data()) if not csv_format else sim.get_data_csv()
 
         # create response
         response = make_response(results)
@@ -64,7 +66,15 @@ def main():
     # api endpoint for test response (no simulation, fake results)
     @app.route("/test", methods=["GET", "OPTIONS"])
     def test():
-        params = PlagueParams(5, 0.6, 0.1, 10000, 0.5, 300, 60)
+        params = PlagueParams(
+            infection_length=100,
+            virility=1,
+            fatal_percent=0,
+            initial_population=100000,
+            immune_percent=0,
+            initial_infected=1,
+        )
+
         data = json.dumps(PlagueSimulation(params).run().get_data())
 
         response = make_response(data)
