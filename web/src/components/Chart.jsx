@@ -47,7 +47,7 @@ export class Chart extends React.Component{
 
 				rows[i] = (
 					<tr key={i}>
-						<td>{i + 1}</td>
+						<td>{i}</td>
 						<td>{day.susceptible.toFixed(0)}</td>
 						<td>{day.infected.toFixed(0)}</td>
 						<td>{day.immune.toFixed(0)}</td>
@@ -65,21 +65,23 @@ export class Chart extends React.Component{
 
 	render(){
 		return (
-			<table className="table">
-				<thead>
-					<tr>
-						<th>Day</th>
-						<th>Susceptible</th>
-						<th>Infected</th>
-						<th>Immune</th>
-						<th>Dead</th>
-						<th>Total Population</th>
-					</tr>
-				</thead>
-				<tbody>
-					{this.renderRows()}
-				</tbody>
-			</table>
+			<div>
+				<table className="table table-striped overflow-table">
+					<thead>
+						<tr>
+							<th>Day</th>
+							<th>Susceptible</th>
+							<th>Infected</th>
+							<th>Immune</th>
+							<th>Dead</th>
+							<th>Total Population</th>
+						</tr>
+					</thead>
+					<tbody>
+						{this.renderRows()}
+					</tbody>
+				</table>
+			</div>
 		);
 	}
 }
