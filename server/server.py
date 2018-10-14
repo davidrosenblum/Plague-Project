@@ -7,7 +7,7 @@ from plague import PlagueParams, PlagueSimulation
 # main method - server setup
 def main():
     # flask server
-    app = Flask(__name__, static_url_path="/static", static_folder="./web/build/static")
+    app = Flask(__name__, static_url_path="/static", static_folder="../web/build/static")
 
     # endpoint for web app
     @app.route("/", methods=["GET", "OPTIONS"])
