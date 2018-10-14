@@ -4,7 +4,7 @@ import json
 from plague import PlagueParams, PlagueSimulation
 
 # flask server
-app = Flask(__name__, static_url_path="/static", static_folder="../web/build")
+app = Flask(__name__, static_url_path="/static", static_folder="../web/build/static/")
 
 # endpoint for web app
 @app.route("/", methods=["GET", "OPTIONS"])
