@@ -87,7 +87,7 @@ def setup_headers(resp):
     resp.headers["Access-Control-Allow-Headers"] = "Access-Control-Allow-Origin"
 
 
-# run main method
+# run main method (for testing)
 if __name__ == "__main__":
     # extract config variables
     port = os.environ["PORT"] if "PORT" in os.environ else 8080
