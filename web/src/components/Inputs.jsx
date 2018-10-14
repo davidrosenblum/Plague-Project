@@ -9,7 +9,7 @@ export class Inputs extends React.Component{
         this.intialImmunityRef = React.createRef();
         this.virilityRef = React.createRef();
         this.fatalityRef = React.createRef();
-        this.initialinfectedRef = React.createRef();
+        this.initialInfectedRef = React.createRef();
         this.intialPopRef = React.createRef();
         this.daysRef = React.createRef();
 
@@ -28,15 +28,15 @@ export class Inputs extends React.Component{
     // creates a dictionary of all the inputs and their values (names formatted for the API call) 
     getInputsDictionary(){
         // extract data from inputs to use in query string 
-        let immune = this.intialImmunityRef.current.value,
+        let immune_percent = this.intialImmunityRef.current.value,
             virility = this.virilityRef.current.value,
-            fatality = this.fatalityRef.current.value,
-            initial_infected = this.initialinfectedRef.current.value,
+            fatal_percent = this.fatalityRef.current.value,
+            initial_infected = this.initialInfectedRef.current.value,
             initial_population = this.intialPopRef.current.value,
-            model_length = this.daysRef.current.value;
+            infection_length = this.daysRef.current.value;
 
         // MUST match API expectations! 
-        return {immune, virility, fatality, initial_infected, initial_population, model_length};
+        return {immune_percent, virility, fatal_percent, initial_infected, initial_population, infection_length};
     }
 
     onSimulatorError(){
@@ -49,13 +49,13 @@ export class Inputs extends React.Component{
 
     // called when then the reset button is clicked
     onReset(){
-        // clear input fields
-        this.intialImmunityRef.current.value = "";
+        // clear input fields?
+        /*this.intialImmunityRef.current.value = "";
         this.virilityRef.current.value = "";
         this.fatalityRef.current.value = "";
-        this.initialinfectedRef.current.value = "";
+        this.initialInfectedRef.current.value = "";
         this.intialPopRef.current.value = "";
-        this.daysRef.current.value = "";
+        this.daysRef.current.value = "";*/
 
         // cleared stored simulation data
         Simulator.reset();
@@ -70,7 +70,6 @@ export class Inputs extends React.Component{
     // entire purpose is to block the sending of the form
     // (submit enforces 'required', 'min', 'max' constraints)
     onSubmit(evt){
-        console.log(evt);
         // no default submission (using ajax instead)
         evt.preventDefault();
 
@@ -83,7 +82,9 @@ export class Inputs extends React.Component{
                 this.setState({pending: true});
     
                 // load data then show next day
-                Simulator.load(this.getInputsDictionary()).then(() => Simulator.nextDay());
+                Simulator.load(this.getInputsDictionary())
+                    .then(() => Simulator.nextDay())
+                    .catch(err => this.setState({message: err.message}));
             }
             else{
                 Simulator.nextDay();
@@ -97,7 +98,9 @@ export class Inputs extends React.Component{
                 this.setState({pending: true});
     
                 // load data then auto run
-                Simulator.load(this.getInputsDictionary()).then(() => Simulator.autoRun());
+                Simulator.load(this.getInputsDictionary())
+                    .then(() => Simulator.autoRun())
+                    .catch(err => this.setState({message: err.message}));
             }
             else{
                 Simulator.autoRun();
@@ -116,7 +119,7 @@ export class Inputs extends React.Component{
         return (
             <div>
                 <h5 className="text-center">Experimental Variables</h5>
-                <form onSubmit={this.onSubmit.bind(this)} onClick={evt => console.log(evt)}>
+                <form onSubmit={this.onSubmit.bind(this)}>
                     <div className="form-group">
                         <label>Length of Infection (Days)</label>
                         <input ref={this.daysRef} className="form-control" type="number" min="1" max="365" placeholder="How many days?" required/>
@@ -139,7 +142,7 @@ export class Inputs extends React.Component{
                     </div>
                     <div className="form-group">
                         <label>Initial Infected</label>
-                        <input ref={this.initialinfectedRef} className="form-control" type="number" min="0" max="9999" placeholder="How many infected people in the initial population?" required/>
+                        <input ref={this.initialInfectedRef} className="form-control" type="number" min="0" max="9999" placeholder="How many infected people in the initial population?" required/>
                     </div>
                     <div className="form-group text-center">
                         <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="day-by-day">Day-By-Day</button>&nbsp;
@@ -148,6 +151,7 @@ export class Inputs extends React.Component{
                         <button onClick={this.onExportCSV.bind(this)} className="input-btn" disabled={this.state.pending} type="button">Export CSV</button>
                     </div>
                 </form>
+                <div>{this.state.message}</div>
             </div>
         );
     }

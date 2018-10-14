@@ -12,12 +12,14 @@ let Simulator = class Simulator extends EventEmitter{
     }
 
     // hits the API for data, signals progress
+    // query should be a dictionary of the inputs, will be converted into a query string
     load(query){
         return new Promise((resolve, reject) => {
             // figure out endpoint
-            let url = window.location.href.includes("localhost") ? "http://localhost:8080/test" : `${window.location.href}/test`;
+            let url = window.location.href.includes("localhost") ? "http://localhost:8080/plague" : `${window.location.href}/plague`;
 
             // ajax call with query string
+            // (null headers)
             Ajax.get(url, null, query)
                 .then(xhr => {    
                     // ajax resolved (could be bad/good request, but server responded)
@@ -30,7 +32,7 @@ let Simulator = class Simulator extends EventEmitter{
                         catch(err){
                             // json parse error (should never happen)
                             reject(err);
-                            this.emit(new Event("error"));
+                            this.emit(new Event("error"));  // server responded with bad request signal
                         }
 
                         // done, resolve promise and emit load + data
@@ -41,7 +43,7 @@ let Simulator = class Simulator extends EventEmitter{
                     }
                     else{
                         // bad request
-                        reject(new Error("Bad request."));
+                        reject(new Error(xhr.response || "Bad request"));
                         this.emit(new Event("error"));  // server responded with bad request signal
                     }
                 })
@@ -53,16 +55,22 @@ let Simulator = class Simulator extends EventEmitter{
         });
     }
 
+    // simulation moves to the last day
+    // (triggers listeners)
     autoRun(){
         this.currentDay = this.data.length - 1; // auto emits update
     }
 
+    // steps the simulation forward one day
+    // (triggers listeners)
     nextDay(){
         if(this.currentDay < this.data.length){
             this.currentDay++;  // auto emits update
         }
     }
 
+    // resets simulation to day 0 and clears all stored data
+    // (triggers listeners)
     reset(){
         this.data = null;
         this.currentDay = 0;

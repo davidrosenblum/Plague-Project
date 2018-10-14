@@ -45,14 +45,20 @@ export class Chart extends React.Component{
 			for(let i = 0, day; i < Simulator.currentDay; i++){
 				day = Simulator.data[i];
 
+				let susceptible = Math.floor(day.susceptible),
+					infected = Math.floor(day.infected),
+					immune = Math.floor(day.immune),
+					dead = Math.floor(day.dead),
+					population = Math.floor(day.total_population);
+
 				rows[i] = (
 					<tr key={i}>
 						<td>{i}</td>
-						<td>{day.susceptible.toFixed(0)}</td>
-						<td>{day.infected.toFixed(0)}</td>
-						<td>{day.immune.toFixed(0)}</td>
-						<td>{day.dead.toFixed(0)}</td>
-						<td>{day.total_population.toFixed(0)}</td>
+						<td>{susceptible}</td>
+						<td>{infected}</td>
+						<td>{immune}</td>
+						<td>{dead}</td>
+						<td>{population}</td>
 					</tr>
 				);
 			}
