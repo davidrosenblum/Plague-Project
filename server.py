@@ -108,8 +108,6 @@ def run_simulation(request_args):
     # run simulation
     sim = PlagueSimulation(params)
     sim.run()
-
-    # results json/csv
     return sim
 
 

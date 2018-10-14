@@ -16,7 +16,7 @@ let Simulator = class Simulator extends EventEmitter{
     load(query){
         return new Promise((resolve, reject) => {
             // figure out endpoint
-            let url = window.location.href.includes("localhost") ? "http://localhost:8080/plague" : `${window.location.href}/plague`;
+            let url = window.location.href.includes("localhost") ? "http://localhost:8080/plague" : `${window.location.origin}plague`;
 
             // ajax call with query string
             // (null headers)
@@ -55,12 +55,16 @@ let Simulator = class Simulator extends EventEmitter{
         });
     }
 
-    // downloads the csv file
+    // async download
     downloadCSV(query){
-        // figure out endpoint
-        let url = window.location.href.includes("localhost") ? "http://localhost:8080/plague/csv" : `${window.location.href}/plague/csv`;
-
+        let url = window.location.href.includes("localhost") ? `http://localhost:8080/plague/csv` : `${window.location.origin}plague/csv`;
         return Ajax.get(url, null, query);
+    }
+
+    // csv download url
+    createCSVDownloadURL(query){
+        let qs = Ajax.queryString(query);
+        return window.location.href.includes("localhost") ? `http://localhost:8080/plague/csv${qs}` : `${window.location.origin}plague/csv${qs}`;
     }
 
     // simulation moves to the last day
