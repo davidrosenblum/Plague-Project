@@ -12,7 +12,7 @@ class PlagueSimulation:
     def run(self):
         self.__days = [self.day_zero()]
 
-        for i in range(1, self.__params.infection_length + 1):
+        for i in range(1, self.__params.simulation_length + 1):
             self.__days.append(
                 PlagueDay(
                     susceptible=self.susceptible(self.__days[i-1]),

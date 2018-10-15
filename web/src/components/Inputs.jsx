@@ -11,6 +11,7 @@ export class Inputs extends React.Component{
         this.fatalityRef = React.createRef();
         this.initialInfectedRef = React.createRef();
         this.intialPopRef = React.createRef();
+        this.infectionLengthRef = React.createRef();
         this.daysRef = React.createRef();
 
         this.state = {
@@ -33,10 +34,11 @@ export class Inputs extends React.Component{
             fatal_percent = this.fatalityRef.current.value,
             initial_infected = this.initialInfectedRef.current.value,
             initial_population = this.intialPopRef.current.value,
-            infection_length = this.daysRef.current.value;
+            infection_length = this.infectionLengthRef.current.value,
+            simulation_length = this.daysRef.current.value;
 
         // MUST match API expectations! 
-        return {immune_percent, virility, fatal_percent, initial_infected, initial_population, infection_length};
+        return {immune_percent, virility, fatal_percent, initial_infected, initial_population, infection_length, simulation_length};
     }
 
     onSimulatorError(){
@@ -68,7 +70,10 @@ export class Inputs extends React.Component{
 
             // load data then show next day
             Simulator.load(this.getInputsDictionary())
-                .then(() => Simulator.nextDay())
+                .then(() => {
+                    this.setState({message: null}); // remove possible err message
+                    Simulator.nextDay();
+                })
                 .catch(err => this.setState({message: err.message}));
         }
         else{
@@ -83,7 +88,10 @@ export class Inputs extends React.Component{
 
             // load data then auto run
             Simulator.load(this.getInputsDictionary())
-                .then(() => Simulator.autoRun())
+                .then(() => {
+                    this.setState({message: null}); // remove possible err message
+                    Simulator.autoRun();
+                })
                 .catch(err => this.setState({message: err.message}));
         }
         else{
@@ -157,27 +165,31 @@ export class Inputs extends React.Component{
                 <form onSubmit={this.onSubmit.bind(this)}>
                     <div className="form-group">
                         <label>Length of Infection (Days)</label>
-                        <input ref={this.daysRef} className="form-control" type="number" min="1" max="365" placeholder="How many days?" required/>
+                        <input ref={this.infectionLengthRef} className="form-control" type="number" min="1" max="365" placeholder="How many days does the infection last?" required/>
                     </div>
                     <div className="form-group">
                         <label>Virility</label>
-                        <input ref={this.virilityRef} className="form-control" type="number" min="0" max="1" step="0.001" placeholder="How infectious?" required/>
+                        <input ref={this.virilityRef} className="form-control" type="number" min="0" max="20" step="0.01" placeholder="How infectious (transmission rate)?" required/>
                     </div>
                     <div className="form-group">
-                        <label>Fatality</label>
-                        <input ref={this.fatalityRef} className="form-control" type="number" min="0" max="20" step="0.01" placeholder="What % of people die when infected?" required/>
+                        <label>Fatality Percentage</label>
+                        <input ref={this.fatalityRef} className="form-control" type="number" min="0" max="1" step="0.001" placeholder="What % of people die when infected?" required/>
                     </div>
                     <div className="form-group">
                         <label>Initial Population</label>
                         <input ref={this.intialPopRef} className="form-control" type="number" min="1" max="1000000" placeholder="How many people in the initial population?" required/>
                     </div>
                     <div className="form-group">
-                        <label>Initial Immunity</label>
+                        <label>Initial Immunity Percentage</label>
                         <input ref={this.intialImmunityRef} className="form-control" type="number" min="0" max="1" step="0.01" placeholder="What % of the intial population people is immune?" required/>
                     </div>
                     <div className="form-group">
                         <label>Initial Infected</label>
                         <input ref={this.initialInfectedRef} className="form-control" type="number" min="0" max="1000000" placeholder="How many infected people in the initial population?" required/>
+                    </div>
+                    <div className="form-group">
+                        <label>Simulation Length (Days)</label>
+                        <input ref={this.daysRef} className="form-control" type="number" min="1" max="365" placeholder="How many days is the simulation?" required/>
                     </div>
                     <div className="form-group text-center">
                         <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="day-by-day">Day-By-Day</button>&nbsp;
