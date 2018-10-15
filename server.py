@@ -94,6 +94,7 @@ def run_simulation(request_args):
     imp = float(request_args.get("immune_percent"))
     ip = int(request_args.get("initial_population"))
     ii = int(request_args.get("initial_infected"))
+    sl = int(request_args.get("simulation_length"))
 
     # construct parameters
     params = PlagueParams(
@@ -103,6 +104,7 @@ def run_simulation(request_args):
         initial_population=ip,
         immune_percent=imp,
         initial_infected=ii,
+        simulation_length=sl
     )
 
     # run simulation
