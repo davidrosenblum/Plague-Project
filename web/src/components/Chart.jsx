@@ -70,7 +70,7 @@ export class Chart extends React.Component{
 	}
 
 	render(){
-		return (
+		return this.state.data !== null ? (
 			<div>
 				<table className="table table-striped overflow-table">
 					<thead>
@@ -88,6 +88,6 @@ export class Chart extends React.Component{
 					</tbody>
 				</table>
 			</div>
-		);
+		) : null;
 	}
 }

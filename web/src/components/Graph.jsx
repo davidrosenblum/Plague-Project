@@ -59,7 +59,7 @@ export class Graph extends React.Component{
 	}
 
 	render(){
-		return  (
+		return this.state.data !== null ? (
 			<div>
 				<h5></h5>
 				<div>
@@ -74,6 +74,6 @@ export class Graph extends React.Component{
 					/>
 				</div>
 			</div>
-		);
+		) : null;
 	}
 }
