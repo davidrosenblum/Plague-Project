@@ -72,7 +72,7 @@ export class Chart extends React.Component{
 	render(){
 		return (
 			<div>
-				<table className="table table-striped overflow-table">
+				<table className="table table-striped fixedHeader">
 					<thead>
 						<tr>
 							<th>Day</th>
@@ -83,7 +83,7 @@ export class Chart extends React.Component{
 							<th>Total Population</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody className="overflow-table">
 						{this.renderRows()}
 					</tbody>
 				</table>
