@@ -161,15 +161,15 @@ export class Inputs extends React.Component{
                     </div>
                     <div className="form-group">
                         <label>Virility</label>
-                        <input ref={this.virilityRef} className="form-control" type="number" min="0" max="0.75" step="0.01" placeholder="How infectious?" required/>
+                        <input ref={this.virilityRef} className="form-control" type="number" min="0" max="1" step="0.001" placeholder="How infectious?" required/>
                     </div>
                     <div className="form-group">
                         <label>Fatality</label>
-                        <input ref={this.fatalityRef} className="form-control" type="number" min="0" max="1" step="0.01" placeholder="What % of people die when infected?" required/>
+                        <input ref={this.fatalityRef} className="form-control" type="number" min="0" max="20" step="0.01" placeholder="What % of people die when infected?" required/>
                     </div>
                     <div className="form-group">
                         <label>Initial Population</label>
-                        <input ref={this.intialPopRef} className="form-control" type="number" min="1" max="9999" placeholder="How many people in the initial population?" required/>
+                        <input ref={this.intialPopRef} className="form-control" type="number" min="1" max="1000000" placeholder="How many people in the initial population?" required/>
                     </div>
                     <div className="form-group">
                         <label>Initial Immunity</label>
@@ -177,7 +177,7 @@ export class Inputs extends React.Component{
                     </div>
                     <div className="form-group">
                         <label>Initial Infected</label>
-                        <input ref={this.initialInfectedRef} className="form-control" type="number" min="0" max="9999" placeholder="How many infected people in the initial population?" required/>
+                        <input ref={this.initialInfectedRef} className="form-control" type="number" min="0" max="1000000" placeholder="How many infected people in the initial population?" required/>
                     </div>
                     <div className="form-group text-center">
                         <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="day-by-day">Day-By-Day</button>&nbsp;
