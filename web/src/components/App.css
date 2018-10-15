@@ -13,10 +13,48 @@
     border-color: white;
 }
 
-.overflow-table{
+/*.overflow-table{
     display: block;
     overflow-y: auto;
     max-height: 250px;
+    width: 100%;
+}*/
+
+{box-sizing: border-box;}
+
+table{
+    width:100%;
+}
+
+thead{
+    display: table;
+    width: 100%; /* scroll bar width is 17px*/
+}
+
+tbody{
+    display: block;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+th{
+    padding-left:25px;
+}
+
+th, td{
+    width:16.67%;
+    padding: 5px;
+}
+
+tr{
+    display: table;
+    width: 100%
+}
+
+td{
+    text-align: center;
+    border-bottom: none;
+    border-left: none;
 }
 
 ::selection{
