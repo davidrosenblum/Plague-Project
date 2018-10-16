@@ -57,6 +57,18 @@ td{
     border-left: none;
 }
 
+.close{
+    cursor: pointer;
+}
+
+.nav-link{
+    cursor: pointer;
+}
+
+.modalHeader{
+    text-align: center;
+}
+
 ::selection{
     background-color: black;
     color: white;
