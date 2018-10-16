@@ -16,8 +16,8 @@ let Simulator = class Simulator extends EventEmitter{
     load(query){
         return new Promise((resolve, reject) => {
             // figure out endpoint
-            let url = window.location.href.includes("localhost") ? "http://localhost:8080/plague" : `${window.location.origin}plague`;
-
+            let url = window.location.href.includes("localhost") ? "http://localhost:8080/plague" : `${window.location.origin}/plague`;
+            
             // ajax call with query string
             // (null headers)
             Ajax.get(url, null, query)
