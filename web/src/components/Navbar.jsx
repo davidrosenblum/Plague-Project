@@ -13,7 +13,7 @@ export class Navbar extends React.Component{
 
 	}
 
-	closeMethod(){
+	closeModal(){
 		this.setState({showModal:false});
 	}
 
@@ -28,14 +28,12 @@ export class Navbar extends React.Component{
 					<div className="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul className="navbar-nav mr-auto">
 		  					<li className="nav-item active">
-		    					<a className="nav-link" href="!" onClick={this.openModal.bind(this)}>Report Bug <span className="sr-only">(current)</span></a>
+		    					<span className="nav-link" onClick={this.openModal.bind(this)}>Report Bug <span className="sr-only">(current)</span></span>
 		  					</li>
 		  				</ul>
 		  			</div>
 	      		</nav>
-	      		<Modal showModal={this.state.showModal} 
-	      		closeModal={this.closeMethod.bind(this)}
-	      		/>
+	      		<Modal showModal={this.state.showModal} closeModal={this.closeModal.bind(this)} />
 	      	</div>
 		);
 	}

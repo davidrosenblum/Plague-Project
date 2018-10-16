@@ -2,19 +2,14 @@ import React from "react";
 import ReactModal from "react-modal"
 
 export class Modal extends React.Component{
-
-	onCloseModal(){
-		this.props.closeMethod();
-	}
-
 	render(){
-		return this.props.showModal ?(
+		return (
 			<div>
-				<ReactModal>
+				<ReactModal isOpen={this.props.showModal} >
 					My React Modal
-      				<a onClick={this.onCloseModal.bind(this)} href="!"><span class="close">&times;</span></a>
+      				<a onClick={this.props.closeModal} href=""><span class="close">&times;</span></a>
       			</ReactModal>
 			</div>
-		) : null;
+		);
 	}
 }
