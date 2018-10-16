@@ -2,7 +2,8 @@
   "dependencies": {
     "react": "^16.5.2",
     "react-d3-components": "^0.9.1",
-    "react-dom": "^16.5.2"
+    "react-dom": "^16.5.2",
+    "react-modal": "^3.6.1"
   },
   "scripts": {
     "start": "react-scripts start",
