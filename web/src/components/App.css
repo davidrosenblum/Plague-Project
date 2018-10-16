@@ -31,27 +31,27 @@ thead{
     width: 100%; /* scroll bar width is 17px*/
 }
 
-tbody{
+.overflow-table tbody{
     display: block;
     max-height: 250px;
     overflow-y: auto;
 }
 
-th{
+.overflow-table th{
     padding-left:25px;
 }
 
-th, td{
+.overflow-table th, td{
     width:16.67%;
     padding: 5px;
 }
 
-tr{
+.overflow-table tr{
     display: table;
     width: 100%
 }
 
-td{
+.overflow-table td{
     text-align: center;
     border-bottom: none;
     border-left: none;

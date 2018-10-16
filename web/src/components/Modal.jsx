@@ -11,7 +11,7 @@ export class Modal extends React.Component{
 		return (
 			<div>
 				<ReactModal isOpen={this.props.showModal} >
-      				<a onClick={this.props.closeModal} href=""><span className="close">&times;</span></a>
+      				<span className="close" onClick={this.props.closeModal}>&times;</span>
       					<h2 className="modalHeader">Report Bug or Request New Feature</h2>
       					<table>
       						<tr>
@@ -26,7 +26,7 @@ export class Modal extends React.Component{
 		      					<td className="featureRequest">
 		      						<h5>Request Feature:</h5>
 			      					<textarea rows="4" cols="100">
-			      						 Request feature Here
+			      						 Request Feature Here
 			      					</textarea>
 			      					<br/>
 			      					<button onClick={this.onClick.bind(this)}>Submit</button>
