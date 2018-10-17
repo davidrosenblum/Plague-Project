@@ -3,10 +3,17 @@
     "react": "^16.5.2",
     "react-d3-components": "^0.9.1",
     "react-dom": "^16.5.2",
-    "react-modal": "^3.6.1"
+    "react-modal": "^3.6.1",
+    "react-scripts": "^2.0.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
