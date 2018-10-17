@@ -57,14 +57,14 @@ let Simulator = class Simulator extends EventEmitter{
 
     // async download
     downloadCSV(query){
-        let url = window.location.href.includes("localhost") ? `http://localhost:8080/plague/csv` : `${window.location.origin}plague/csv`;
+        let url = window.location.href.includes("localhost") ? `http://localhost:8080/plague/csv` : `${window.location.origin}/plague/csv`;
         return Ajax.get(url, null, query);
     }
 
     // csv download url
     createCSVDownloadURL(query){
         let qs = Ajax.queryString(query);
-        return window.location.href.includes("localhost") ? `http://localhost:8080/plague/csv${qs}` : `${window.location.origin}plague/csv${qs}`;
+        return window.location.href.includes("localhost") ? `http://localhost:8080/plague/csv${qs}` : `${window.location.origin}/plague/csv${qs}`;
     }
 
     // simulation moves to the last day
