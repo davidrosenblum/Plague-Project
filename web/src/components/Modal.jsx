@@ -13,7 +13,7 @@ export class Modal extends React.Component{
 				<ReactModal isOpen={this.props.showModal} >
       				<span className="close" onClick={this.props.closeModal}>&times;</span>
       					<h2 className="modalHeader">Report Bug or Request New Feature</h2>
-      					<table>
+      					<table className="reportsTable">
       						<tr>
 	      						<td className="bugReport">
 	      							<h5>Report Bug:</h5>

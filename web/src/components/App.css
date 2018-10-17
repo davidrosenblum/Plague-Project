@@ -13,20 +13,19 @@
     border-color: white;
 }
 
-/*.overflow-table{
-    display: block;
-    overflow-y: auto;
-    max-height: 250px;
-    width: 100%;
-}*/
+::selection{
+    background-color: black;
+    color: white;
+}
 
+/* CSS for the chart */
 {box-sizing: border-box;}
 
-table{
+.overflow-table table{
     width:100%;
 }
 
-thead{
+.overflow-table thead{
     display: table;
     width: 100%; /* scroll bar width is 17px*/
 }
@@ -57,11 +56,12 @@ thead{
     border-left: none;
 }
 
-.close{
+/* CSS to make cursor a pointer on hover over report bug*/
+.nav-link{
     cursor: pointer;
 }
-
-.nav-link{
+/* CSS for Modal*/
+.close{
     cursor: pointer;
 }
 
@@ -69,7 +69,7 @@ thead{
     text-align: center;
 }
 
-::selection{
-    background-color: black;
-    color: white;
+.reportsTable{
+    padding-top: 500px;
 }
+
