@@ -24,11 +24,13 @@ export class App extends React.Component{
                     <div className="row">
                         <div className="col-lg-6">
                             <Inputs/>
-                            <Chart/>
                         </div>
                         <div className="col-lg-6">
                             <Graph rows={this.state.rows}/>
                         </div>
+                    </div>
+                    <div className="col-lg-12">
+                        <Chart/>
                     </div>
                 </main>
             </div>
