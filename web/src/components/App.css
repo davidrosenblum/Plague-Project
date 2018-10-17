@@ -13,6 +13,10 @@
     border-color: white;
 }
 
+.chart{
+    text-align: center;
+}
+
 ::selection{
     background-color: black;
     color: white;
