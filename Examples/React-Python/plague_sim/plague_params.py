@@ -14,6 +14,11 @@ class PlagueParams():
         self._immune_percent = immune_percent
         self._initial_infected = init_infected
         self._model_length = model_length
+        self._day_zero = { "Susceptible"     : self._initial_pop - self._initial_infected,
+                           "Infected"        : self._initial_infected,
+                           "Immune"          : self._initial_pop * self._immune_percent,
+                           "Dead"            : 0,
+                           "TotalPopulation" : self._initial_pop }
 
     @property
     def infection_length(self):
@@ -42,3 +47,7 @@ class PlagueParams():
     @property
     def model_length(self):
         return self._model_length
+
+    @property
+    def day_zero(self):
+        return self._day_zero
