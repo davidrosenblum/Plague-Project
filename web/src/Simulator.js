@@ -18,9 +18,15 @@ let Simulator = class Simulator extends EventEmitter{
             // figure out endpoint
             let url = window.location.href.includes("localhost") ? "http://localhost:8080/plague" : `${window.location.origin}/plague`;
             
+            // CORS headers (use foreign domain)
+            let headers = {
+                "Access-Control-Allow-Origin": window.location.origin,
+                "Access-Control-Allow-Headers": "Access-Control-Allow-Origin"
+            };
+
             // ajax call with query string
             // (null headers)
-            Ajax.get(url, null, query)
+            Ajax.get(url, headers, query)
                 .then(xhr => {    
                     // ajax resolved (could be bad/good request, but server responded)
                     if(xhr.status === 200){

@@ -1,5 +1,6 @@
 import React from "react";
 import Simulator from "../Simulator";
+import { NumSlider } from "./NumSlider";
 
 export class Inputs extends React.Component{
     constructor(props){
@@ -37,6 +38,9 @@ export class Inputs extends React.Component{
             infection_length = this.infectionLengthRef.current.value,
             simulation_length = this.daysRef.current.value;
 
+        // make sure infected <= population
+        initial_infected = Math.min(initial_infected, initial_population);
+
         // MUST match API expectations! 
         return {immune_percent, virility, fatal_percent, initial_infected, initial_population, infection_length, simulation_length};
     }
@@ -51,14 +55,6 @@ export class Inputs extends React.Component{
 
     // called when then the reset button is clicked
     onReset(){
-        // clear input fields?
-        /*this.intialImmunityRef.current.value = "";
-        this.virilityRef.current.value = "";
-        this.fatalityRef.current.value = "";
-        this.initialInfectedRef.current.value = "";
-        this.intialPopRef.current.value = "";
-        this.daysRef.current.value = "";*/
-
         // cleared stored simulation data
         Simulator.reset();
     }
@@ -163,33 +159,91 @@ export class Inputs extends React.Component{
             <div>
                 <h5 className="text-center">Experimental Variables</h5>
                 <form onSubmit={this.onSubmit.bind(this)}>
-                    <div className="form-group">
-                        <label>Length of Infection (Days)</label>
-                        <input ref={this.infectionLengthRef} className="form-control" type="number" min="1" max="365" placeholder="How many days does the infection last?" required/>
+                    <div className="row">
+                        <div className="form-group col-lg-6">
+                            <NumSlider
+                                label={"Length of Infection (Days)"}
+                                showRange={true}
+                                min={1}
+                                max={365}
+                                step={1}
+                                required={true}
+                                ref={this.infectionLengthRef}
+                            />
+                        </div>
+                        <div className="form-group col-lg-6">
+                            <NumSlider
+                                label={"Virility"}
+                                showRange={true}
+                                min={0}
+                                max={20}
+                                step={0.01}
+                                required={true}
+                                ref={this.virilityRef}
+                            />
+                        </div>
                     </div>
-                    <div className="form-group">
-                        <label>Virility</label>
-                        <input ref={this.virilityRef} className="form-control" type="number" min="0" max="20" step="0.01" placeholder="How infectious (transmission rate)?" required/>
+                    <div className="row">
+                        <div className="form-group col-lg-6">
+                            <NumSlider
+                                label={"Fatality Percent"}
+                                showRange={true}
+                                min={0}
+                                max={1}
+                                step={0.001}
+                                required={true}
+                                ref={this.fatalityRef}
+                            />
+                        </div>
+                        <div className="form-group col-lg-6">
+                            <NumSlider
+                                label={"Initial Population"}
+                                showRange={true}
+                                min={1}
+                                max={1000000}
+                                step={1}
+                                required={true}
+                                ref={this.intialPopRef}
+                            />
+                        </div>
                     </div>
-                    <div className="form-group">
-                        <label>Fatality Percentage</label>
-                        <input ref={this.fatalityRef} className="form-control" type="number" min="0" max="1" step="0.001" placeholder="What % of people die when infected?" required/>
+                    <div className="row">
+                        <div className="form-group col-lg-6">
+                            <NumSlider
+                                label={"Initial Immunity Percent"}
+                                showRange={true}
+                                min={0}
+                                max={1}
+                                step={0.01}
+                                required={true}
+                                ref={this.intialImmunityRef}
+                            />
+                        </div>
+                        <div className="form-group col-lg-6">
+                            <NumSlider
+                                label={"Initial Infected"}
+                                showRange={true}
+                                min={0}
+                                max={1000000}
+                                maxText={"Population"}
+                                step={1}
+                                required={true}
+                                ref={this.initialInfectedRef}
+                            />
+                        </div>
                     </div>
-                    <div className="form-group">
-                        <label>Initial Population</label>
-                        <input ref={this.intialPopRef} className="form-control" type="number" min="1" max="1000000" placeholder="How many people in the initial population?" required/>
-                    </div>
-                    <div className="form-group">
-                        <label>Initial Immunity Percentage</label>
-                        <input ref={this.intialImmunityRef} className="form-control" type="number" min="0" max="1" step="0.01" placeholder="What % of the intial population people is immune?" required/>
-                    </div>
-                    <div className="form-group">
-                        <label>Initial Infected</label>
-                        <input ref={this.initialInfectedRef} className="form-control" type="number" min="0" max="1000000" placeholder="How many infected people in the initial population?" required/>
-                    </div>
-                    <div className="form-group">
-                        <label>Simulation Length (Days)</label>
-                        <input ref={this.daysRef} className="form-control" type="number" min="1" max="365" placeholder="How many days is the simulation?" required/>
+                    <div className="row">
+                        <div className="form-group col-lg-6">
+                            <NumSlider
+                                label={"Simulation Length (Days)"}
+                                showRange={true}
+                                min={1}
+                                max={365}
+                                step={1}
+                                required={true}
+                                ref={this.daysRef}
+                            />
+                        </div>
                     </div>
                     <div className="form-group text-center">
                         <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="day-by-day">Day-By-Day</button>&nbsp;

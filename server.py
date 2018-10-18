@@ -1,6 +1,7 @@
 from flask import Flask, make_response, send_from_directory, request
 import os
 import json
+import base64
 from plague import PlagueParams, PlagueSimulation
 
 # flask server
@@ -28,7 +29,7 @@ def plague():
     except ValueError:
         return "Bad request - valuer error.", 400
     except Exception:
-        return "Bad request", 400
+        return "Simulation failure.", 400
 
     results = json.dumps(sim.get_data()) if not csv_format else sim.get_data_csv()
 
@@ -51,7 +52,7 @@ def plague_csv():
     except ValueError:
         return "Bad request - valuer error.", 400
     except Exception:
-        return "Bad request", 400
+        return "Simulation failure.", 400
 
     csv_data = sim.get_data_csv()
 
@@ -116,7 +117,7 @@ def run_simulation(request_args):
 # applies standard headers, required for CORS
 def setup_headers(resp):
     resp.headers["Access-Control-Allow-Origin"] = "*"
-    resp.headers["Access-Control-Allow-Headers"] = "Access-Control-Allow-Origin"
+    resp.headers["Access-Control-Allow-Headers"] = "*"
 
 
 # run main method (for testing)
