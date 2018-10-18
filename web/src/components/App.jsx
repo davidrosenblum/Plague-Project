@@ -25,7 +25,7 @@ export class App extends React.Component{
                         <div className="col-lg-6">
                             <Inputs/>
                         </div>
-                        <div className="col-lg-6">
+                        <div className="col-lg-6 graph">
                             <Graph rows={this.state.rows}/>
                         </div>
                     </div>
