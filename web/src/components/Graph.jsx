@@ -29,7 +29,7 @@ export class Graph extends React.Component{
 		let data = Simulator.data.map((row, index) => {
 			return {
 				x: index,
-				y: row.dead
+				y: row.infected
 			};
 		});
 
@@ -69,8 +69,8 @@ export class Graph extends React.Component{
 						width={400}
 						height={400}
 						margin={{top: 10, bottom: 50, left: 50, right: 10}}
-						xAxis={{label: "Days"}}
-						yAxis={{label: "Dead"}}
+						xAxis={{label: "Day"}}
+						yAxis={{label: "Infected"}}
 					/>
 				</div>
 			</div>

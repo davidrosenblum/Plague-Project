@@ -1,0 +1,19 @@
+.num-slider-container{
+    text-align: center;
+}
+
+.num-slider-container input[type="range"]{
+    width: 100%;
+}
+
+.num-slider-container input[type="number"]{
+    width: 100%;
+    border: 1px solid silver;
+    border-radius: 6px;
+    padding: 3px;
+    margin-bottom: 5px;
+}
+
+.num-slider-container input[type="number"]:focus{
+    outline: none;
+}
