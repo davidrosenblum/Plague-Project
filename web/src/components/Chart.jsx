@@ -51,9 +51,11 @@ export class Chart extends React.Component{
 					dead = Math.floor(day.dead),
 					population = Math.floor(day.total_population);
 
+				let dayIndex = i + 1; // current day is index + 1
+
 				rows[i] = (
-					<tr key={i}>
-						<td>{i}</td>
+					<tr key={dayIndex} onClick={()=>Simulator.setGraphDay(dayIndex)}>
+						<td>{dayIndex}</td>
 						<td>{susceptible}</td>
 						<td>{infected}</td>
 						<td>{immune}</td>

@@ -1,5 +1,6 @@
 import { Ajax } from "./Ajax";
 import { EventEmitter } from "./EventEmitter";
+import { SimulationUpdateEvent } from "./SimulationUpdateEvent";
 
 // singleton for holding simulation data
 // event-driven to keep chart + graph updated
@@ -95,10 +96,15 @@ let Simulator = class Simulator extends EventEmitter{
         this.emit(new Event("reset"));
     }
 
+    // updates the graph day 
+    setGraphDay(day){
+        this.emit(new SimulationUpdateEvent("update-graph", day));
+    }
+
     // always emit update
     set currentDay(day){
         this._currentDay = day; 
-        this.emit(new Event("update"));
+        this.emit(new SimulationUpdateEvent("update", this.currentDay));
     }
 
     get hasData(){
