@@ -52,7 +52,6 @@ export class Graph extends React.Component{
 
 	// simulator update - graph change
 	onSimulatorUpdateGraph(evt){
-		console.log('day change' + evt.day);
 		// day change
 		if("day" in evt){
 			this.setState({day: evt.day});
