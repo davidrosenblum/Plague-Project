@@ -21,6 +21,9 @@ export class Graph extends React.Component{
 
 		// when the simulator changes the day
 		Simulator.on("update", this.onSimulatorUpdate.bind(this));
+
+		// when the simulator changes the graph
+		Simulator.on("update-graph", this.onSimulatorUpdateGraph.bind(this));
 	}
 
 	// simulator has data - convert to d3 format and store it
@@ -45,6 +48,14 @@ export class Graph extends React.Component{
 	// simulator update - update to the current day
 	onSimulatorUpdate(){
 		this.setState({day: Simulator.currentDay});
+	}
+
+	// simulator update - graph change
+	onSimulatorUpdateGraph(evt){
+		// day change
+		if("day" in evt){
+			this.setState({day: evt.day});
+		}
 	}
 
 	// gets the data values up to the current day
