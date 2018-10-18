@@ -18,6 +18,10 @@
     color: white;
 }
 
+.graph{
+    text-align: center;
+}
+
 /* CSS for the chart */
 {box-sizing: border-box;}
 
@@ -41,8 +45,8 @@
 }
 
 .overflow-table th, td{
-    width:16.67%;
-    padding: 5px;
+    width:calc(100% / 6);/* Divide the full width by number of columns in table */
+    text-align: center;
 }
 
 .overflow-table tr{
