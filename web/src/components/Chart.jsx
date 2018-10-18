@@ -58,7 +58,7 @@ export class Chart extends React.Component{
 						<td>{infected}</td>
 						<td>{immune}</td>
 						<td>{dead}</td>
-						<td>{population}</td>
+						<td>{population - dead}</td>
 					</tr>
 				);
 			}
