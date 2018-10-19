@@ -11,7 +11,7 @@ export class Modal extends React.Component{
 		return (
 			<div>
 				<ReactModal isOpen={this.props.showModal} >
-      				<span className="close" onClick={this.props.closeModal}>&times;</span>
+      				<span className="nav-link" onClick={this.props.closeModal}>&times;</span>
       					<h2 className="modalHeader">Report Bug or Request New Feature</h2>
       					<table className="reportsTable">
       						<tr>

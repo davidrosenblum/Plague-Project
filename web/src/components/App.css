@@ -60,18 +60,7 @@
     border-left: none;
 }
 
-.clickRows{
-    cursor: pointer;
-}
-
 /* CSS to make cursor a pointer on hover over report bug*/
-.nav-link{
-    cursor: pointer;
-}
-/* CSS for Modal*/
-.close{
-    cursor: pointer;
-}
 
 .modalHeader{
     text-align: center;
@@ -81,3 +70,7 @@
     padding-top: 500px;
 }
 
+/* make cursor into pointer */
+.nav-link{
+    cursor: pointer;
+}
