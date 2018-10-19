@@ -22,11 +22,11 @@ export class Modal extends React.Component{
       					<table className="reportsTable">
       						<tr>
 	      						<td>
-	      							<input type="radio" value="Have a problem?"/>Have a problem?
+	      							<input type="radio" name="type" value="Have a problem?"/>Have a problem?
 	      							&nbsp;
-	      							<input type="radio" value="Have an idea?"/>Have an idea?
+	      							<input type="radio" name="type" value="Have an idea?"/>Have an idea?
 	      							&nbsp;
-	      							<input type="radio" value="Other"/>Other
+	      							<input type="radio" name="type" value="Other"/>Other
 		      					</td>
 		      				</tr>
 		      				<tr>
