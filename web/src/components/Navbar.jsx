@@ -28,7 +28,7 @@ export class Navbar extends React.Component{
 					<div className="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul className="navbar-nav mr-auto">
 		  					<li className="nav-item active">
-		    					<span className="nav-link" onClick={this.openModal.bind(this)}>Report Bug <span className="sr-only">(current)</span></span>
+		    					<span className="nav-link" onClick={this.openModal.bind(this)}>Contact Us <span className="sr-only">(current)</span></span>
 		  					</li>
 		  				</ul>
 		  			</div>
