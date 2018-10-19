@@ -17,29 +17,37 @@ export class Modal extends React.Component{
 		return (
 			<div>
 				<ReactModal isOpen={this.props.showModal} >
-      				<span className="nav-link" onClick={this.props.closeModal}>&times;</span>
-      					<h2 className="modalHeader">Contact Us</h2>
-      					<table className="reportsTable">
-      						<tr>
-	      						<td>
-	      							<input type="radio" name="type" value="Have a problem?"/>Have a problem?
-	      							&nbsp;
-	      							<input type="radio" name="type" value="Have an idea?"/>Have an idea?
-	      							&nbsp;
-	      							<input type="radio" name="type" value="Other"/>Other
-		      					</td>
-		      				</tr>
-		      				<tr>
-		      					<td>
-			      					<textarea rows="4" cols="100" placeholder="Type message in here."></textarea>
-		      					</td>
-		      				</tr>
-		      				<tr>
-		      					<td>
-		      						<button onClick={this.onClick.bind(this)}>Submit</button>
-		      					</td>
-	      					</tr>
-      					</table>
+					<tr>
+						<td>
+	  						<span className="nav-link" onClick={this.props.closeModal}>&times;</span>
+	  					</td>
+	      			</tr>
+      				<table className="reportsTable">
+	      				<tr>
+	      					<td>
+	      						<h2 className="modalHeader">Contact Us</h2>
+	      					</td>
+	      				</tr>
+						<tr>
+	  						<td>
+	  							<input type="radio" name="type" value="Have a problem?"/>Have a problem?
+	  							&nbsp;
+	  							<input type="radio" name="type" value="Have an idea?"/>Have an idea?
+	  							&nbsp;
+	  							<input type="radio" name="type" value="Other"/>Other
+	      					</td>
+	      				</tr>
+	      				<tr>
+	      					<td>
+		      					<textarea rows="4" cols="100" placeholder="Type message in here."></textarea>
+	      					</td>
+	      				</tr>
+	      				<tr>
+	      					<td>
+	      						<button onClick={this.onClick.bind(this)}>Submit</button>
+	      					</td>
+	  					</tr>
+      				</table>
       			</ReactModal>
 			</div>
 		);
