@@ -60,6 +60,10 @@
     border-left: none;
 }
 
+.row{
+    cursor: pointer;
+}
+
 /* CSS to make cursor a pointer on hover over report bug*/
 .nav-link{
     cursor: pointer;
