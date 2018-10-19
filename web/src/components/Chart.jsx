@@ -54,7 +54,7 @@ export class Chart extends React.Component{
 				let dayIndex = i + 1; // current day is index + 1
 
 				rows[i] = (
-					<tr key={dayIndex} onClick={()=>Simulator.setGraphDay(dayIndex)}>
+					<tr className="clickRows" key={dayIndex} onClick={()=>Simulator.setGraphDay(dayIndex)}>
 						<td>{dayIndex}</td>
 						<td>{susceptible}</td>
 						<td>{infected}</td>
