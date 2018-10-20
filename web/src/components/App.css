@@ -60,6 +60,11 @@
     border-left: none;
 }
 
+.overflow-table tr td:nth-child(1){
+    font-weight: bold;
+    cursor: pointer;
+}
+
 /* CSS to make cursor a pointer on hover over report bug*/
 
 .modalHeader{
@@ -73,8 +78,4 @@
 /* make cursor into pointer */
 .nav-link{
     cursor: pointer;
-}
-
-.reportsTable{
-    
 }
