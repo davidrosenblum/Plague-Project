@@ -17,14 +17,16 @@ export class Modal extends React.Component{
 		return (
 			<div>
 				<ReactModal isOpen={this.props.showModal} >
+				<table>
 					<tr>
-						<td>
+						<td className="closeTag">
 	  						<span className="nav-link" onClick={this.props.closeModal}>&times;</span>
 	  					</td>
 	      			</tr>
+	      		</table>
       				<table className="reportsTable">
 	      				<tr>
-	      					<td>
+	      					<td className="header">
 	      						<h2 className="modalHeader">Contact Us</h2>
 	      					</td>
 	      				</tr>

@@ -71,8 +71,17 @@
     text-align: center;
 }
 
+.header{
+    background-color: lightgray;
+}
+
+.closeTag{
+    float: left;
+}
+
 .reportsTable{
-    padding-top: 500px;
+    border: 1px solid black;
+    height: 300px;
 }
 
 /* make cursor into pointer */
