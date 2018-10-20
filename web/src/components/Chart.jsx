@@ -42,8 +42,8 @@ export class Chart extends React.Component{
 		if(Simulator.hasData){
 			let rows = new Array(Simulator.currentDay + 1);
 
-			for(let i = 0, day; i < Simulator.currentDay; i++){
-				day = Simulator.data[i];
+			for(let i = 0; i < Simulator.currentDay; i++){
+				let day = Simulator.data[i];
 
 				let susceptible = Math.floor(day.susceptible),
 					infected = Math.floor(day.infected),
