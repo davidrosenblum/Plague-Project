@@ -2,11 +2,13 @@ from flask import Flask, make_response, send_from_directory, request
 import os
 import json
 import base64
-from plague import PlagueParams, PlagueSimulation
+from plague import PlagueParams, PlagueSimulation, PlagueParamValues
+
+# expected query string params from requests
+EXPECTED_REQUEST_PARAMS = ("infection_length", "virility", "initial_population", "initial_infected", "fatal_percent", "immune_percent", "simulation_length")
 
 # flask server
 app = Flask(__name__, static_url_path="/static", static_folder="./web/build/static")
-
 
 # endpoint for web app
 @app.route("/", methods=["GET", "OPTIONS"])
@@ -23,11 +25,12 @@ def plague():
 
     # run simulation and store results
     try:
-        sim = run_simulation(request.args)
-    except TypeError:
-        return "Bad request - bad query string values.", 400
-    except ValueError:
-        return "Bad request - valuer error.", 400
+        params = validate_params(request.args)
+        sim = run_simulation(params)
+    except TypeError as error:
+        return "Bad request {msg}".format(msg=str(error)), 400
+    except ValueError as error:
+        return "Bad request {msg}".format(msg=str(error)), 400
     except Exception:
         return "Simulation failure.", 400
 
@@ -46,11 +49,12 @@ def plague():
 def plague_csv():
     # run simulation and store results
     try:
-        sim = run_simulation(request.args)
-    except TypeError:
-        return "Bad request - bad query string values.", 400
-    except ValueError:
-        return "Bad request - valuer error.", 400
+        params = validate_params(request.args)
+        sim = run_simulation(params)
+    except TypeError as error:
+        return "Bad request {msg}".format(msg=str(error)), 400
+    except ValueError as error:
+        return "Bad request {msg}".format(msg=str(error)), 400
     except Exception:
         return "Simulation failure.", 400
 
@@ -86,26 +90,78 @@ def test():
     return response
 
 
-# runs through a simulation based on request arguments (query string values)
-def run_simulation(request_args):
-    # attempt query string parse
-    il = int(request_args.get("infection_length"))
-    v = float(request_args.get("virility"))
-    fp = float(request_args.get("fatal_percent"))
-    imp = float(request_args.get("immune_percent"))
-    ip = int(request_args.get("initial_population"))
-    ii = int(request_args.get("initial_infected"))
-    sl = int(request_args.get("simulation_length"))
+# validated user-given parameters with helpful error messages
+def validate_params(request_args):
+    # results go in this dict
+    extracted_params = {}    
 
+    # make sure every param exists
+    for param in EXPECTED_REQUEST_PARAMS:
+        if request_args.get(param) is None:
+            raise ValueError("{p} parameter is missing.".format(p=param))
+        else:
+            extracted_params[param] = request_args.get(param)
+
+    # convert infection length
+    try:
+        extracted_params["infection_length"] = int(extracted_params["infection_length"])
+    except ValueError:
+        raise ValueError("Infection Length must be of type int.")
+
+    # convert virility
+    try:
+        extracted_params["virility"] = float(extracted_params["virility"])
+    except ValueError:
+        raise ValueError("Virility must be of type float.")
+
+    # convert fatal percent
+    try:
+        extracted_params["fatal_percent"] = float(extracted_params["fatal_percent"])
+    except ValueError:
+        raise ValueError("Fatal Percent must be of type float.")
+
+    # convert immune percent
+    try:
+        extracted_params["immune_percent"] = float(extracted_params["immune_percent"])
+    except ValueError:
+        raise ValueError("Immune Percent must be of type float.")
+
+    # convert initial population
+    try:
+        extracted_params["initial_population"] = int(extracted_params["initial_population"])
+    except ValueError:
+        raise ValueError("Initial Population must be of type int.")
+
+    # convert intial infected
+    try:
+        extracted_params["initial_infected"] = int(extracted_params["initial_infected"])
+    except ValueError:
+        raise ValueError("Initial Infected must be of type int.")
+
+    # convert simulation length
+    try:
+        extracted_params["simulation_length"] = int(extracted_params["simulation_length"])
+    except ValueError:
+        raise ValueError("Simulation Length must be of type int.")
+
+    # types at this point are valid, make sure they are in range
+    PlagueParamValues.validate_all_params(extracted_params)
+
+    # return results
+    return extracted_params
+
+
+# runs through a simulation based on request arguments (query string values)
+def run_simulation(validated_params):
     # construct parameters
     params = PlagueParams(
-        infection_length=il,
-        virility=v,
-        fatal_percent=fp,
-        initial_population=ip,
-        immune_percent=imp,
-        initial_infected=ii,
-        simulation_length=sl
+        infection_length=validated_params["infection_length"],
+        virility=validated_params["virility"],
+        fatal_percent=validated_params["fatal_percent"],
+        initial_population=validated_params["initial_population"],
+        immune_percent=validated_params["immune_percent"],
+        initial_infected=validated_params["initial_infected"],
+        simulation_length=validated_params["simulation_length"]
     )
 
     # run simulation

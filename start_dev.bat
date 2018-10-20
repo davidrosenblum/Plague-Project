@@ -2,7 +2,9 @@
 
 @echo off
 
-start cmd /k "python server.py %DEBUG=1%"
+set debug=1
+
+start cmd /k "python server.py %debug%"
 
 cd web
 
