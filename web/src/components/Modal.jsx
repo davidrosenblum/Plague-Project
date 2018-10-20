@@ -10,10 +10,11 @@ export class Modal extends React.Component{
         // input refs
         //this.typeRef = React.createRef();
         this.textRef = React.createRef();
-        this.errorRef = React.createRef();
 
         this.state = { 
-        	typt: null
+        	type: null,
+        	error: false,
+        	other: false
         };
 
         //Modal.setAppElement(el);
@@ -21,9 +22,9 @@ export class Modal extends React.Component{
     }
 
 	// on click of submit button 
-	onClick(){
+	onClick(e){
 		if(this.state.type != null && this.textRef.current.value != null){
-			let message = this.getInputsDictionary()
+			let message = this.BuildArray()
 			Ajax.post("${window.location.origin}/mail",null,{message})
 				.then(xhr => {    
                     // ajax resolved (could be bad/good request, but server responded)
@@ -53,10 +54,11 @@ export class Modal extends React.Component{
 			if(this.textRef.current.value == null){
 				this.errorRef += "No Teaxt Entered"
 			}
+			e.preventDefault();
 		}
 	}
 
-	getInputsDictionary(){
+	BuildArray(){
         let type = this.state.type,
         	text = this.textRef.current.value;
 
@@ -65,52 +67,57 @@ export class Modal extends React.Component{
     }
 
 	// on change of radio button set type
-	getType(type){
-	 	this.state.type = type;
+	onTypeSelect(t){
+	 	this.setState({type: t});
+	 	//this.state.type = t;
+	 	console.log(this.state.type);
+
+	 	// if(this.state.type == "other"){
+	 	// 	this.state.other = true;
+	 	// 	this.TypeOther();
+	 	// }
+	 	//console.log(this.state.other);
+	 }
+
+	 TypeOther(){
+	 	if(!this.state.other){
+	 		
+	 	}else{
+	 		let input = <input type="text" placeholder="Input for other"/>;
+	 		return input;
+	 	}
+	 	return null;
 	 }
 
 	render(){
 		return (
 			<div>
 				<ReactModal isOpen={this.props.showModal} >
-					<table>
-						<tbody>
-							<tr>
-								<td className="closeTag">
-			  						<span className="nav-link" onClick={this.props.closeModal}>&times;</span>
-			  					</td>
-			      			</tr>
-		      			</tbody>
-		      		</table>
-	  				<table className="reportsTable">
-	  					<tbody>
-		      				<tr>
-		      					<td className="header">
-		      						<h2 className="modalHeader">Contact Us</h2>
-		      						<span className="error"></span>
-		      					</td>
-		      				</tr>
-							<tr>
-		  						<td>
-		  							<input type="radio" onChange={() => this.getType("problem")} name="type" value="problem"/>Have a problem?
-		  							&nbsp;
-		  							<input type="radio" onChange={() => this.getType("idea")} name="type" value="idea"/>Have an idea?
-		  							&nbsp;
-		  							<input type="radio" onChange={() => this.getType("other")} name="type" value="other"/>Other
-		      					</td>
-		      				</tr>
-		      				<tr>
-		      					<td>
-			      					<textarea rows="4" cols="100" placeholder="Type message in here." ref={this.textRef}></textarea>
-		      					</td>
-		      				</tr>
-		      				<tr>
-		      					<td>
-		      						<button onClick={this.onClick.bind(this)}>Submit</button>
-		      					</td>
-		  					</tr>
-	  					</tbody>
-	  				</table>
+					<div className="col-lg-1">
+			  			<span className="nav-link" onClick={this.props.closeModal}>&times;</span>
+			  		</div>
+			  		<div className="container border">
+	      				<div className="col-lg-12 header center">
+	  						<h2 className="modalHeader">Contact Us</h2>
+	  						<span className="error"></span>
+	  					</div>
+						<div className="col-lg-12 center">
+							<input type="radio" onChange={() => this.onTypeSelect("Bug Report")} name="types" value="problem"/>Have a problem?
+							&nbsp;
+							<input type="radio" onChange={() => this.onTypeSelect("Feature Request")} name="types" value="idea"/>Have an idea?
+							&nbsp;
+							<input type="radio" onChange={() => this.onTypeSelect("other")} name="types" value="other"/>Other
+	      				</div>
+	      				<div className="col-lg-12 center">
+	  						{this.TypeOther()}
+	      				</div>
+	      				<div className="col-lg-12 center">
+		      				<textarea rows="4" cols="100" placeholder="Type message in here." ref={this.textRef}></textarea>
+	  					</div>
+	  					<div className="col-lg-12 center">
+		  					<button onClick={this.onClick.bind(this)}>Submit</button>
+						</div>
+					</div>
       			</ReactModal>
 			</div>
 		);
