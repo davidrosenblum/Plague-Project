@@ -1,6 +1,6 @@
 from mpmath import mpf, mp
-from .disease_model import DiseaseModel
-from .plague_params import PlagueParams
+from plague_sim.disease_model import DiseaseModel
+from plague_sim.plague_params import PlagueParams
 
 class PlagueModelExcel(DiseaseModel):
     
