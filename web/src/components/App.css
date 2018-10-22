@@ -88,6 +88,10 @@
     height: 300px;
 }
 
+.center{
+    text-align: center;
+}
+
 /* make cursor into pointer */
 .nav-link{
     cursor: pointer;
