@@ -1,7 +1,7 @@
-from setuptools import *
+from setuptools import setup, setuptools
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+# with open("README.md", "r") as fh:
+#    long_description = fh.read()
 
 setuptools.setup(
     name="plague_sim",

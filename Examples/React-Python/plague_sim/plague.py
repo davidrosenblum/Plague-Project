@@ -1,6 +1,7 @@
 from mpmath import mpf, mp
 from plague_sim.plague_params import PlagueParams
 from plague_sim.plague_model_excel import PlagueModelExcel
+from plague_sim.model_factory import ModelFactory
 
 class Plague:
 
@@ -12,15 +13,19 @@ class Plague:
                  percent_fatal,
                  init_pop,
                  immune_percent,
-                 init_infected):
+                 init_infected,
+                 disease_model):
         self._plague_params = PlagueParams(infection_length, 
             virility, percent_fatal, init_pop, immune_percent, 
             init_infected)
-        self._disease_model    = PlagueModelExcel()
+        self._disease_model    = ModelFactory.create_disease_model(self, disease_model)
         self._plague_spread    = []
         self._plague_spread.append(self._plague_params.day_zero)
 
     def run_sim(self, sim_length):
+
+        self._plague_spread.length = 1
+
         for day in range(1, sim_length + 1):
             plague_day = {
                 "Susceptible"     : self._disease_model.calc_susceptible(self, self._plague_params, self._plague_spread[day-1]),
@@ -38,7 +43,3 @@ class Plague:
     def plague_simulation(self):
         return self._plague_spread
 
-def main():
-    test_plague = Plague(2, 1, 0, 100000, 0, 1)
-    test_plague.run_sim(100)
-    print(test_plague.plague_simulation)
