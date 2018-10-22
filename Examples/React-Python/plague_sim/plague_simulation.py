@@ -1,4 +1,6 @@
 from plague_sim.plague import Plague
+import json
+import csv
 
 class PlagueSimulation:
 
@@ -33,7 +35,16 @@ class PlagueSimulation:
 
     @property
     def simulation_json(self):
+        return json.dumps(self._plague.plague_simulation, sort_keys=True)
+
+    @property
+    def simulation_csv(self):
+        csv_string = ""
+        fieldnames = ['Susceptible', 'Infected', 'Immune', 'Dead', 'TotalPopulation']
         
-        
-                
-        
+        csv_string += ",".join(fieldnames)
+
+        for row in self._plague.plague_simulation:
+            csv_string += ",".join(row.values())
+
+        return csv_string
