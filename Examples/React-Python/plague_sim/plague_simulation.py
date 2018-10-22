@@ -1,6 +1,5 @@
 from plague_sim.plague import Plague
 import json
-import csv
 
 class PlagueSimulation:
 
@@ -43,8 +42,14 @@ class PlagueSimulation:
         fieldnames = ['Susceptible', 'Infected', 'Immune', 'Dead', 'TotalPopulation']
         
         csv_string += ",".join(fieldnames)
+        csv_string += '\n'
 
         for row in self._plague.plague_simulation:
-            csv_string += ",".join(row.values())
+            csv_string += "{s},{inf},{im},{d},{p}\n".format(
+                    s=row["Susceptible"],
+                    inf=row["Infected"],
+                    im=row["Immune"],
+                    d=row["Dead"],
+                    p=row["TotalPopulation"])
 
         return csv_string
