@@ -21,8 +21,7 @@ let Simulator = class Simulator extends EventEmitter{
             
             // CORS headers (use foreign domain)
             let headers = {
-                "Access-Control-Allow-Origin": window.location.origin,
-                "Access-Control-Allow-Headers": "Access-Control-Allow-Origin"
+                "Access-Control-Allow-Origin": window.location.origin
             };
 
             // ajax call with query string
