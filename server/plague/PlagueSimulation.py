@@ -1,5 +1,5 @@
-from plague import PlagueParams, PlagueDay
-
+from .PlagueDay import PlagueDay
+from .PlagueParams import PlagueParams
 
 class PlagueSimulation:
     def __init__(self, params):

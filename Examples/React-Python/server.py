@@ -1,5 +1,5 @@
-from flask import Flask, send_from_directory, make_response, request, current_app
-from plague import PlagueParams, PlagueSimulation
+from flask import Flask, send_from_directory, make_response, request
+from server.plague import PlagueParams, PlagueSimulation
 import os
 import json
 
