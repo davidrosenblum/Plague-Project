@@ -20,12 +20,18 @@ export class NumSlider extends React.Component{
         // set the range value to the number value
         let val = evt.target.value;
     
-        // enforce min/max constraints
-        val = Math.min(Math.max(val, this.props.min), this.props.max); 
+        if(val.length){
+            // enforce min/max constraints
+            val = Math.min(Math.max(val, this.props.min), this.props.max); 
 
-        // update inputs (update both incase bad number entered)
-        this.rangeRef.current.value = val;
-        this.numRef.current.value = val;
+            // update inputs
+            this.numRef.current.value = val;
+            this.rangeRef.current.value = val;
+        }
+        else{
+            // empty input - range at min and number will be empty
+            this.rangeRef.current.value = this.props.min;
+        }
     }
 
     // on range bar move
@@ -67,6 +73,7 @@ export class NumSlider extends React.Component{
                         min={this.props.min}
                         max={this.props.max}
                         step={this.props.step}
+                        className="num-slider-slider"
                     />
                 </div>
             </div>
