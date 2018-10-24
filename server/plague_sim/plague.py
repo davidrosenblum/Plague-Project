@@ -36,7 +36,7 @@ class Plague:
             }
 
             plague_day["TotalPopulation"] = str(
-                mpf(self._plague_spread[day-1]["TotalPopulation"]) - mpf(plague_day["Dead"])
+                mpf(self._plague_params.initial_pop) - mpf(plague_day["Dead"])
             )
 
             self._plague_spread.append(plague_day)
