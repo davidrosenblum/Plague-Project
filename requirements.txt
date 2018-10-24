@@ -1,1 +1,4 @@
+setuptools==39.0.1
+mpmath==1.0.0
+Flask==1.0.2
 tornado==5.1.1
