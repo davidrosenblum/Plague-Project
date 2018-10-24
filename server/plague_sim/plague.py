@@ -24,7 +24,8 @@ class Plague:
 
     def run_sim(self, sim_length):
 
-        # self._plague_spread.length = 1
+        del self._plague_spread
+        self._plague_spread.append(self._plague_params.day_zero)
 
         for day in range(1, sim_length + 1):
             plague_day = {
@@ -35,7 +36,7 @@ class Plague:
                 "TotalPopulation" : ""
             }
             plague_day["TotalPopulation"] = str(
-                mpf(plague_day["Susceptible"]) + mpf(plague_day["Infected"]) + mpf(plague_day["Immune"])
+                mpf(self._plague_params["TotalPopulation"]) - mpf(plague_day["Dead"])
             )
             self._plague_spread.append(plague_day)
         
