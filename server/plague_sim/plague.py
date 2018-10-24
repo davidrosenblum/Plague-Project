@@ -34,11 +34,11 @@ class Plague:
                 "Dead"            : self._disease_model.calc_dead(self, self._plague_params, self._plague_spread[day-1]),
                 "TotalPopulation" : ""
             }
+
             plague_day["TotalPopulation"] = str(
-                # problem!
-                # plague day is an object not a dictionary. Also no total population attribute
-                mpf(self._plague_params["TotalPopulation"]) - mpf(plague_day["Dead"])
+                mpf(self._plague_spread[day-1]["TotalPopulation"]) - mpf(plague_day["Dead"])
             )
+
             self._plague_spread.append(plague_day)
         
     @property

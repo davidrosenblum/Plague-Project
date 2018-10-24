@@ -45,11 +45,11 @@ export class Chart extends React.Component{
 			for(let i = 0; i < Simulator.currentDay; i++){
 				let day = Simulator.data[i];
 
-				let susceptible = Math.floor(day.Susceptible),
-					infected = Math.floor(day.Infected),
-					immune = Math.floor(day.Immune),
-					dead = Math.floor(day.Dead),
-					population = Math.floor(day.TotalPopulation);
+				let susceptible = Math.round(day.Susceptible),
+					infected = Math.round(day.Infected),
+					immune = Math.round(day.Immune),
+					dead = Math.round(day.Dead),
+					population = Math.round(day.TotalPopulation);
 
 				let dayIndex = i + 1; // current day is index + 1
 
