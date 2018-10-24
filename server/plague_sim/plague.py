@@ -1,6 +1,5 @@
 from mpmath import mpf, mp
 from .plague_params import PlagueParams
-from .plague_model_excel import PlagueModelExcel
 from .model_factory import ModelFactory
 
 class Plague:
@@ -24,7 +23,7 @@ class Plague:
 
     def run_sim(self, sim_length):
 
-        del self._plague_spread
+        del self._plague_spread[:]
         self._plague_spread.append(self._plague_params.day_zero)
 
         for day in range(1, sim_length + 1):
@@ -36,6 +35,8 @@ class Plague:
                 "TotalPopulation" : ""
             }
             plague_day["TotalPopulation"] = str(
+                # problem!
+                # plague day is an object not a dictionary. Also no total population attribute
                 mpf(self._plague_params["TotalPopulation"]) - mpf(plague_day["Dead"])
             )
             self._plague_spread.append(plague_day)
