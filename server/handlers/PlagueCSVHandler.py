@@ -1,24 +1,22 @@
 import tornado.web
 from server.param_utils import ParamExtractor
-from server.plague import PlagueSimulation, PlagueParams
+from server.plague_sim import PlagueSimulation
 
 
 class PlagueCSVHandler(tornado.web.RequestHandler):
     def run_simulation(self, validated_params):
-        # construct parameters
-        params = PlagueParams(
+        sim = PlagueSimulation()
+
+        sim.create_plague(
             infection_length=validated_params["infection_length"],
             virility=validated_params["virility"],
-            fatal_percent=validated_params["fatal_percent"],
-            initial_population=validated_params["initial_population"],
+            percent_fatal=validated_params["fatal_percent"],
+            init_pop=validated_params["initial_population"],
             immune_percent=validated_params["immune_percent"],
-            initial_infected=validated_params["initial_infected"],
-            simulation_length=validated_params["simulation_length"]
+            init_infected=validated_params["initial_infected"],
+            model_length=validated_params["simulation_length"]
         )
 
-        # run simulation
-        sim = PlagueSimulation(params)
-        sim.run()
         return sim
 
     def set_default_headers(self):
@@ -49,7 +47,7 @@ class PlagueCSVHandler(tornado.web.RequestHandler):
             self.set_header("Content-Type", "text/csv")
             self.set_header("Content-Disposition", "attachment; filename=data.csv")
 
-            self.finish(sim.get_data_csv())
+            self.finish(sim.simulation_csv)
         else:
             self.set_status(400)
             self.finish(err_msg)
