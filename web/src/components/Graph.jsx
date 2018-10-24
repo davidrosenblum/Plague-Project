@@ -32,7 +32,7 @@ export class Graph extends React.Component{
 		let data = Simulator.data.map((row, index) => {
 			return {
 				x: index,
-				y: row.infected
+				y: row.Infected
 			};
 		});
 

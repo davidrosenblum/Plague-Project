@@ -1,6 +1,7 @@
 import json
 import tornado.web
 from server.plague import PlagueParams, PlagueSimulation
+from server.plague_sim import PlagueSimulation
 
 
 class TestHandler(tornado.web.RequestHandler):
@@ -14,16 +15,18 @@ class TestHandler(tornado.web.RequestHandler):
         self.finish()
 
     def get(self):
-        params = PlagueParams(
+        sim = PlagueSimulation()
+
+        sim.create_plague(
             infection_length=100,
             virility=1,
-            fatal_percent=0,
-            initial_population=100000,
+            percent_fatal=0,
+            init_pop=100000,
             immune_percent=0,
-            initial_infected=1,
-            simulation_length=60
+            init_infected=1,
+            model_length=60
         )
 
         # send json
         self.set_header("Content-Type", "text/json")
-        self.finish(json.dumps(PlagueSimulation(params).run().get_data()))
+        self.finish(sim.simulation_json)
