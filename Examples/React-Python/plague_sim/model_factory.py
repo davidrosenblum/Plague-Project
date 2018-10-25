@@ -1,4 +1,4 @@
-from plague_sim.plague_model_excel import PlagueModelExcel
+from .plague_model_excel import PlagueModelExcel
 
 class ModelFactory:
     @staticmethod

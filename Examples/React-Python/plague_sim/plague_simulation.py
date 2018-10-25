@@ -1,4 +1,4 @@
-from plague_sim.plague import Plague
+from .plague import Plague
 import json
 
 class PlagueSimulation:
