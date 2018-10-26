@@ -77,7 +77,7 @@ export class Graph extends React.Component{
 					<LineChart
 						data={this.getData()}
 						axes
-						width={400}
+						width={540}
 						height={400}
 						margin={{top: 10, bottom: 50, left: 80, right: 10}}
 						xAxis={{label: "Day"}}
