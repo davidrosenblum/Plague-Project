@@ -12,7 +12,7 @@ class PlagueParams():
         self._initial_pop = init_pop
         self._immune_percent = immune_percent
         self._initial_infected = init_infected
-        self._day_zero = { "Susceptible"     : self._initial_pop - self._initial_infected,
+        self._day_zero = { "Susceptible"     : self._initial_pop - self._initial_infected - (self._immune_percent*self._initial_pop),
                            "Infected"        : self._initial_infected,
                            "Immune"          : self._initial_pop * self._immune_percent,
                            "Dead"            : 0,
