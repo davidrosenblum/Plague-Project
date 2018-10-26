@@ -8,12 +8,17 @@ export class Modal extends React.Component{
         super(props);
 
         // input refs
-        //this.typeRef = React.createRef();
         this.textRef = React.createRef();
         this.errorRef = React.createRef();
+        this.headerRef = React.createRef();
+
+        this.type = null;
+        this.typeError = true;
+        this.errorTime = false;
+        this.errorMsg = "";
 
         this.state = { 
-        	typt: null
+        	other: false
         };
 
         //Modal.setAppElement(el);
@@ -21,16 +26,18 @@ export class Modal extends React.Component{
     }
 
 	// on click of submit button 
-	onClick(){
-		if(this.state.type != null && this.textRef.current.value != null){
-			let message = this.getInputsDictionary()
-			Ajax.post("${window.location.origin}/mail",null,{message})
+	submitClick(e){
+		e.preventDefault();
+		if(this.type != null && this.textRef.current.value != ""){
+			console.log(this.textRef.current.value);
+			let message = this.BuildArray();
+			Ajax.post(`${window.location.origin}/mail`,null,{message})
 				.then(xhr => {    
                     // ajax resolved (could be bad/good request, but server responded)
                     if(xhr.status === 200){
                         // good request - attempt to parse results json
                         try{
-                            console.log("Text Received")
+                            console.log("Text Received");
                         }
                         catch(err){
                             // json parse error (should never happen)
@@ -47,72 +54,115 @@ export class Modal extends React.Component{
                     console.log("Really bad Error");// request died signal
                 });
 		}else{
-			if(this.state.type == null){
-				this.errorRef += "No Header Selected|"
+			
+			let textError = this.textRef.current.value;
+
+			if(this.typeError == true && textError == ""){
+				this.errorMsg = "No Header Selected|No Text Entered";
+			}else if(this.typeError == true){
+				this.errorMsg = "No Header Selected";
+			}else if(textError == ""){
+				this.errorMsg = "No Text Entered";
 			}
-			if(this.textRef.current.value == null){
-				this.errorRef += "No Teaxt Entered"
+
+			if(this.errorMsg != ""){
+				this.errorTime = true;
 			}
+
+			console.log("Error Time: "+this.errorTime);
+			this.buildError();
+				
 		}
 	}
 
-	getInputsDictionary(){
-        let type = this.state.type,
-        	text = this.textRef.current.value;
+	BuildArray(){
+        let text = this.textRef.current.value;
+        let type = "";
+
+        if(this.state.other){
+        	type = this.headerRef.current.value;
+        }else{
+        	type = this.type;
+        }
 
         // MUST match API expectations! 
         return {type,text};
     }
 
 	// on change of radio button set type
-	getType(type){
-	 	this.state.type = type;
+	onTypeSelect(type){
+	 	this.type = type;
+
+	 	if(this.type == "other"){
+	 		this.setState({other: true});
+	 	}else{
+	 		this.setState({other: false});
+	 	}
+
+	 	this.typeError = false;
 	 }
 
+ 	 TypeOther(){
+	 	if(!this.state.other){
+	 		return null;
+	 	}else{
+	 		return(
+	 			<div>
+	 				<label>Other: </label> <input type="text" placeholder="Input for other" ref={this.headerRef}/>
+	 			</div>
+	 		);
+	 	}
+	 }
+
+	buildError(){
+		console.log("Error Message: "+this.errorMsg);
+		if(this.errorTime){
+			return(
+					<span className="error">
+						{this.errorMsg}
+					</span>
+				);
+		}else{
+			this.errorMsg = "";
+			return null;
+		}
+	}
+	 
 	render(){
 		return (
-			<div>
+			<form>
 				<ReactModal isOpen={this.props.showModal} >
-					<table>
-						<tbody>
-							<tr>
-								<td className="closeTag">
-			  						<span className="nav-link" onClick={this.props.closeModal}>&times;</span>
-			  					</td>
-			      			</tr>
-		      			</tbody>
-		      		</table>
-	  				<table className="reportsTable">
-	  					<tbody>
-		      				<tr>
-		      					<td className="header">
-		      						<h2 className="modalHeader">Contact Us</h2>
-		      						<span className="error"></span>
-		      					</td>
-		      				</tr>
-							<tr>
-		  						<td>
-		  							<input type="radio" onChange={() => this.getType("problem")} name="type" value="problem"/>Have a problem?
-		  							&nbsp;
-		  							<input type="radio" onChange={() => this.getType("idea")} name="type" value="idea"/>Have an idea?
-		  							&nbsp;
-		  							<input type="radio" onChange={() => this.getType("other")} name="type" value="other"/>Other
-		      					</td>
-		      				</tr>
-		      				<tr>
-		      					<td>
-			      					<textarea rows="4" cols="100" placeholder="Type message in here." ref={this.textRef}></textarea>
-		      					</td>
-		      				</tr>
-		      				<tr>
-		      					<td>
-		      						<button onClick={this.onClick.bind(this)}>Submit</button>
-		      					</td>
-		  					</tr>
-	  					</tbody>
-	  				</table>
+					<div className="col-lg-1">
+			  			<span className="nav-link" onClick={this.props.closeModal}>&times;</span>
+			  		</div>
+			  		<div className="container border">
+					  <form onSubmit={this.submitClick.bind(this)}>
+							<div className="col-lg-12 header center">
+								<h2 className="modalHeader">Contact Us</h2>
+								<div>
+									{this.buildError()}
+								</div>
+							</div>
+							<div className="col-lg-12 center">
+								<input type="radio" onChange={(t) => this.onTypeSelect("Bug Report")} name="types" value="problem"/>Have a problem?
+								&nbsp;
+								<input type="radio" onChange={(t) => this.onTypeSelect("Feature Request")} name="types" value="idea"/>Have an idea?
+								&nbsp;
+								<input type="radio" onChange={(t) => this.onTypeSelect("other")} name="types" value="other"/>Other
+							</div>
+							<div className="col-lg-12 center">
+								{this.TypeOther()}
+							</div>
+							<div className="col-lg-12 center">
+								<textarea rows="4" cols="100" placeholder="Type message in here." ref={this.textRef}></textarea>
+							</div>
+							<div className="col-lg-12 center">
+								<input type="submit" />
+							</div>
+						</form>
+					</div>
       			</ReactModal>
-			</div>
+			</form>
 		);
 	}
 }
