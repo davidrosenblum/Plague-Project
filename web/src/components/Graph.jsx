@@ -78,7 +78,7 @@ export class Graph extends React.Component{
 						data={this.getData()}
 						axes
 						width={540}
-						height={400}
+						height={525}
 						margin={{top: 10, bottom: 50, left: 80, right: 10}}
 						xAxis={{label: "Day"}}
 						yAxis={{label: "Infected"}}

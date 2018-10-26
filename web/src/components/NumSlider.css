@@ -16,7 +16,7 @@
     cursor: pointer;
 }
 
-.num-slider-container input[type="range"]:hover{
+.num-slider-container input[type="range"]:focus{
     opacity: 1
 }
 
