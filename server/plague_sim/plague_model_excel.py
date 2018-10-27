@@ -44,10 +44,11 @@ class PlagueModelExcel(DiseaseModel):
                     plague_params.infection_length   -  \
                     prev_disease_day["Infected"]     *  \
                     plague_params.percent_fatal      /  \
-                    (
-                        100                              *  \
-                        plague_params.infection_length
-                    )
+                    plague_params.infection_length
+#                    (
+#                        100                              *  \
+#                        plague_params.infection_length
+#                    )
                 )
             ).to_integral()
 
@@ -57,9 +58,10 @@ class PlagueModelExcel(DiseaseModel):
             (
                 plague_params.percent_fatal      *  \
                 prev_disease_day["Infected"]     /  \
-                (
-                    100                              *  \
-                    plague_params.infection_length
-                )                                     +  \
+                plague_params.infection_length   +  \
+#                (
+#                    100                              *  \
+#                    plague_params.infection_length
+#                )                                     +  \
                 prev_disease_day["Dead"]
             ).to_integral()
