@@ -1,54 +1,65 @@
-from mpmath import mpf, mp
 from .disease_model import DiseaseModel
 from .plague_params import PlagueParams
+from decimal import Decimal as Dec, getcontext, ROUND_HALF_UP
+
+getcontext().rounding = ROUND_HALF_UP
 
 class PlagueModelExcel(DiseaseModel):
     
-    mp.dps = 8
-
     @staticmethod
     def calc_susceptible(self, plague_params, prev_disease_day):
-        return str(
-            mpf(prev_disease_day["Susceptible"])  -  \
-           (mpf(plague_params.virility)           *  \
-            mpf(prev_disease_day["Susceptible"])  *  \
-            mpf(prev_disease_day["Infected"])     /  \
-            mpf(plague_params.initial_pop)
-           )
-        )
+        return \
+            (
+                prev_disease_day["Susceptible"]  -  \
+                (
+                    plague_params.virility           *  \
+                    prev_disease_day["Susceptible"]  *  \
+                    prev_disease_day["Infected"]     /  \
+                    plague_params.initial_pop
+                )
+            ).to_integral()
 
     @staticmethod
     def calc_immune(self, plague_params, prev_disease_day):
-        return str(
-            mpf(prev_disease_day["Immune"])       +  \
-           (mpf(prev_disease_day["Infected"])     /  \
-            mpf(plague_params.infection_length)
-           )
-        )
+        return \
+            (
+                prev_disease_day["Immune"]       +  \
+                (
+                    prev_disease_day["Infected"]     /  \
+                    plague_params.infection_length
+                )
+            ).to_integral()
 
     @staticmethod
     def calc_infected(self, plague_params, prev_disease_day):
-        return str(
-            mpf(prev_disease_day["Infected"])     +  \
-           (mpf(plague_params.virility)           *  \
-            mpf(prev_disease_day["Susceptible"])  *  \
-            mpf(prev_disease_day["Infected"])     /  \
-            mpf(plague_params.initial_pop)        -  \
-            mpf(prev_disease_day["Infected"])     /  \
-            mpf(plague_params.infection_length)   -  \
-            mpf(prev_disease_day["Infected"])     *  \
-            mpf(plague_params.percent_fatal)      /  \
-           (mpf(100)                              *  \
-            mpf(plague_params.infection_length))
-           )
-        )
+        return \
+            (
+                prev_disease_day["Infected"]     +  \
+                (
+                    plague_params.virility           *  \
+                    prev_disease_day["Susceptible"]  *  \
+                    prev_disease_day["Infected"]     /  \
+                    plague_params.initial_pop        -  \
+                    prev_disease_day["Infected"]     /  \
+                    plague_params.infection_length   -  \
+                    prev_disease_day["Infected"]     *  \
+                    plague_params.percent_fatal      /  \
+                    (
+                        100                              *  \
+                        plague_params.infection_length
+                    )
+                )
+            ).to_integral()
 
     @staticmethod
     def calc_dead(self, plague_params, prev_disease_day):
-        return str(
-            mpf(plague_params.percent_fatal)      *  \
-            mpf(prev_disease_day["Infected"])     /  \
-           (mpf(100)                              *  \
-            mpf(plague_params.infection_length))  +  \
-            mpf(prev_disease_day["Dead"])
-        )
+        return \
+            (
+                plague_params.percent_fatal      *  \
+                prev_disease_day["Infected"]     /  \
+                (
+                    100                              *  \
+                    plague_params.infection_length
+                )                                     +  \
+                prev_disease_day["Dead"]
+            ).to_integral()

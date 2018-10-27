@@ -1,11 +1,11 @@
-from mpmath import mpf, mp
 from .plague_params import PlagueParams
 from .model_factory import ModelFactory
+from decimal import Decimal as Dec, getcontext, ROUND_HALF_UP
+
+getcontext().rounding = ROUND_HALF_UP
 
 class Plague:
 
-    mp.dps = 8
-    
     def __init__(self, 
                  infection_length,
                  virility,
@@ -35,9 +35,11 @@ class Plague:
                 "TotalPopulation" : ""
             }
 
-            plague_day["TotalPopulation"] = str(
-                mpf(self._plague_params.initial_pop) - mpf(plague_day["Dead"])
-            )
+            plague_day["TotalPopulation"] = \
+                (
+                    self._plague_params.initial_pop  -  \
+                    Dec(plague_day["Dead"])
+                ).to_integral()
 
             self._plague_spread.append(plague_day)
         

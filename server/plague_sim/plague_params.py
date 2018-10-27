@@ -1,3 +1,7 @@
+from decimal import Decimal as Dec, getcontext, ROUND_HALF_UP
+
+getcontext().rounding = ROUND_HALF_UP
+
 class PlagueParams():
     def __init__(self, 
                  infection_length,
@@ -6,17 +10,17 @@ class PlagueParams():
                  init_pop,
                  immune_percent,
                  init_infected):
-        self._infection_length = infection_length
-        self._virility = virility
-        self._percent_fatal = percent_fatal
-        self._initial_pop = init_pop
-        self._immune_percent = immune_percent
-        self._initial_infected = init_infected
-        self._day_zero = { "Susceptible"     : self._initial_pop - self._initial_infected - (self._immune_percent*self._initial_pop),
-                           "Infected"        : self._initial_infected,
-                           "Immune"          : self._initial_pop * self._immune_percent,
-                           "Dead"            : 0,
-                           "TotalPopulation" : self._initial_pop }
+        self._infection_length = Dec(infection_length)
+        self._virility = Dec(virility)
+        self._percent_fatal = Dec(percent_fatal)
+        self._initial_pop = Dec(init_pop)
+        self._immune_percent = Dec(immune_percent)
+        self._initial_infected = Dec(init_infected)
+        self._day_zero = { "Susceptible"     : (self._initial_pop - self._initial_infected - (self._immune_percent * self._initial_pop)).to_integral(),
+                           "Infected"        : (self._initial_infected).to_integral(),
+                           "Immune"          : (self._initial_pop * self._immune_percent).to_integral(),
+                           "Dead"            : Dec(0),
+                           "TotalPopulation" : (self._initial_pop).to_integral() }
 
     @property
     def infection_length(self):
