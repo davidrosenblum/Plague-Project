@@ -180,39 +180,39 @@ class TestPlagueModelExcel(unittest.TestCase):
 	def test_day2_TotalPopulation(self):
 		self.assertEqual(Decimal(self.testModel.plague_simulation[2]['TotalPopulation']).to_integral(), self.excelComputed['day2']['TotalPopulation'])
 
-## DAY 7
-#
-#	def test_day7_Susceptible(self):
-#		self.assertEqual(Decimal(self.testModel.plague_simulation[7]['Susceptible']).to_integral(), self.excelComputed['day7']['Susceptible'])
-#	
-#	def test_day7_Infected(self):
-#		self.assertEqual(Decimal(self.testModel.plague_simulation[7]['Infected']).to_integral(), self.excelComputed['day7']['Infected'])
-#	
-#	def test_day7_Immune(self):
-#		self.assertEqual(Decimal(self.testModel.plague_simulation[7]['Immune']).to_integral(), self.excelComputed['day7']['Immune'])
-#	
-#	def test_day7_Dead(self):
-#		self.assertEqual(Decimal(self.testModel.plague_simulation[7]['Dead']).to_integral(), self.excelComputed['day7']['Dead'])
-#	
-#	def test_day7_TotalPopulation(self):
-#		self.assertEqual(Decimal(self.testModel.plague_simulation[7]['TotalPopulation']).to_integral(), self.excelComputed['day7']['TotalPopulation'])
-#
-## DAY 17
-#		
-#	def test_day17_Susceptible(self):
-#		self.assertEqual(Decimal(self.testModel.plague_simulation[17]['Susceptible']).to_integral(), self.excelComputed['day17']['Susceptible'])
-#	
-#	def test_day17_Infected(self):
-#		self.assertEqual(Decimal(self.testModel.plague_simulation[17]['Infected']).to_integral(), self.excelComputed['day17']['Infected'])
-#	
-#	def test_day17_Immune(self):
-#		self.assertEqual(Decimal(self.testModel.plague_simulation[17]['Immune']).to_integral(), self.excelComputed['day17']['Immune'])
-#	
-#	def test_day17_Dead(self):
-#		self.assertEqual(Decimal(self.testModel.plague_simulation[17]['Dead']).to_integral(), self.excelComputed['day17']['Dead'])
-#	
-#	def test_day17_TotalPopulation(self):
-#		self.assertEqual(Decimal(self.testModel.plague_simulation[17]['TotalPopulation']).to_integral(), self.excelComputed['day17']['TotalPopulation'])
+# DAY 7
+
+	def test_day7_Susceptible(self):
+		self.assertEqual(Decimal(self.testModel.plague_simulation[7]['Susceptible']).to_integral(), self.excelComputed['day7']['Susceptible'])
+	
+	def test_day7_Infected(self):
+		self.assertEqual(Decimal(self.testModel.plague_simulation[7]['Infected']).to_integral(), self.excelComputed['day7']['Infected'])
+	
+	def test_day7_Immune(self):
+		self.assertEqual(Decimal(self.testModel.plague_simulation[7]['Immune']).to_integral(), self.excelComputed['day7']['Immune'])
+	
+	def test_day7_Dead(self):
+		self.assertEqual(Decimal(self.testModel.plague_simulation[7]['Dead']).to_integral(), self.excelComputed['day7']['Dead'])
+	
+	def test_day7_TotalPopulation(self):
+		self.assertEqual(Decimal(self.testModel.plague_simulation[7]['TotalPopulation']).to_integral(), self.excelComputed['day7']['TotalPopulation'])
+
+# DAY 17
+		
+	def test_day17_Susceptible(self):
+		self.assertEqual(Decimal(self.testModel.plague_simulation[17]['Susceptible']).to_integral(), self.excelComputed['day17']['Susceptible'])
+	
+	def test_day17_Infected(self):
+		self.assertEqual(Decimal(self.testModel.plague_simulation[17]['Infected']).to_integral(), self.excelComputed['day17']['Infected'])
+	
+	def test_day17_Immune(self):
+		self.assertEqual(Decimal(self.testModel.plague_simulation[17]['Immune']).to_integral(), self.excelComputed['day17']['Immune'])
+	
+	def test_day17_Dead(self):
+		self.assertEqual(Decimal(self.testModel.plague_simulation[17]['Dead']).to_integral(), self.excelComputed['day17']['Dead'])
+	
+	def test_day17_TotalPopulation(self):
+		self.assertEqual(Decimal(self.testModel.plague_simulation[17]['TotalPopulation']).to_integral(), self.excelComputed['day17']['TotalPopulation'])
 	
 if __name__=='__main__':
 	unittest.main()
