@@ -215,12 +215,13 @@ class TestPlagueModelExcel(unittest.TestCase):
 #		self.assertEqual(Decimal(self.testModel.plague_simulation[17]['TotalPopulation']).to_integral(), self.excelComputed['day17']['TotalPopulation'])
 	
 if __name__=='__main__':
-#	unittest.main()
-	from plague_sim.plague import Plague
-	testParams = (2, 2, .05, 100000, .03, 1)
-	sim_length = 20
-	testModel = Plague(*testParams, "PlagueModelExcel")
-	testModel.run_sim(sim_length)
-	from tabulate import tabulate
-	print(tabulate([[f'Day {index}']+list(day.values()) for index, day in enumerate(testModel.plague_simulation)], headers=['Day #', 'Susceptible', 'Infected', 'Immune', 'Dead', 'Total Pop'], tablefmt='grid'))
+	unittest.main()
+#	from plague_sim.plague import Plague
+#	testParams = (2, 2, .05, 100000, .03, 1)
+#	sim_length = 20
+#	testModel = Plague(*testParams, "PlagueModelExcel")
+#	testModel.run_sim(sim_length)
+#	from tabulate import tabulate
+#	print(tabulate([[f'Day {index}']+list(day.values()) for index, day in enumerate(testModel.plague_simulation)], headers=['Day #', 'Susceptible', 'Infected', 'Immune', 'Dead', 'Total Pop'], tablefmt='grid'))
+	
 	
