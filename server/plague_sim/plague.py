@@ -52,7 +52,7 @@ class Plague:
     @staticmethod
     def _serialize_spread(spread):
         return  [ { 'Susceptible' : str(day['Susceptible']),
-                    'Infected' : str(day['Infeceted']),
+                    'Infected' : str(day['Infected']),
                     'Immune' : str(day['Immune']),
                     'Dead' : str(day['Dead']),
                     'TotalPopulation' : str(day['TotalPopulation'])
