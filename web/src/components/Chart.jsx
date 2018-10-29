@@ -42,7 +42,7 @@ export class Chart extends React.Component{
 		if(Simulator.hasData){
 			let rows = new Array(Simulator.currentDay + 1);
 
-			for(let i = 0; i < Simulator.currentDay; i++){
+			for(let i = 0; i <= Simulator.currentDay; i++){
 				let day = Simulator.data[i];
 
 				let susceptible = Math.round(day.Susceptible),
@@ -51,11 +51,9 @@ export class Chart extends React.Component{
 					dead = Math.round(day.Dead),
 					population = Math.round(day.TotalPopulation);
 
-				let dayIndex = i + 1; // current day is index + 1
-
 				rows[i] = (
-					<tr key={dayIndex}>
-						<td onClick={()=>Simulator.setGraphDay(dayIndex)}>{dayIndex}</td>
+					<tr key={i}>
+						<td onClick={()=>Simulator.setGraphDay(i)}>{i}</td>
 						<td>{susceptible}</td>
 						<td>{infected}</td>
 						<td>{immune}</td>
