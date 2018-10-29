@@ -18,7 +18,8 @@ export class Modal extends React.Component{
         this.errorMsg = "";
 
         this.state = { 
-        	other: false
+			other: false,
+			errMessage:null
         };
 
         //Modal.setAppElement(el);
@@ -66,11 +67,10 @@ export class Modal extends React.Component{
 			}
 
 			if(this.errorMsg != ""){
-				this.errorTime = true;
+				this.setState({errMessage:this.errorMsg})
 			}
 
-			console.log("Error Time: "+this.errorTime);
-			this.buildError();
+			// console.log("Error Time: "+this.errorTime);
 				
 		}
 	}
@@ -113,20 +113,6 @@ export class Modal extends React.Component{
 	 		);
 	 	}
 	 }
-
-	buildError(){
-		console.log("Error Message: "+this.errorMsg);
-		if(this.errorTime){
-			return(
-					<span className="error">
-						{this.errorMsg}
-					</span>
-				);
-		}else{
-			this.errorMsg = "";
-			return null;
-		}
-	}
 	 
 	render(){
 		return (
@@ -140,7 +126,9 @@ export class Modal extends React.Component{
 							<div className="col-lg-12 header center">
 								<h2 className="modalHeader">Contact Us</h2>
 								<div>
-									{this.buildError()}
+									<span className="error">
+										{this.state.errMessage}
+									</span>
 								</div>
 							</div>
 							<div className="col-lg-12 center">
