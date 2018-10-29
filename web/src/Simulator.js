@@ -102,7 +102,8 @@ let Simulator = class Simulator extends EventEmitter{
 
     // always emit update
     set currentDay(day){
-        this._currentDay = day; 
+        let maxDays = this.hasData ? (this.data.length - 1) : 0;
+        this._currentDay = Math.min(day, maxDays); 
         this.emit(new SimulationUpdateEvent("update", this.currentDay));
     }
 
