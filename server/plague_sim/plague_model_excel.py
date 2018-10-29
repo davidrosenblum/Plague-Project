@@ -8,7 +8,8 @@ getcontext().prec     = 8
 
 class PlagueModelExcel(DiseaseModel):
     
-    def calc_susceptible(self, plague_params, prev_disease_day):
+    @staticmethod
+    def calc_susceptible(plague_params, prev_disease_day):
         return  prev_disease_day["Susceptible"]  -  \
                 (
                     plague_params.virility           *  \
@@ -17,14 +18,16 @@ class PlagueModelExcel(DiseaseModel):
                     plague_params.initial_pop
                 )
 
-    def calc_immune(self, plague_params, prev_disease_day):
+    @staticmethod
+    def calc_immune(plague_params, prev_disease_day):
         return  prev_disease_day["Immune"]       +  \
                 (
                     prev_disease_day["Infected"]     /  \
                     plague_params.infection_length
                 )
 
-    def calc_infected(self, plague_params, prev_disease_day):
+    @staticmethod
+    def calc_infected(plague_params, prev_disease_day):
         return  prev_disease_day["Infected"]     +  \
                 (
                     plague_params.virility           *  \
@@ -38,7 +41,8 @@ class PlagueModelExcel(DiseaseModel):
                     plague_params.infection_length
                 )
 
-    def calc_dead(self, plague_params, prev_disease_day):
+    @staticmethod
+    def calc_dead(plague_params, prev_disease_day):
         return  plague_params.percent_fatal      *  \
                 prev_disease_day["Infected"]     /  \
                 plague_params.infection_length   +  \
