@@ -62,42 +62,58 @@ export class Graph extends React.Component{
 			return null;
 		}
 
+		let largestY = 0;
+
 		let data = this.state.data.map((row, index) => {
+			let y = parseFloat(row[this.state.yLabel]);
+
+			largestY = Math.max(largestY, y);
+
 			return {
 				x: index,
-				y: parseFloat(row[this.state.yLabel])
+				y
 			};
 		});
 
 		// d3 wants {values:[...]}
 		let values = data.slice(0, this.state.day + 1);
-		return {values};
+		return {values, largestY};
 	}
 
 	render(){
-		return this.state.data !== null ? (
-			<div>
-				<h5></h5>
-				<div className="GraphDropdown" onChange={this.onYLabelChange.bind(this)}>
-					<select className="form-control">
-						<option value="Infected">Infected</option>
-						<option value="Susceptible">Susceptible</option>
-						<option value="Immune">Immune</option>
-						<option value="Dead">Dead</option>
-					</select>
-				</div>
+		let data = this.getData();
+		if(data){
+
+			/*
+				data.largestY for biggest Y value! 
+			*/
+
+			return (
 				<div>
-					<LineChart
-						data={this.getData()}
-						axes
-						width={540}
-						height={525}
-						margin={{top: 10, bottom: 50, left: 80, right: 10}}
-						xAxis={{label: "Day"}}
-						yAxis={{label: this.state.yLabel}}
-					/>
+					<h5></h5>
+					<div className="GraphDropdown" onChange={this.onYLabelChange.bind(this)}>
+						<select className="form-control">
+							<option value="Infected">Infected</option>
+							<option value="Susceptible">Susceptible</option>
+							<option value="Immune">Immune</option>
+							<option value="Dead">Dead</option>
+						</select>
+					</div>
+					<div>
+						<LineChart
+							data={data}
+							axes
+							width={540}
+							height={525}
+							margin={{top: 10, bottom: 50, left: 80, right: 10}}
+							xAxis={{label: "Day"}}
+							yAxis={{label: this.state.yLabel}}
+							//tooltipHtml={(x, y) => `Day ${x} - ${y} ${this.state.yLabel}`}
+						/>
+					</div>
 				</div>
-			</div>
-		) : null;
+			);
+		}
+		return null;
 	}
 }

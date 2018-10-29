@@ -25,6 +25,16 @@ export class Inputs extends React.Component{
     componentDidMount(){
         Simulator.on("load", this.onSimulatorLoad.bind(this));
         Simulator.on("error", this.onSimulatorError.bind(this));
+
+        // test values
+        if(new URLSearchParams(window.location.search).get("test") === "true"){
+            this.initialInfectedRef.current.value = 500;
+            this.intialImmunityRef.current.value = 0.10;
+            this.intialPopRef.current.value = 1000000;
+            this.fatalityRef = 0.25;
+            this.daysRef = 365;
+            this.infectionLengthRef = 100;
+        }
     }
 
     // creates a dictionary of all the inputs and their values (names formatted for the API call) 
