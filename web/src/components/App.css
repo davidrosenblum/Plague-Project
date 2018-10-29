@@ -22,7 +22,13 @@
     text-align: center;
 }
 
-/*   */ 
+.version{
+    float: right;
+    text-align: center;
+    color: gray;
+}
+
+/* CSS for graph dropdown  */ 
 .GraphDropdown{
     float:right;
 }
