@@ -18,7 +18,8 @@ export class Inputs extends React.Component{
         this.state = {
             pending: false,         // no new requests while pending (disable buttons)
             message: null,          // message to display (errors)
-            lastBtn: null
+            lastBtn: null,
+            isDisabled: false       // to disable/enable fields depending on what preset is selected
         };
     }
 
@@ -165,6 +166,14 @@ export class Inputs extends React.Component{
         this.setState({lastBtn: evt.target.getAttribute("btn")});
     }
 
+    onPresetChange(evt){
+        if(evt.target.value != "Custom"){
+            this.setState({isDisabled:true});
+        }else{
+            this.setState({isDisabled:false});
+        }
+    }
+
     render(){
         return (
             <div>
@@ -180,6 +189,7 @@ export class Inputs extends React.Component{
                                 step={1}
                                 required={true}
                                 ref={this.infectionLengthRef}
+                                disabled={this.state.isDisabled}
                             />
                         </div>
                         <div className="form-group col-lg-6">
@@ -191,6 +201,7 @@ export class Inputs extends React.Component{
                                 step={0.01}
                                 required={true}
                                 ref={this.transmissionRef}
+                                disabled={this.state.isDisabled}
                             />
                         </div>
                     </div>
@@ -204,6 +215,7 @@ export class Inputs extends React.Component{
                                 step={0.001}
                                 required={true}
                                 ref={this.fatalityRef}
+                                disabled={this.state.isDisabled}
                             />
                         </div>
                         <div className="form-group col-lg-6">
@@ -228,6 +240,7 @@ export class Inputs extends React.Component{
                                 step={0.01}
                                 required={true}
                                 ref={this.intialImmunityRef}
+                                disabled={this.state.isDisabled}
                             />
                         </div>
                         <div className="form-group col-lg-6">
@@ -257,8 +270,9 @@ export class Inputs extends React.Component{
                         </div>
                         <div className="form-group col-lg-6">
                             <label>Presets:</label>
-                            <select className="form-control">
+                            <select className="form-control" onChange={this.onPresetChange.bind(this)}>
                                 <option value="Custom">Custom</option>
+                                <option value="Not Custom">Not Custom</option>
                             </select>
                         </div>
                     </div>
