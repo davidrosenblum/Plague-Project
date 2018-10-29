@@ -6,11 +6,10 @@ export class Graph extends React.Component{
 	constructor(props){
 		super(props);
 		
-		this.label = "infected";
-
 	    this.state = {
-			data: null,		// graph points
-			day: 0			// current simulation day
+			data: null,			// graph data
+			day: 0,				// current simulation day
+			yLabel: "Infected"	// y-axis value
 	    };
 	}
 
@@ -30,16 +29,8 @@ export class Graph extends React.Component{
 
 	// simulator has data - convert to d3 format and store it
 	onSimulatorData(){
-		// map a new array of {x: day, y: dead}
-		let data = Simulator.data.map((row, index) => {
-			return {
-				x: index,
-				y: parseFloat(row.Infected)
-			};
-		});
-
 		// update
-		this.setState({data});
+		this.setState({data: Simulator.data});
 	}
 
 	// simulator reset - reset this component
@@ -55,9 +46,14 @@ export class Graph extends React.Component{
 	// simulator update - graph change
 	onSimulatorUpdateGraph(evt){
 		// day change
-		if("day" in evt){
+		if(typeof evt.day === "number"){
 			this.setState({day: evt.day});
 		}
+	}
+
+	// when the graph y axis drop down is changed
+	onYLabelChange(evt){
+		this.setState({yLabel: evt.target.value})
 	}
 
 	// gets the data values up to the current day
@@ -66,20 +62,26 @@ export class Graph extends React.Component{
 			return null;
 		}
 
+		let data = this.state.data.map((row, index) => {
+			return {
+				x: index,
+				y: parseFloat(row[this.state.yLabel])
+			};
+		});
+
 		// d3 wants {values:[...]}
-		let values = this.state.data.slice(0, this.state.day + 1);
+		let values = data.slice(0, this.state.day + 1);
 		return {values};
 	}
 
 	render(){
-		console.log(this.getData());
 		return this.state.data !== null ? (
 			<div>
 				<h5></h5>
-				<div className="GraphDropdown">
-					<select>
+				<div className="GraphDropdown" onChange={this.onYLabelChange.bind(this)}>
+					<select className="form-control">
 						<option value="Infected">Infected</option>
-						<option value="Suscpetible">Susceptible</option>
+						<option value="Susceptible">Susceptible</option>
 						<option value="Immune">Immune</option>
 						<option value="Dead">Dead</option>
 					</select>
@@ -92,7 +94,7 @@ export class Graph extends React.Component{
 						height={525}
 						margin={{top: 10, bottom: 50, left: 80, right: 10}}
 						xAxis={{label: "Day"}}
-						yAxis={{label: "Infected"}}
+						yAxis={{label: this.state.yLabel}}
 					/>
 				</div>
 			</div>
