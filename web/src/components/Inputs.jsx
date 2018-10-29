@@ -31,9 +31,9 @@ export class Inputs extends React.Component{
             this.initialInfectedRef.current.value = 500;
             this.intialImmunityRef.current.value = 0.10;
             this.intialPopRef.current.value = 1000000;
-            this.fatalityRef = 0.25;
-            this.daysRef = 365;
-            this.infectionLengthRef = 100;
+            this.fatalityRef.current.value = 0.25;
+            this.daysRef.current.value = 365;
+            this.infectionLengthRef.current.value = 100;
         }
     }
 
