@@ -8,7 +8,7 @@ export class Inputs extends React.Component{
 
         // input refs
         this.intialImmunityRef = React.createRef();
-        this.virilityRef = React.createRef();
+        this.transmissionRef = React.createRef();
         this.fatalityRef = React.createRef();
         this.initialInfectedRef = React.createRef();
         this.intialPopRef = React.createRef();
@@ -34,6 +34,7 @@ export class Inputs extends React.Component{
             this.fatalityRef.current.value = 0.25;
             this.daysRef.current.value = 365;
             this.infectionLengthRef.current.value = 100;
+            this.transmissionRef.current.value = 0.2;
         }
     }
 
@@ -41,7 +42,7 @@ export class Inputs extends React.Component{
     getInputsDictionary(){
         // extract data from inputs to use in query string 
         let immune_percent = this.intialImmunityRef.current.value,
-            virility = this.virilityRef.current.value,
+            virility = this.transmissionRef.current.value,
             fatal_percent = this.fatalityRef.current.value,
             initial_infected = this.initialInfectedRef.current.value,
             initial_population = this.intialPopRef.current.value,
@@ -183,13 +184,13 @@ export class Inputs extends React.Component{
                         </div>
                         <div className="form-group col-lg-6">
                             <NumSlider
-                                label={"Virility"}
+                                label={"Transmission Rate"}
                                 showRange={true}
                                 min={0}
                                 max={20}
                                 step={0.01}
                                 required={true}
-                                ref={this.virilityRef}
+                                ref={this.transmissionRef}
                             />
                         </div>
                     </div>
