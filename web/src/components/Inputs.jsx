@@ -244,6 +244,12 @@ export class Inputs extends React.Component{
                                 ref={this.daysRef}
                             />
                         </div>
+                        <div className="form-group col-lg-6">
+                            <label>Presets:</label>
+                            <select className="form-control">
+                                <option value="Custom">Custom</option>
+                            </select>
+                        </div>
                     </div>
                     <div className="form-group text-center">
                         <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="day-by-day">Day-By-Day</button>&nbsp;
