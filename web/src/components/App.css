@@ -22,6 +22,11 @@
     text-align: center;
 }
 
+/*   */ 
+.GraphDropdown{
+    float:right;
+}
+
 /* CSS for the chart */
 {box-sizing: border-box;}
 
