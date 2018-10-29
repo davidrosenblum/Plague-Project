@@ -30,11 +30,11 @@ class PlagueSimulation:
 
     @property
     def simulation_array(self):
-        return self._plague.plague_simulation
+        return self._plague.plague_simulation_str
 
     @property
     def simulation_json(self):
-        return json.dumps(self._plague.plague_simulation, sort_keys=True)
+        return json.dumps(self.simulation_array, sort_keys=True)
 
     @property
     def simulation_csv(self):
@@ -44,7 +44,7 @@ class PlagueSimulation:
         csv_string += ",".join(fieldnames)
         csv_string += '\n'
 
-        for row in self._plague.plague_simulation:
+        for row in self.simulation_array:
             csv_string += "{s},{inf},{im},{d},{p}\n".format(
                     s=row["Susceptible"],
                     inf=row["Infected"],
