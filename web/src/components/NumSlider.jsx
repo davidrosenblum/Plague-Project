@@ -63,6 +63,7 @@ export class NumSlider extends React.Component{
                         step={this.props.step}
                         placeholder={this.props.placeholder}
                         required={this.props.required}
+                        disabled={this.props.disabled}
                     />
                 </div>
                 <div>
@@ -73,6 +74,7 @@ export class NumSlider extends React.Component{
                         min={this.props.min}
                         max={this.props.max}
                         step={this.props.step}
+                        disabled={this.props.disabled}
                         className="num-slider-slider"
                     />
                 </div>
