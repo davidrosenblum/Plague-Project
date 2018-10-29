@@ -6,6 +6,8 @@ export class Graph extends React.Component{
 	constructor(props){
 		super(props);
 
+		this.label = "infected";
+
 	    this.state = {
 			data: null,		// graph points
 			day: 0			// current simulation day
@@ -73,6 +75,14 @@ export class Graph extends React.Component{
 		return this.state.data !== null ? (
 			<div>
 				<h5></h5>
+				<div className="GraphDropdown">
+					<select>
+						<option value="Infected">Infected</option> 
+						<option value="Susceptible">Susceptible</option>
+						<option value="Immune">Immune</option>
+						<option value="Dead">Dead</option>
+					</select>
+				</div>
 				<div>
 					<LineChart
 						data={this.getData()}
@@ -81,7 +91,7 @@ export class Graph extends React.Component{
 						height={525}
 						margin={{top: 10, bottom: 50, left: 80, right: 10}}
 						xAxis={{label: "Day"}}
-						yAxis={{label: "Infected"}}
+						yAxis={{label: this.label}}// will change to the type selected in the dropdown in next iteration
 					/>
 				</div>
 			</div>

@@ -19,6 +19,9 @@ export class App extends React.Component{
         return (
             <div>
                 <Navbar/>
+                <div className="version">
+                    <span className="versionNumber">0.1</span>
+                </div>
                 <br/>
                 <main className="container card card-body bg-light">
                     <div className="row">
