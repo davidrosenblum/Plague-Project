@@ -94,6 +94,10 @@
     color: red;
 }
 
+.center{
+    text-align: center;
+}
+
 .reportsTable{
     border: 1px solid black;
     height: 300px;
