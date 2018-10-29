@@ -34,7 +34,7 @@ export class Graph extends React.Component{
 		let data = Simulator.data.map((row, index) => {
 			return {
 				x: index,
-				y: row.Infected
+				y: parseFloat(row.Infected)
 			};
 		});
 
@@ -72,6 +72,7 @@ export class Graph extends React.Component{
 	}
 
 	render(){
+		console.log(this.getData());
 		return this.state.data !== null ? (
 			<div>
 				<h5></h5>
@@ -91,7 +92,7 @@ export class Graph extends React.Component{
 						height={525}
 						margin={{top: 10, bottom: 50, left: 80, right: 10}}
 						xAxis={{label: "Day"}}
-						yAxis={{label: this.label}}
+						yAxis={{label: "Infected"}}
 					/>
 				</div>
 			</div>

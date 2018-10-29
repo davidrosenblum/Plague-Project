@@ -17,17 +17,17 @@
 }
 
 .num-slider-container input[type="range"]:focus{
-    opacity: 1
+    opacity: 1;
 }
 
 .num-slider-slider::-webkit-slider-thumb{
     -webkit-appearance: none;
     appearance: none;
-    background-color: green;
-    border: 1px solid darkgreen;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
+    background-color: steelblue;
+    border: 1px solid darkblue;
+    border-radius: 4px;
+    width: 15px;
+    height: 15px;
 }
 
 .num-slider-container input[type="number"]{
