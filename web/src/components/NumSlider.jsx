@@ -80,6 +80,11 @@ export class NumSlider extends React.Component{
         );
     }
 
+    set value(n){
+        this.numRef.current.value = n;
+        this.rangeRef.current.value = n;
+    }
+
     get minText(){
         return this.props.minText ? this.props.minText : this.props.min;
     }
