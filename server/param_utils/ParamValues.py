@@ -25,17 +25,6 @@ class ParamValues:
             raise ValueError("Infection Length value must be in the range {a}-{b}.".format(a=min_val, b=max_val))
 
     @staticmethod
-    def validate_virulence(virulence):
-        if isnan(virulence) or not isinstance(virulence, float):
-            raise TypeError("Virulence must be of type float.")
-
-        min_val = ParamValues.VIRULENCE[0]
-        max_val = ParamValues.VIRULENCE[1]
-
-        if virulence < min_val or virulence > max_val:
-            raise ValueError("Virulence value must be in the range {a}-{b}.".format(a=min_val, b=max_val))
-
-    @staticmethod
     def validate_transmission_rate(transmission_rate):
         if isnan(transmission_rate) or not isinstance(transmission_rate, float):
             raise TypeError("Transmission Rate must be of type float.")
@@ -45,6 +34,17 @@ class ParamValues:
 
         if transmission_rate < min_val or transmission_rate > max_val:
             raise ValueError("Transmission Rate value must be in the range {a}-{b}.".format(a=min_val, b=max_val))
+
+    @staticmethod
+    def validate_virulence(virulence):
+        if isnan(virulence) or not isinstance(virulence, float):
+            raise TypeError("Virulence must be of type float.")
+
+        min_val = ParamValues.VIRULENCE[0]
+        max_val = ParamValues.VIRULENCE[1]
+
+        if virulence < min_val or virulence > max_val:
+            raise ValueError("Virulence value must be in the range {a}-{b}.".format(a=min_val, b=max_val))
 
     @staticmethod
     def validate_initial_population(initial_population):

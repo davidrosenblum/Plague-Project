@@ -7,10 +7,10 @@ from .ParamValues import ParamValues
 class ParamExtractor:
     EXPECTED_REQUEST_PARAMS = (
         "infection_length",
-        "virulence",
+        "transmission_rate",
         "initial_population",
         "initial_infected",
-        "transmission_rate",
+        "virulence",
         "immune_percent",
         "simulation_length"
     )
@@ -35,13 +35,13 @@ class ParamExtractor:
         except ValueError:
             raise ValueError("Infection Length must be of type int.")
 
-        # convert virility
+        # convert transmission rate
         try:
             extracted_params["transmission_rate"] = float(extracted_params["transmission_rate"])
         except ValueError:
             raise ValueError("Transmission Rate must be of type float.")
 
-        # convert fatal percent
+        # convert virulence
         try:
             extracted_params["virulence"] = float(extracted_params["virulence"])
         except ValueError:
