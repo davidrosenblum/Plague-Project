@@ -80,7 +80,7 @@ export class Modal extends React.Component{
 				for(var i = 0;i < errors.length;i++){
 					errorString += errors[i]+"|";
 				}
-				this.setState({errMessage:errorString});
+				this.setState({errMessage:errorString.substring(0,errorString.length-1)});
 			}else if(errors.length == 0){
 				this.setState({errMessage:null});
 			}
