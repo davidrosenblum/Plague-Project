@@ -5,17 +5,17 @@ getcontext().rounding = ROUND_HALF_UP
 getcontext().prec     = 8
 
 class PlagueParams():
-    def __init__(self, 
+    def __init__(self,
                  infection_length,
-                 virility,
-                 percent_fatal,
+                 transmission_rate,
+                 virulence,
                  init_pop,
                  immune_percent,
                  init_infected):
         # Save parameters as properties, as Decimal objects
         self._infection_length    = Dec(infection_length)
-        self._virility            = Dec(virility)
-        self._percent_fatal       = Dec(percent_fatal)
+        self._transmission_rate    = Dec(transmission_rate)
+        self._virulence       = Dec(virulence)
         self._initial_pop         = Dec(init_pop)
         self._immune_percent      = Dec(immune_percent)
         self._initial_infected    = Dec(init_infected)
@@ -41,12 +41,12 @@ class PlagueParams():
         return self._infection_length
 
     @property
-    def virility(self):
-        return self._virility
+    def transmission_rate(self):
+        return self._transmission_rate
 
     @property
-    def percent_fatal(self):
-        return self._percent_fatal
+    def virulence(self):
+        return self._virulence
 
     @property
     def initial_pop(self):

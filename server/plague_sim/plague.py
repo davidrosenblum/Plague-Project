@@ -10,14 +10,14 @@ class Plague:
 
     def __init__(self, 
                  infection_length,
-                 virility,
-                 percent_fatal,
+                 transmission_rate,
+                 virulence,
                  init_pop,
                  immune_percent,
                  init_infected,
                  disease_model):
         self._plague_params = PlagueParams(infection_length, 
-            virility, percent_fatal, init_pop, immune_percent, 
+            transmission_rate, virulence, init_pop, immune_percent, 
             init_infected)
         self._disease_model    = ModelFactory.create_disease_model(self, disease_model)
         self._plague_spread    = []

@@ -12,7 +12,7 @@ class PlagueModelExcel(DiseaseModel):
     def calc_susceptible(self, plague_params, prev_disease_day):
         return  prev_disease_day["Susceptible"]  -  \
                 (
-                    plague_params.virility           *  \
+                    plague_params.transmission_rate   *  \
                     prev_disease_day["Susceptible"]  *  \
                     prev_disease_day["Infected"]     /  \
                     plague_params.initial_pop
@@ -30,20 +30,20 @@ class PlagueModelExcel(DiseaseModel):
     def calc_infected(self, plague_params, prev_disease_day):
         return  prev_disease_day["Infected"]     +  \
                 (
-                    plague_params.virility           *  \
+                    plague_params.transmission_rate   *  \
                     prev_disease_day["Susceptible"]  *  \
                     prev_disease_day["Infected"]     /  \
                     plague_params.initial_pop        -  \
                     prev_disease_day["Infected"]     /  \
                     plague_params.infection_length   -  \
                     prev_disease_day["Infected"]     *  \
-                    plague_params.percent_fatal      /  \
+                    plague_params.virulence          /  \
                     plague_params.infection_length
                 )
 
     @staticmethod
     def calc_dead(self, plague_params, prev_disease_day):
-        return  plague_params.percent_fatal      *  \
+        return  plague_params.virulence          *  \
                 prev_disease_day["Infected"]     /  \
                 plague_params.infection_length   +  \
                 prev_disease_day["Dead"]

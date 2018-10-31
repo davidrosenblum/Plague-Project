@@ -2,8 +2,8 @@ from math import isnan
 
 class PlagueParamValues:
     INFECTION_LENGTH = (1, 365)
-    VIRILITY = (0, 20)
-    FATAL_PERCENT = (0, 1)
+    TRANSMISSION_RATE = (0, 20)
+    VIRULENCE = (0, 1)
     INITIAL_POPULATION = (1, 1000000)
     IMMUNE_PERCENT = (0, 1)
     INITIAL_INFECTED = (0, 1000000)
@@ -22,27 +22,27 @@ class PlagueParamValues:
             
 
     @staticmethod
-    def validate_virility(virility):
-        if isnan(virility) or not isinstance(virility, float):
-            raise TypeError("Virility must be of type float.")
+    def validate_transmission_rate(transmission_rate):
+        if isnan(transmission_rate) or not isinstance(transmission_rate, float):
+            raise TypeError("Transmission Rate must be of type float.")
 
-        min_val = PlagueParamValues.VIRILITY[0]
-        max_val = PlagueParamValues.VIRILITY[1]
+        min_val = PlagueParamValues.TRANSMISSION_RATE[0]
+        max_val = PlagueParamValues.TRANSMISSION_RATE[1]
 
-        if virility < min_val or virility > max_val:
-            raise ValueError("Virility value must be in the range {a}-{b}.".format(a=min_val, b=max_val))
+        if transmission_rate < min_val or transmission_rate > max_val:
+            raise ValueError("Transmission value must be in the range {a}-{b}.".format(a=min_val, b=max_val))
 
 
     @staticmethod
-    def validate_fatal_percent(fatal_percent):
-        if isnan(fatal_percent) or not isinstance(fatal_percent, float):
-            raise TypeError("Fatal Percent must be of type float.")
+    def validate_virulence(virulence):
+        if isnan(virulence) or not isinstance(virulence, float):
+            raise TypeError("Virulence must be of type float.")
 
-        min_val = PlagueParamValues.FATAL_PERCENT[0]
-        max_val = PlagueParamValues.FATAL_PERCENT[1]
+        min_val = PlagueParamValues.VIRULENCE[0]
+        max_val = PlagueParamValues.VIRULENCE[1]
 
-        if fatal_percent < min_val or fatal_percent > max_val:
-            raise ValueError("Fatal Percent value must be in the range {a}-{b}.".format(a=min_val, b=max_val))
+        if virulence < min_val or virulence > max_val:
+            raise ValueError("Virulence value must be in the range {a}-{b}.".format(a=min_val, b=max_val))
 
     
     @staticmethod
@@ -102,20 +102,20 @@ class PlagueParamValues:
         else:
             raise ValueError("Infection Length parameter missing.")
 
-        # virility check
-        if "virility" in params_dict:
-            virility = params_dict["virility"]
-            PlagueParamValues.validate_virility(virility) 
+        # transmission rate check
+        if "transmission_rate" in params_dict:
+            transmission_rate = params_dict["transmission_rate"]
+            PlagueParamValues.validate_transmission_rate(transmission_rate) 
         else:
-            raise ValueError("Virility parameter missing.")
+            raise ValueError("Transmission parameter missing.")
 
 
-        # fatal percent check
-        if "fatal_percent" in params_dict:
-            fatal_percent = params_dict["fatal_percent"]
-            PlagueParamValues.validate_fatal_percent(fatal_percent) 
+        # virulence check
+        if "virulence" in params_dict:
+            virulence = params_dict["virulence"]
+            PlagueParamValues.validate_virulence(virulence) 
         else:
-            raise ValueError("Fatal Percent parameter missing.")
+            raise ValueError("Virulence parameter missing.")
 
         # initial population check
         if "initial_population" in params_dict:

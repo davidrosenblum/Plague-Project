@@ -41,7 +41,7 @@ class PlagueSimulation:
     def susceptible(self, prev_day):
         return prev_day.susceptible - \
                (
-                       self.__params.virility *
+                       self.__params.transmission_rate *
                        prev_day.susceptible *
                        prev_day.infected /
                        self.__params.initial_population
@@ -50,14 +50,14 @@ class PlagueSimulation:
     def infected(self, prev_day):
         return prev_day.infected + \
                (
-                    self.__params.virility *
+                    self.__params.transmission_rate *
                     prev_day.susceptible *
                     prev_day.infected /
                     self.__params.initial_population -
                     prev_day.infected /
                     self.__params.infection_length -
                     prev_day.infected *
-                    self.__params.fatal_percent /
+                    self.__params.virulence /
                     (100 * self.__params.infection_length)
                )
 
@@ -65,7 +65,7 @@ class PlagueSimulation:
         return prev_day.immune + (prev_day.infected / self.__params.infection_length)
 
     def dead(self, prev_day):
-        return self.__params.fatal_percent * prev_day.infected / (100 * self.__params.infection_length) + prev_day.dead
+        return self.__params.virulence * prev_day.infected / (100 * self.__params.infection_length) + prev_day.dead
 
     def get_data(self):
         data = []
