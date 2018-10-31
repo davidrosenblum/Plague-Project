@@ -9,8 +9,8 @@ class PlagueHandler(tornado.web.RequestHandler):
 
         sim.create_plague(
             infection_length=validated_params["infection_length"],
-            virility=validated_params["virility"],
-            percent_fatal=validated_params["fatal_percent"],
+            transmission_rate=validated_params["transmission_rate"],
+            virulence=validated_params["virulence"],
             init_pop=validated_params["initial_population"],
             immune_percent=validated_params["immune_percent"],
             init_infected=validated_params["initial_infected"],
@@ -36,15 +36,15 @@ class PlagueHandler(tornado.web.RequestHandler):
         csv_format = self.get_argument("csv", "").lower() == "true"
 
         # run simulation and store results
-        try:
-            params = ParamExtractor.extract_and_validate(self)
-            sim = self.run_simulation(params)
-        except TypeError as error:
-            err_msg = str(error)
-        except ValueError as error:
-            err_msg = str(error)
-        except Exception as error:
-            err_msg = "Simulation failure error (" + str(error) + ")"
+        #try:
+        params = ParamExtractor.extract_and_validate(self)
+        sim = self.run_simulation(params)
+        #except TypeError as error:
+        #    err_msg = str(error)
+        #except ValueError as error:
+        #    err_msg = str(error)
+        #except Exception as error:
+        #    err_msg = "Simulation failure error (" + str(error) + ")"
 
         if err_msg is None:
             print("No error" + str(sim is None))

@@ -9,7 +9,7 @@ export class Inputs extends React.Component{
         // input refs
         this.intialImmunityRef = React.createRef();
         this.transmissionRef = React.createRef();
-        this.fatalityRef = React.createRef();
+        this.virulenceRef = React.createRef();
         this.initialInfectedRef = React.createRef();
         this.intialPopRef = React.createRef();
         this.infectionLengthRef = React.createRef();
@@ -32,7 +32,7 @@ export class Inputs extends React.Component{
             this.initialInfectedRef.current.value = 500;
             this.intialImmunityRef.current.value = 0.10;
             this.intialPopRef.current.value = 1000000;
-            this.fatalityRef.current.value = 0.25;
+            this.virulenceRef.current.value = 0.25;
             this.daysRef.current.value = 365;
             this.infectionLengthRef.current.value = 100;
             this.transmissionRef.current.value = 0.2;
@@ -42,19 +42,19 @@ export class Inputs extends React.Component{
     // creates a dictionary of all the inputs and their values (names formatted for the API call) 
     getInputsDictionary(){
         // extract data from inputs to use in query string 
-        let immune_percent = this.intialImmunityRef.current.value,
-            virility = this.transmissionRef.current.value,
-            fatal_percent = this.fatalityRef.current.value,
-            initial_infected = this.initialInfectedRef.current.value,
-            initial_population = this.intialPopRef.current.value,
-            infection_length = this.infectionLengthRef.current.value,
-            simulation_length = this.daysRef.current.value;
+        let immune_percent =        this.intialImmunityRef.current.value,
+            transmission_rate =     this.transmissionRef.current.value,
+            virulence =             this.virulenceRef.current.value,
+            initial_infected =      this.initialInfectedRef.current.value,
+            initial_population =    this.intialPopRef.current.value,
+            infection_length =      this.infectionLengthRef.current.value,
+            simulation_length =     this.daysRef.current.value;
 
         // make sure infected <= population
         initial_infected = Math.min(initial_infected, initial_population);
 
         // MUST match API expectations! 
-        return {immune_percent, virility, fatal_percent, initial_infected, initial_population, infection_length, simulation_length};
+        return {immune_percent, transmission_rate, virulence, initial_infected, initial_population, infection_length, simulation_length};
     }
 
     onSimulatorError(){
@@ -208,13 +208,13 @@ export class Inputs extends React.Component{
                     <div className="row">
                         <div className="form-group col-lg-6">
                             <NumSlider
-                                label={"Fatality Percent"}
+                                label={"Virulence"}
                                 showRange={true}
                                 min={0}
                                 max={1}
                                 step={0.001}
                                 required={true}
-                                ref={this.fatalityRef}
+                                ref={this.virulenceRef}
                                 disabled={this.state.isDisabled}
                             />
                         </div>
@@ -240,7 +240,6 @@ export class Inputs extends React.Component{
                                 step={0.01}
                                 required={true}
                                 ref={this.intialImmunityRef}
-                                disabled={this.state.isDisabled}
                             />
                         </div>
                         <div className="form-group col-lg-6">
