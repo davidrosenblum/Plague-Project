@@ -9,8 +9,8 @@ class PlagueCSVHandler(tornado.web.RequestHandler):
 
         sim.create_plague(
             infection_length=validated_params["infection_length"],
-            virility=validated_params["virility"],
-            percent_fatal=validated_params["fatal_percent"],
+            transmission_rate=validated_params["transmission_rate"],
+            virulence=validated_params["virulence"],
             init_pop=validated_params["initial_population"],
             immune_percent=validated_params["immune_percent"],
             init_infected=validated_params["initial_infected"],

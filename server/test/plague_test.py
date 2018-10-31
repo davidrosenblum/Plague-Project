@@ -20,11 +20,11 @@ class TestPlagueParams(unittest.TestCase):
     def test_intantiated_InfectionLength(self):
         self.assertEqual(self.testParams.infection_length, 2)
     
-    def test_instantiated_Virility(self):
-        self.assertEqual(self.testParams.virility, 2)
+    def test_instantiated_TransmissionRate(self):
+        self.assertEqual(self.testParams.transmissionRate, 2)
         
-    def test_instantiated_PercentFatal(self):
-        self.assertEqual(self.testParams.percent_fatal, .05)
+    def test_instantiated_Virulence(self):
+        self.assertEqual(self.testParams.virulence, .05)
     
     def test_instantiated_InitialPop(self):
         self.assertEqual(self.testParams.initial_pop, 100000)
