@@ -28,8 +28,10 @@ export class Modal extends React.Component{
 
 	// on click of submit button 
 	submitClick(e){
+		this.setState({errMessage:null});
 		e.preventDefault();
-		if(this.type != null && this.textRef.current.value != ""){
+		let goodHeader = this.headerRef.current ? (this.headerRef.current.value.length > 0) : true;
+		if(this.type != null && this.textRef.current.value != "" && goodHeader){
 			console.log(this.textRef.current.value);
 			let message = this.BuildArray();
 			Ajax.post(`${window.location.origin}/mail`,null,{message})
@@ -55,22 +57,33 @@ export class Modal extends React.Component{
                     console.log("Really bad Error");// request died signal
                 });
 		}else{
-			
 			let textError = this.textRef.current.value;
+			//JSON.stringify
+			var errors = [];
 
-			if(this.typeError == true && textError == ""){
-				this.errorMsg = "No Header Selected|No Text Entered";
-			}else if(this.typeError == true){
-				this.errorMsg = "No Header Selected";
-			}else if(textError == ""){
-				this.errorMsg = "No Text Entered";
+			if(this.typeError == true){
+				errors.push("No Header Selected");
 			}
 
-			if(this.errorMsg != ""){
-				this.setState({errMessage:this.errorMsg})
+			if(this.typeError == false){
+				if(this.type == "other" && this.headerRef.current.value == ""){
+					errors.push("No Text Entered in Other Input")
+				}
 			}
 
-			// console.log("Error Time: "+this.errorTime);
+			if(textError == ""){
+				errors.push("No Text Entered");
+			}
+
+			if(errors.length > 0){
+				var errorString="";
+				for(var i = 0;i < errors.length;i++){
+					errorString += errors[i]+"|";
+				}
+				this.setState({errMessage:errorString});
+			}else if(errors.length == 0){
+				this.setState({errMessage:null});
+			}
 				
 		}
 	}
