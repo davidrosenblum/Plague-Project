@@ -62,10 +62,6 @@ export class Graph extends React.Component{
 			return null;
 		}
 
-		if(this.state.yLabel === "All"){
-			return this.getDataAll();
-		}
-
 		let largestY = 0;
 
 		let data = this.state.data.map((row, index) => {
@@ -74,7 +70,6 @@ export class Graph extends React.Component{
 			largestY = Math.max(largestY, y);
 
 			return {
-				label: this.state.yLabel,
 				x: index,
 				y
 			};
@@ -83,24 +78,6 @@ export class Graph extends React.Component{
 		// d3 wants {values:[...]}
 		let values = data.slice(0, this.state.day + 1);
 		return {values, largestY};
-	}
-
-	getDataAll(){
-		let data = [];
-
-		this.state.data.forEach((row, index) => {
-			for(let type in row){
-				data.push({
-					
-				});
-			}
-		});
-
-		return data;
-	}
-
-	tooltipLine(a, pt){
-		return `Day ${pt.x} - ${pt.y} ${pt.label}`;
 	}
 
 	render(){
@@ -120,7 +97,6 @@ export class Graph extends React.Component{
 							<option>Susceptible</option>
 							<option>Immune</option>
 							<option>Dead</option>
-							<option>All</option>
 						</select>
 					</div>
 					<div>
@@ -133,7 +109,6 @@ export class Graph extends React.Component{
 							xAxis={{label: "Day"}}
 							yAxis={{label: this.state.yLabel}}
 							//tooltipHtml={(label, pt) => `Day ${pt.x} - ${pt.y} ${this.state.yLabel}`}
-							tooltipHtml={this.tooltipLine.bind(this)}
 						/>
 					</div>
 				</div>
