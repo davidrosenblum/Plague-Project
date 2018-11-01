@@ -93,10 +93,10 @@ export class Graph extends React.Component{
 					<h5></h5>
 					<div className="GraphDropdown" onChange={this.onYLabelChange.bind(this)}>
 						<select className="form-control">
-							<option value="Infected">Infected</option>
-							<option value="Susceptible">Susceptible</option>
-							<option value="Immune">Immune</option>
-							<option value="Dead">Dead</option>
+							<option>Infected</option>
+							<option>Susceptible</option>
+							<option>Immune</option>
+							<option>Dead</option>
 						</select>
 					</div>
 					<div>
@@ -108,7 +108,7 @@ export class Graph extends React.Component{
 							margin={{top: 10, bottom: 50, left: 80, right: 10}}
 							xAxis={{label: "Day"}}
 							yAxis={{label: this.state.yLabel}}
-							//tooltipHtml={(x, y) => `Day ${x} - ${y} ${this.state.yLabel}`}
+							//tooltipHtml={(label, pt) => `Day ${pt.x} - ${pt.y} ${this.state.yLabel}`}
 						/>
 					</div>
 				</div>

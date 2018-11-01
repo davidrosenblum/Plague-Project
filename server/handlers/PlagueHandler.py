@@ -36,18 +36,17 @@ class PlagueHandler(tornado.web.RequestHandler):
         csv_format = self.get_argument("csv", "").lower() == "true"
 
         # run simulation and store results
-        #try:
-        params = ParamExtractor.extract_and_validate(self)
-        sim = self.run_simulation(params)
-        #except TypeError as error:
-        #    err_msg = str(error)
-        #except ValueError as error:
-        #    err_msg = str(error)
-        #except Exception as error:
-        #    err_msg = "Simulation failure error (" + str(error) + ")"
+        try:
+            params = ParamExtractor.extract_and_validate(self)
+            sim = self.run_simulation(params)
+        except TypeError as error:
+            err_msg = str(error)
+        except ValueError as error:
+            err_msg = str(error)
+        except Exception as error:
+            err_msg = "Simulation failure error (" + str(error) + ")"
 
         if err_msg is None:
-            print("No error" + str(sim is None))
             # json or csv
             if csv_format is True:
                 self.set_header("Content-Type", "text/csv")
