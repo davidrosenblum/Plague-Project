@@ -62,6 +62,10 @@ export class Graph extends React.Component{
 			return null;
 		}
 
+		if(this.state.yLabel === "All"){
+			return this.getDataAll();
+		}
+
 		let largestY = 0;
 
 		let data = this.state.data.map((row, index) => {
@@ -70,6 +74,7 @@ export class Graph extends React.Component{
 			largestY = Math.max(largestY, y);
 
 			return {
+				label: this.state.yLabel,
 				x: index,
 				y
 			};
@@ -78,6 +83,24 @@ export class Graph extends React.Component{
 		// d3 wants {values:[...]}
 		let values = data.slice(0, this.state.day + 1);
 		return {values, largestY};
+	}
+
+	getDataAll(){
+		let data = [];
+
+		this.state.data.forEach((row, index) => {
+			for(let type in row){
+				data.push({
+					
+				});
+			}
+		});
+
+		return data;
+	}
+
+	tooltipLine(a, pt){
+		return `Day ${pt.x} - ${pt.y} ${pt.label}`;
 	}
 
 	render(){
@@ -93,10 +116,11 @@ export class Graph extends React.Component{
 					<h5></h5>
 					<div className="GraphDropdown" onChange={this.onYLabelChange.bind(this)}>
 						<select className="form-control">
-							<option value="Infected">Infected</option>
-							<option value="Susceptible">Susceptible</option>
-							<option value="Immune">Immune</option>
-							<option value="Dead">Dead</option>
+							<option>Infected</option>
+							<option>Susceptible</option>
+							<option>Immune</option>
+							<option>Dead</option>
+							<option>All</option>
 						</select>
 					</div>
 					<div>
@@ -108,7 +132,8 @@ export class Graph extends React.Component{
 							margin={{top: 10, bottom: 50, left: 80, right: 10}}
 							xAxis={{label: "Day"}}
 							yAxis={{label: this.state.yLabel}}
-							//tooltipHtml={(x, y) => `Day ${x} - ${y} ${this.state.yLabel}`}
+							//tooltipHtml={(label, pt) => `Day ${pt.x} - ${pt.y} ${this.state.yLabel}`}
+							tooltipHtml={this.tooltipLine.bind(this)}
 						/>
 					</div>
 				</div>
