@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal } from "./Modal"
+import { MailModal } from "./MailModal"
 
 export class Navbar extends React.Component{
 
@@ -33,7 +33,7 @@ export class Navbar extends React.Component{
 		  				</ul>
 		  			</div>
 	      		</nav>
-	      		<Modal showModal={this.state.showModal} closeModal={this.closeModal.bind(this)} />
+	      		<MailModal showModal={this.state.showModal} closeModal={this.closeModal.bind(this)} />
 	      	</div>
 		);
 	}
