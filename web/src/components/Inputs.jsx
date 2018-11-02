@@ -1,6 +1,7 @@
 import React from "react";
 import Simulator from "../Simulator";
 import { NumSlider } from "./NumSlider";
+import preset from "../preset"
 
 export class Inputs extends React.Component{
     constructor(props){
@@ -169,6 +170,9 @@ export class Inputs extends React.Component{
     onPresetChange(evt){
         if(evt.target.value != "Custom"){
             this.setState({isDisabled:true});
+            this.infectionLengthRef.current.value = preset[evt.target.value]["Infection Length"];
+            this.transmissionRef.current.value = preset[evt.target.value]["Transmission"];
+            this.virulenceRef.current.value = preset[evt.target.value]["Virulence"]
         }else{
             this.setState({isDisabled:false});
         }
@@ -270,8 +274,8 @@ export class Inputs extends React.Component{
                         <div className="form-group col-lg-6">
                             <label>Presets:</label>
                             <select className="form-control" onChange={this.onPresetChange.bind(this)}>
-                                <option value="Custom">Custom</option>
-                                <option value="Not Custom">Not Custom</option>
+                                <option>Custom</option>
+                                <option>Seasonal Flu</option>
                             </select>
                         </div>
                     </div>
