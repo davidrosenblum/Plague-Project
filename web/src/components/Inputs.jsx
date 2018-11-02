@@ -1,5 +1,6 @@
 import React from "react";
 import Simulator from "../Simulator";
+import ParameterStorage from "../Storage";
 import { NumSlider } from "./NumSlider";
 
 export class Inputs extends React.Component{

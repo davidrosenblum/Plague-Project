@@ -1,6 +1,6 @@
 // Session Storage class for storing
 //  parameter values that were rendered
-export class ParameterStorage {
+class ParameterStorage {
     constructor() {
         this._paramCount = 0;
         this._paramSet = {};
@@ -23,3 +23,5 @@ export class ParameterStorage {
         sessionStorage.setItem(this._paramCount, this._paramSet);
     }
 }
+
+export default new ParameterStorage();
