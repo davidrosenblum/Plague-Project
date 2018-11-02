@@ -2,7 +2,7 @@ import React from "react";
 import ReactModal from "react-modal"
 import { Ajax } from "../Ajax";
 
-export class Modal extends React.Component{
+export class MailModal extends React.Component{
 
 	constructor(props){
         super(props);
@@ -87,9 +87,12 @@ export class Modal extends React.Component{
 				
 		}
 	}
-
+	
+	//Build the JSON array that is sent over the Ajax request
 	BuildArray(){
-        let text = this.textRef.current.value;
+		//get the text in the the message textarea
+		let text = this.textRef.current.value;
+		//
         let type = "";
 
         if(this.state.other){
@@ -104,8 +107,10 @@ export class Modal extends React.Component{
 
 	// on change of radio button set type
 	onTypeSelect(type){
+		//get the type of the radio button selected
 	 	this.type = type;
 
+		 // check to see if other is selected
 	 	if(this.type == "other"){
 	 		this.setState({other: true});
 	 	}else{
@@ -115,10 +120,13 @@ export class Modal extends React.Component{
 	 	this.typeError = false;
 	 }
 
+	 //Check if other is selcted and load elements based on that
  	 TypeOther(){
 	 	if(!this.state.other){
+			 // remove element of screen
 	 		return null;
 	 	}else{
+			 //load element onto screen
 	 		return(
 	 			<div>
 	 				<label>Other: </label> <input type="text" placeholder="Input for other" ref={this.headerRef}/>
