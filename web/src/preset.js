@@ -1,14 +1,15 @@
 export const presets ={
-    /*"Common Cold":{
-        "Infection Length":1
-    }
-
-    */
+    //presets in the inputs go here
+    //seasonal flu
    "Seasonal Flu":{
        "Infection Length": 8,
        "Transmission": 1.2,
        "Virulence": 0.01
    }
+   //smallpox
+
+   //polio
+
+   //measles
 }
 export default presets;
-//presets["Common Cold"]["Infection Length"]
