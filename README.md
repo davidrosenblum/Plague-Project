@@ -8,7 +8,7 @@ Install [Node.js](https://nodejs.org/en/) (for React development)
 
 Install [Python 3](https://www.python.org/downloads/) (for server)
 
-## Plague Project - Python Python Server
+## Plague Project - Python Tornado Server
 
 ### Installation & Setup
 
