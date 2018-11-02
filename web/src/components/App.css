@@ -107,3 +107,14 @@
 .nav-link{
     cursor: pointer;
 }
+
+footer a{
+    color: black;
+    text-decoration: none;
+    transition: 0.5s;
+}
+
+footer a:hover{
+    color: orangered;
+    text-decoration: none;
+}
