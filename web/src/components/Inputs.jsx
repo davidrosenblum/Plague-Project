@@ -276,6 +276,9 @@ export class Inputs extends React.Component{
                             <select className="form-control" onChange={this.onPresetChange.bind(this)}>
                                 <option>Custom</option>
                                 <option>Seasonal Flu</option>
+                                <option>Smallpox</option>
+                                <option>Polio</option>
+                                <option>Measles</option>
                             </select>
                         </div>
                     </div>
