@@ -18,9 +18,9 @@ export class NumSlider extends React.Component{
     // on text field input
     onNumber(evt){
         // set the range value to the number value
-        let val = evt.target.value;
+        let val = parseFloat(evt.target.value);
     
-        if(val.length){
+        if(val){
             // enforce min/max constraints
             val = Math.min(Math.max(val, this.props.min), this.props.max); 
 

@@ -7,14 +7,6 @@ import { Chart } from "./Chart";
 import { Graph } from "./Graph";
 
 export class App extends React.Component{
-    constructor(props){
-        super(props);
-
-        this.state = {
-            rows: null
-        };
-    }
-
     render(){
         return (
             <div>
@@ -27,7 +19,7 @@ export class App extends React.Component{
                             <Inputs/>
                         </div>
                         <div className="col-lg-6 graph">
-                            <Graph rows={this.state.rows}/>
+                            <Graph/>
                         </div>
                     </div>
                     <div className="col-lg-12">
@@ -44,7 +36,6 @@ export class App extends React.Component{
                             <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>
                         </div>
                     </div>
-                    
                 </footer>
             </div>
         );
