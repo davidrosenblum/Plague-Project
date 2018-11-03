@@ -1,33 +1,10 @@
-import json
-import tornado.web
 from server.param_utils import ParamExtractor
-from server.plague_sim import PlagueSimulation
+from server.handlers import SimCORSHandler
 
-class PlagueHandler(tornado.web.RequestHandler):
-    def run_simulation(self, validated_params):
-        sim = PlagueSimulation()
 
-        sim.create_plague(
-            infection_length=validated_params["infection_length"],
-            transmission_rate=validated_params["transmission_rate"],
-            virulence=validated_params["virulence"],
-            init_pop=validated_params["initial_population"],
-            immune_percent=validated_params["immune_percent"],
-            init_infected=validated_params["initial_infected"],
-            model_length=validated_params["simulation_length"]
-        )
-
-        return sim
-
-    def set_default_headers(self):
-        self.set_header("Access-Control-Allow-Origin", "*")
-        self.set_header("Access-Control-Allow-Methods", "OPTIONS")
-        self.set_header("Access-Control-Allow-Headers", "Access-Control-Allow-Origin, Content-Type")
-
-    def options(self, *args, **kwargs):
-        self.set_status(204)
-        self.finish()
-
+# HTTP request handler that handles plague simulation requests
+class PlagueHandler(SimCORSHandler):
+    # handle HTTP GET request
     def get(self):
         err_msg = None
         sim = None
@@ -37,7 +14,9 @@ class PlagueHandler(tornado.web.RequestHandler):
 
         # run simulation and store results
         try:
+            # extract query strings and make sure they are valid
             params = ParamExtractor.extract_and_validate(self)
+            # run the simulation using the query string values
             sim = self.run_simulation(params)
         except TypeError as error:
             err_msg = str(error)
@@ -49,14 +28,18 @@ class PlagueHandler(tornado.web.RequestHandler):
         if err_msg is None:
             # json or csv
             if csv_format is True:
+                # csv format requested
                 self.set_header("Content-Type", "text/csv")
                 results = sim.simulation_csv
             else:
+                # not csv format - use json
                 self.set_header("Content-Type", "text/json")
                 results = sim.simulation_json
 
+            # respond
             self.finish(results)
         else:
+            # error occurred - respond with bad request
             print(err_msg)
             self.set_status(400)
             self.finish(err_msg)
