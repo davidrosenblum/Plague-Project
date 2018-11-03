@@ -1,6 +1,6 @@
 import React from "react";
 import Simulator from "../Simulator";
-import { LineChart } from "react-d3-components";
+import { LineChart, d3 } from "react-d3-components";
 
 export class Graph extends React.Component{
 	constructor(props){
@@ -81,12 +81,25 @@ export class Graph extends React.Component{
 	}
 
 	render(){
+		// graph size constants
+		const WIDTH = 		540,
+			HEIGHT = 		525,
+			MARGIN_TOP = 	10,
+			MARGIN_BOTTOM =	50,
+			MARGIN_LEFT = 	80,
+			MARGIN_RIGHT = 	10;
+
 		let data = this.getData();
 		if(data){
-
-			/*
-				data.largestY for biggest Y value! 
-			*/
+			// scale the x-axis (0 - last day) with graph width
+			let xScale = d3.scale.linear()
+				.domain([0, data.values.length-1])
+				.range([0, WIDTH - MARGIN_LEFT - MARGIN_RIGHT]);
+			
+			// scale the y-axis based on (0 - biggest y) with graph height
+			let yScale = d3.scale.linear()
+				.domain([data.largestY, 0])
+				.range([0, HEIGHT - MARGIN_TOP - MARGIN_BOTTOM]);
 
 			return (
 				<div>
@@ -103,11 +116,16 @@ export class Graph extends React.Component{
 						<LineChart
 							data={data}
 							axes
-							width={540}
-							height={525}
-							margin={{top: 10, bottom: 50, left: 80, right: 10}}
+							width={WIDTH}
+							height={HEIGHT}
+							margin={{
+								top: MARGIN_TOP, bottom: MARGIN_BOTTOM,
+								left: MARGIN_LEFT, right: MARGIN_RIGHT
+							}}
 							xAxis={{label: "Day"}}
 							yAxis={{label: this.state.yLabel}}
+							xScale={xScale}
+							yScale={yScale}
 							//tooltipHtml={(label, pt) => `Day ${pt.x} - ${pt.y} ${this.state.yLabel}`}
 						/>
 					</div>
