@@ -34,7 +34,11 @@ export class MailModal extends React.Component{
 		let goodHeader = this.headerRef.current ? (this.headerRef.current.value.length > 0) : true;
 		if(this.type != null && this.textRef.current.value != "" && goodHeader){
 			let message = this.BuildArray();
-			Ajax.post(`${window.location.origin}/mail`,null,{message})
+
+			// localhost = dev, else = prod
+			let origin = window.location.origin.includes("localhost") ? "http://localhost:8080" : window.location.origin;
+
+			Ajax.post(`${origin}/mail`,null,{message})
 				.then(xhr => {    
                     // ajax resolved (could be bad/good request, but server responded)
                     if(xhr.status === 200){
