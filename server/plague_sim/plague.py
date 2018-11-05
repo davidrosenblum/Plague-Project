@@ -16,7 +16,7 @@ class Plague:
                  immune_percent,
                  init_infected,
                  disease_model,
-                 bound_checking):
+                 bound_checking = True):
         self._plague_params = PlagueParams(infection_length, 
             transmission_rate, virulence, init_pop, immune_percent, 
             init_infected)
