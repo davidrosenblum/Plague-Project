@@ -21,7 +21,7 @@ class TestPlagueParams(unittest.TestCase):
         self.assertEqual(self.testParams.infection_length, 2)
     
     def test_instantiated_TransmissionRate(self):
-        self.assertEqual(self.testParams.transmissionRate, 2)
+        self.assertEqual(self.testParams.transmission_rate, 2)
         
     def test_instantiated_Virulence(self):
         self.assertEqual(self.testParams.virulence, .05)

@@ -14,14 +14,16 @@ class PlagueSimulation:
                  immune_percent,
                  init_infected,
                  model_length = 0,
-                 model_type = "PlagueModelExcel"):
+                 model_type = "PlagueModelExcel",
+                 bound_checking = True):
         self._plague = Plague(infection_length,
                             transmission_rate,
                             virulence,
                             init_pop,
                             immune_percent,
                             init_infected,
-                            model_type)
+                            model_type,
+                            bound_checking)
         if model_length != 0:
             self._plague.run_sim(model_length)
 
@@ -35,6 +37,10 @@ class PlagueSimulation:
     @property
     def simulation_json(self):
         return json.dumps(self.simulation_array, sort_keys=True)
+
+    @property
+    def invalid_bound_err_day(self):
+        return self._plague.invalid_result_day
 
     @property
     def simulation_csv(self):
