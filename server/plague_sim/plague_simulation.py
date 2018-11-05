@@ -22,7 +22,8 @@ class PlagueSimulation:
                             init_pop,
                             immune_percent,
                             init_infected,
-                            model_type)
+                            model_type,
+                            bound_checking)
         if model_length != 0:
             self._plague.run_sim(model_length)
 
