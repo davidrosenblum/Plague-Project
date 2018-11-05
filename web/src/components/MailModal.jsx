@@ -19,7 +19,8 @@ export class MailModal extends React.Component{
 
         this.state = { 
 			other: false,
-			errMessage:null
+			errMessage:null,
+			successMessage:null
         };
 
         //Modal.setAppElement(el);
@@ -40,16 +41,19 @@ export class MailModal extends React.Component{
                     if(xhr.status === 200){
                         // good request - attempt to parse results json
                         try{
-                            console.log("Text Received");
+							this.setState({successMessage:"Submit Successful"});
+                           // console.log("Text Received");
                         }
                         catch(err){
-                            // json parse error (should never happen)
-							console.log(JSON.parse(err)); // server responded with bad request signal
+							// json parse error (should never happen)
+							this.setState({errMessage:JSON.parse(err)});
+							//console.log(JSON.parse(err)); // server responded with bad request signal
                         }
                     }
                     else{
-                        // bad request
-                        console.log("Bad Request Error");  // server responded with bad request signal
+						// bad request
+						this.setState({errMessage:"Bad Request Error"});
+                        //console.log("Bad Request Error");  // server responded with bad request signal
                     }
                 })
                 .catch(err => {
@@ -149,6 +153,9 @@ export class MailModal extends React.Component{
 								<div>
 									<span className="error">
 										{this.state.errMessage}
+									</span>
+									<span className="success">
+										{this.state.successMessage}
 									</span>
 								</div>
 							</div>
