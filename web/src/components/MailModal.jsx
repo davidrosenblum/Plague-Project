@@ -33,7 +33,6 @@ export class MailModal extends React.Component{
 		e.preventDefault();
 		let goodHeader = this.headerRef.current ? (this.headerRef.current.value.length > 0) : true;
 		if(this.type != null && this.textRef.current.value != "" && goodHeader){
-			console.log(this.textRef.current.value);
 			let message = this.BuildArray();
 			Ajax.post(`${window.location.origin}/mail`,null,{message})
 				.then(xhr => {    
@@ -42,23 +41,21 @@ export class MailModal extends React.Component{
                         // good request - attempt to parse results json
                         try{
 							this.setState({successMessage:"Submit Successful"});
-                           // console.log("Text Received");
                         }
                         catch(err){
 							// json parse error (should never happen)
 							this.setState({errMessage:JSON.parse(err)});
-							//console.log(JSON.parse(err)); // server responded with bad request signal
+							// server responded with bad request signal
                         }
                     }
                     else{
 						// bad request
 						this.setState({errMessage:"Bad Request Error"});
-                        //console.log("Bad Request Error");  // server responded with bad request signal
                     }
                 })
                 .catch(err => {
                     // ajax request died (really bad NOT a 400 error!)
-                    console.log("Really bad Error");// request died signal
+					this.setState({errMessage:"Cannot reach server"});// request died signal
                 });
 		}else{
 			let textError = this.textRef.current.value;
