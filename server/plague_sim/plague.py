@@ -19,7 +19,7 @@ class Plague:
         self._plague_params = PlagueParams(infection_length, 
             transmission_rate, virulence, init_pop, immune_percent, 
             init_infected)
-        self._disease_model    = ModelFactory.create_disease_model(self, disease_model)
+        self._disease_model    = ModelFactory.create_disease_model(disease_model)
         self._plague_spread    = []
         self._plague_spread.append(self._plague_params.day_zero)
 
@@ -30,10 +30,10 @@ class Plague:
 
         for day in range(1, sim_length + 1):
             plague_day = {
-                "Susceptible"     : self._disease_model.calc_susceptible(self, self._plague_params, self._plague_spread[day-1]),
-                "Infected"        : self._disease_model.calc_infected(self, self._plague_params, self._plague_spread[day-1]),
-                "Immune"          : self._disease_model.calc_immune(self, self._plague_params, self._plague_spread[day-1]),
-                "Dead"            : self._disease_model.calc_dead(self, self._plague_params, self._plague_spread[day-1]),
+                "Susceptible"     : self._disease_model.calc_susceptible(self._plague_params, self._plague_spread[day-1]),
+                "Infected"        : self._disease_model.calc_infected(self._plague_params, self._plague_spread[day-1]),
+                "Immune"          : self._disease_model.calc_immune(self._plague_params, self._plague_spread[day-1]),
+                "Dead"            : self._disease_model.calc_dead(self._plague_params, self._plague_spread[day-1]),
                 "TotalPopulation" : ""
             }
 
