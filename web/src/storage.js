@@ -1,6 +1,6 @@
 // Session Storage class for storing
 //  parameter values that were rendered
-class ParameterStorage {
+class ParameterStorage extends EventEmitter {
     constructor() {
         this._paramCount = 0;
         this._paramSet = {};
