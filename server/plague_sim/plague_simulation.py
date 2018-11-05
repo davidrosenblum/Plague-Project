@@ -14,7 +14,8 @@ class PlagueSimulation:
                  immune_percent,
                  init_infected,
                  model_length = 0,
-                 model_type = "PlagueModelExcel"):
+                 model_type = "PlagueModelExcel",
+                 bound_checking = True):
         self._plague = Plague(infection_length,
                             transmission_rate,
                             virulence,
