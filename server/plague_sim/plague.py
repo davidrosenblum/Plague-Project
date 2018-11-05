@@ -1,6 +1,6 @@
 from .plague_params import PlagueParams
 from .model_factory import ModelFactory
-from decimal import Decimal as Dec, getcontext, ROUND_HALF_UP
+from decimal import Decimal as Dec, getcontext, ROUND_HALF_UP, ROUND_FLOOR
 
 # Set context parameters for floating-point processing
 getcontext().rounding = ROUND_HALF_UP
@@ -46,7 +46,7 @@ class Plague:
                 total_pop_day = Dec(plague_day["Susceptible"]) + Dec(plague_day["Infected"]) + \
                     Dec(plague_day["Immune"]) + Dec(plague_day["Dead"])
 
-                if (total_pop_day > self._plague_params.initial_pop):
+                if (total_pop_day.to_integral(rounding=ROUND_FLOOR) > self._plague_params.initial_pop):
                     if not self._out_of_bound_result_day == -1:
                         self._out_of_bound_result_day = len(self._plague_spread)
 
