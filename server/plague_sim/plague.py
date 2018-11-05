@@ -23,6 +23,8 @@ class Plague:
         self._disease_model    = ModelFactory.create_disease_model(self, disease_model)
         self._plague_spread    = []
         self._plague_spread.append(self._plague_params.day_zero)
+        self._bound = bound_checking
+        self._out_of_bound_result_day = -1
 
     def run_sim(self, sim_length):
 
@@ -39,6 +41,23 @@ class Plague:
             }
 
             plague_day["TotalPopulation"] = self._plague_params.initial_pop - Dec(plague_day["Dead"])
+
+            if self._bound:
+                total_pop_day = Dec(plague_day["Susceptible"]) + Dec(plague_day["Infected"]) + \
+                    Dec(plague_day["Immune"]) + Dec(plague_day["Dead"])
+
+                if (total_pop_day > self._plague_params.initial_pop):
+
+                    susceptible_percent = plague_day["Susceptible"] / total_pop_day
+                    infected_percent = plague_day["Infected"] / total_pop_day
+                    immune_percent = plague_day["Immune"] / total_pop_day
+                    dead_percent = plague_day["Dead"] / total_pop_day
+
+                    plague_day["Susceptible"] = self._plague_params.initial_pop * susceptible_percent
+                    plague_day["Infected"] = self._plague_params.initial_pop * infected_percent
+                    plague_day["Immune"] = self._plague_params.initial_pop * immune_percent
+                    plague_day["Dead"] = self._plague_params.initial_pop * dead_percent
+                    plague_day["TotalPopulation"] = self._plague_params.initial_pop - Dec(plague_day["Dead"])    
 
             self._plague_spread.append(plague_day)
             
