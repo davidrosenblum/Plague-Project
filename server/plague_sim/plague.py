@@ -47,6 +47,8 @@ class Plague:
                     Dec(plague_day["Immune"]) + Dec(plague_day["Dead"])
 
                 if (total_pop_day > self._plague_params.initial_pop):
+                    if not self._out_of_bound_result_day == -1:
+                        self._out_of_bound_result_day = len(self._plague_spread)
 
                     susceptible_percent = plague_day["Susceptible"] / total_pop_day
                     infected_percent = plague_day["Infected"] / total_pop_day
@@ -68,6 +70,10 @@ class Plague:
     @property
     def plague_simulation_raw(self):
         return self._plague_spread
+
+    @property
+    def invalid_result_day(self):
+        return self._out_of_bound_result_day
 
     @staticmethod
     def _serialize_spread(spread):

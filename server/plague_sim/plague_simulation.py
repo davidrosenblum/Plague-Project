@@ -38,6 +38,10 @@ class PlagueSimulation:
         return json.dumps(self.simulation_array, sort_keys=True)
 
     @property
+    def invalid_bound_err_day(self):
+        return self._plague.invalid_result_day
+
+    @property
     def simulation_csv(self):
         csv_string = ""
         fieldnames = ['Susceptible', 'Infected', 'Immune', 'Dead', 'TotalPopulation']
