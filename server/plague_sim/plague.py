@@ -47,7 +47,7 @@ class Plague:
                     Dec(plague_day["Immune"]) + Dec(plague_day["Dead"])
 
                 if (total_pop_day.to_integral(rounding=ROUND_FLOOR) > self._plague_params.initial_pop):
-                    if not self._out_of_bound_result_day == -1:
+                    if self._out_of_bound_result_day == -1:
                         self._out_of_bound_result_day = len(self._plague_spread)
 
                     susceptible_percent = plague_day["Susceptible"] / total_pop_day
