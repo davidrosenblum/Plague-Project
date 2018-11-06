@@ -272,6 +272,10 @@ export class Inputs extends React.Component{
                                 <option>Smallpox</option>
                                 <option>Polio</option>
                                 <option>Measles</option>
+                                <option>Ebola</option>
+                                <option>H1N1 Flu</option>
+                                <option>H5N1 Flu</option>
+                                <option>1918 Flu</option>
                             </select>
                         </div>
                     </div>
