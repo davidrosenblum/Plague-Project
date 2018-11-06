@@ -2,6 +2,7 @@ import React from "react";
 import Simulator from "../Simulator";
 import { NumSlider } from "./NumSlider";
 import preset from "../preset"
+import { Ajax } from "../Ajax";
 
 export class Inputs extends React.Component{
     constructor(props){
@@ -111,27 +112,19 @@ export class Inputs extends React.Component{
     // downloads the csv file
     downloadCSV(){
         if(!this.state.pending){
-            // create download link (never rendered)
-            let url = Simulator.createCSVDownloadURL(this.getInputsDictionary());
+            // disable buttons
+            this.setState({pending: true});
 
-            // create a link tag
-            let link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("target", "_blank");
-            link.setAttribute("download", "download");
-
-            // click the tag
-            link.click();
-            link = null;
-
-            /*
-            //this.setState({pending: true});     // disable buttons
-
-            // async csv download request
-            Simulator.downloadCSV(this.getInputsDictionary())
-                .catch(err => this.setState({message: err.message}))    // error
-                .then(() => this.setState({pending: false}));           // enable buttons after fulfilled/rejected
-            */
+            Simulator.downloadCSVFile(this.getInputsDictionary())
+                .catch(err => {
+                    // something went wrong (server did not respond or bad request)
+                    this.setState({message: err.message});
+                })
+                .then(() => {
+                    // (this fires when any response happens not successful only!)
+                    // always enable buttons
+                    this.setState({pending: false})
+                });
         }
     }
 

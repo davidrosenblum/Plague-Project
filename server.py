@@ -9,7 +9,6 @@ app = tornado.web.Application([
         (r"/", MainHandler),
         (r"/mail", MailHandler),
         (r"/plague", PlagueHandler),
-        (r"/plague/csv", PlagueCSVHandler),
         (r"/test", TestHandler)
     ], static_path="./web/build/static", debug=bool(os.environ.get("DEBUG", False)))
 

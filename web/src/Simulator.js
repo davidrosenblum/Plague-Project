@@ -61,16 +61,56 @@ let Simulator = class Simulator extends EventEmitter{
         });
     }
 
-    // async download
-    downloadCSV(query){
-        let url = window.location.href.includes("localhost") ? `http://localhost:8080/plague/csv` : `${window.location.origin}/plague/csv`;
-        return Ajax.get(url, null, query);
-    }
+    // asychronously downloads a csv file using ajax
+    downloadCSVFile(query){
+        return new Promise((resolve, reject) => {
+            // figure out endpoint origin
+            let origin = window.location.origin.includes("localhost") ? "http://localhost:8080" : window.location.origin;
 
-    // csv download url
-    createCSVDownloadURL(query){
-        let qs = Ajax.queryString(query);
-        return window.location.href.includes("localhost") ? `http://localhost:8080/plague/csv${qs}` : `${window.location.origin}/plague/csv${qs}`;
+            // figure out endpoint using origin
+            let url = `${origin}/plague`;
+
+            // http request headers
+            let headers = {
+                "Access-Control-Allow-Origin": window.location.origin,
+                "Content-Type": "text/csv"
+            };
+
+            // get csv file via Ajax
+            Ajax.get(url, headers, query)
+                .then(xhr => {
+                    // server responded
+                    if(xhr.status === 200){
+                        // good http status - download
+                        // xhr.response = csv text
+                        // convert to blob
+                        let csvDataBlob = new Blob([xhr.response], {type: "octet/stream"});
+
+                        // create a 'secret' link using the blob
+                        let a = document.createElement("a");
+                        let url = window.URL.createObjectURL(csvDataBlob);
+
+                        // setup the link to download blob data
+                        a.setAttribute("download", "data.csv");
+                        a.setAttribute("href", url);
+
+                        // click the link to download the file
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+
+                        // trigger any listeners
+                        resolve("File downloaded.");
+                    }
+                    else{
+                        // bad http status - trigger listeners with error
+                        reject(new Error(xhr.response || "Error downloading CSV file."));
+                    }
+                })
+                .catch(err => {
+                    // server did not responed - trigger listeners with error
+                    reject(new Error(err.message || "Unable to download CSV file."))
+                });
+        });
     }
 
     // simulation moves to the last day
