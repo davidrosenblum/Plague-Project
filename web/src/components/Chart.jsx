@@ -43,16 +43,30 @@ export class Chart extends React.Component{
 			let rows = new Array(Simulator.currentDay + 1);
 
 			for(let i = 0; i <= Simulator.currentDay; i++){
+				// get json for the say
 				let day = Simulator.data[i];
 
+				// extract data
 				let susceptible = Math.round(day.Susceptible),
 					infected = Math.round(day.Infected),
 					immune = Math.round(day.Immune),
 					dead = Math.round(day.Dead),
 					population = Math.round(day.TotalPopulation);
 
+				// first invalid day?
+				let style = null, tooltip = null;
+				if(i === Simulator.firstInvalidDay){
+					// this row is first invalid day
+					style = {
+						borderLeft: "5px solid red",
+						borderRight: "5px solid red"
+					};
+
+					tooltip = `Data correction begins at day ${i}.`;
+				}
+
 				rows[i] = (
-					<tr key={i}>
+					<tr key={i} style={style} title={tooltip}>
 						<td onClick={()=>Simulator.setGraphDay(i)}>{i}</td>
 						<td>{susceptible}</td>
 						<td>{infected}</td>

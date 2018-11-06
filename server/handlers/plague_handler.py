@@ -47,7 +47,7 @@ class PlagueHandler(CORSHandler):
         if err_msg is None:
             # set a header for the first invalid day (if it occurred)
             if first_invalid_day > -1:
-                self.set_header("First_Invalid_Day", first_invalid_day)
+                self.set_header("First-Invalid-Day", first_invalid_day)
 
             # json or csv
             if csv_format is True:
