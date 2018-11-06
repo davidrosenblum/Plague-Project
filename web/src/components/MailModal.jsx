@@ -23,9 +23,9 @@ export class MailModal extends React.Component{
 			successMessage:null
         };
 
-        //Modal.setAppElement(el);
+        //Modal.setAppElement(this.props.app);
 
-    }
+	}
 
 	// on click of submit button 
 	submitClick(e){
@@ -62,33 +62,7 @@ export class MailModal extends React.Component{
 					this.setState({errMessage:"Cannot reach server"});// request died signal
                 });
 		}else{
-			let textError = this.textRef.current.value;
-			//JSON.stringify
-			var errors = [];
-
-			if(this.typeError == true){
-				errors.push("No Header Selected");
-			}
-
-			if(this.typeError == false){
-				if(this.type == "other" && this.headerRef.current.value == ""){
-					errors.push("No Text Entered in Other Input")
-				}
-			}
-
-			if(textError == ""){
-				errors.push("No Text Entered");
-			}
-
-			if(errors.length > 0){
-				var errorString="";
-				for(var i = 0;i < errors.length;i++){
-					errorString += errors[i]+"|";
-				}
-				this.setState({errMessage:errorString.substring(0,errorString.length-1)});
-			}else if(errors.length == 0){
-				this.setState({errMessage:null});
-			}
+		
 				
 		}
 	}
@@ -134,14 +108,14 @@ export class MailModal extends React.Component{
 			 //load element onto screen
 	 		return(
 	 			<div>
-	 				<label>Other: </label> <input type="text" placeholder="Input for other" ref={this.headerRef}/>
+	 				<label>Other: </label> <input type="text" placeholder="Input for other" ref={this.headerRef} required/>
 	 			</div>
 	 		);
 	 	}
 	 }
 	 
 	render(){
-		return (
+		return this.props.showModal ? (
 			<form>
 				<ReactModal isOpen={this.props.showModal} >
 					<div className="col-lg-1">
@@ -161,17 +135,17 @@ export class MailModal extends React.Component{
 								</div>
 							</div>
 							<div className="col-lg-12 center">
-								<input type="radio" onChange={(t) => this.onTypeSelect("Bug Report")} name="types" value="problem"/>Have a problem?
+								<input type="radio" onChange={(t) => this.onTypeSelect("Bug Report")} name="types" value="problem" required/>Have a problem?
 								&nbsp;
-								<input type="radio" onChange={(t) => this.onTypeSelect("Feature Request")} name="types" value="idea"/>Have an idea?
+								<input type="radio" onChange={(t) => this.onTypeSelect("Feature Request")} name="types" value="idea" required/>Have an idea?
 								&nbsp;
-								<input type="radio" onChange={(t) => this.onTypeSelect("other")} name="types" value="other"/>Other
+								<input type="radio" onChange={(t) => this.onTypeSelect("other")} name="types" value="other" required/>Other
 							</div>
 							<div className="col-lg-12 center">
 								{this.TypeOther()}
 							</div>
 							<div className="col-lg-12 center">
-								<textarea rows="4" cols="100" placeholder="Type message in here." ref={this.textRef}></textarea>
+								<textarea rows="4" cols="100" placeholder="Type message in here." ref={this.textRef} required></textarea>
 							</div>
 							<div className="col-lg-12 center">
 								<input type="submit" />
@@ -180,6 +154,6 @@ export class MailModal extends React.Component{
 					</div>
       			</ReactModal>
 			</form>
-		);
+		) : null;
 	}
 }
