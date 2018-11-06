@@ -8,8 +8,9 @@ class PlagueHandler(CORSHandler):
     # handle HTTP GET request
     def get(self):
         # setup
-        err_msg = None
-        sim = None
+        err_msg = None          # error message
+        sim = None              # simulation
+        first_invalid_day = -1  # first day where numbers become invalid (and corrected)
 
         # extract non-simulation parameters/headers
         content_type = self.request.headers.get("Content-Type")
@@ -33,6 +34,9 @@ class PlagueHandler(CORSHandler):
                 model_length=params["simulation_length"]
             )
 
+            # set invalid day (where the simulation started to 'break')
+            first_invalid_day = sim.invalid_bound_err_day
+
         except TypeError as error:
             err_msg = str(error)
         except ValueError as error:
@@ -41,6 +45,10 @@ class PlagueHandler(CORSHandler):
             err_msg = "Simulation failure error (" + str(error) + ")"
 
         if err_msg is None:
+            # set a header for the first invalid day (if it occurred)
+            if first_invalid_day > -1:
+                self.set_header("First_Invalid_Day", first_invalid_day)
+
             # json or csv
             if csv_format is True:
                 # csv format requested
