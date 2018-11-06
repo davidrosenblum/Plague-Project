@@ -8,8 +8,9 @@ let Simulator = class Simulator extends EventEmitter{
     constructor(){
         super();
 
-        this.data = null;       // simulation data array
-        this._currentDay = 0;    // 'private' current simulation day
+        this.data = null;           // simulation data array
+        this._currentDay = 0;       // 'private' current simulation day
+        this._firstInvalidDay = -1; // first invalid day (-1 = no invalid days)
     }
 
     // hits the API for data, signals progress
@@ -34,6 +35,9 @@ let Simulator = class Simulator extends EventEmitter{
                         try{
                             // parse json
                             this.data = JSON.parse(xhr.response);
+
+                            // extract first invalid day
+                            this._firstInvalidDay = parseInt(xhr.getResponseHeader("First-Invalid-Day")) || -1;
                         }
                         catch(err){
                             // json parse error (should never happen)
@@ -153,6 +157,10 @@ let Simulator = class Simulator extends EventEmitter{
 
     get currentDay(){
         return this._currentDay;
+    }
+
+    get firstInvalidDay(){
+        return this._firstInvalidDay;
     }
 }
 
