@@ -2,7 +2,6 @@ import React from "react";
 import Simulator from "../Simulator";
 import { NumSlider } from "./NumSlider";
 import preset from "../preset"
-import { Ajax } from "../Ajax";
 
 export class Inputs extends React.Component{
     constructor(props){
