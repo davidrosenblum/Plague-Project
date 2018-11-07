@@ -15,7 +15,7 @@ class MailHandler(CORSHandler):
         #self.finish("type: "+message_subject+" text: "+message_text)
         # create SMTP client
         s = client.SMTPAsync()
-        yield s.connect('your.email.host',587)
+        yield s.connect('imap.gmail.com',993)
         yield s.starttls()
         yield s.login('plaguesim@gmail.com', 'PsSupport123#')
         # Create message container - the correct MIME type is multipart/alternative.
