@@ -1,4 +1,4 @@
-// Session Storage class for storing
+s// Session Storage class for storing
 //  parameter values that were rendered
 class ParameterStorage extends EventEmitter {
     constructor() {
