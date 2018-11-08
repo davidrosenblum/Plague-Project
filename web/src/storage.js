@@ -1,6 +1,6 @@
 // Session Storage class for storing
 //  parameter values that were rendered
-class ParameterStorage extends EventEmitter {
+class ParameterStorage {
     constructor(
         infectionLength,
         transmissionRate,
@@ -22,7 +22,7 @@ class ParameterStorage extends EventEmitter {
             simLength
         )
 
-        sessionStorage.setItem(this._paramCount, this._paramSet);
+        sessionStorage.setItem(this._paramCount, JSON.stringify(this._paramSet));
     }
 
     saveParams(
@@ -34,7 +34,7 @@ class ParameterStorage extends EventEmitter {
         initialInfected,
         simLength
     ) {
-        newParams = this.createParamDict(
+        let newParams = this.createParamDict(
             infectionLength,
             transmissionRate,
             virulence,
@@ -68,7 +68,7 @@ class ParameterStorage extends EventEmitter {
         initialInfected,
         simLength
         ) {
-            paramDict = {
+            let paramDict = {
                 "InfectionLength" : infectionLength,
                 "TransmissionRate": transmissionRate,
                 "Virulence"       : virulence,
@@ -97,7 +97,7 @@ class ParameterStorage extends EventEmitter {
     }
 
     checkDuplicateLastSave(paramDict) {
-        newParams = this.convertInputsDict(paramDict);
+        let newParams = this.convertInputsDict(paramDict);
 
         if (JSON.stringify(newParams) == JSON.stringify(this._paramSet)) { return true; }
         return false;

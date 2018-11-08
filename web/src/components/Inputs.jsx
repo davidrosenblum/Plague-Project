@@ -2,7 +2,6 @@ import React from "react";
 import Simulator from "../Simulator";
 import ParameterStorage from "../Storage";
 import { NumSlider } from "./NumSlider";
-import ParameterStorage from "../Storage";
 
 export class Inputs extends React.Component{
     constructor(props){
@@ -22,7 +21,9 @@ export class Inputs extends React.Component{
             message: null,          // message to display (errors)
             lastBtn: null,
             isDisabled: false       // to disable/enable fields depending on what preset is selected
-        };        
+        };
+        
+        this.paramStorage = {};
     }
 
     componentDidMount(){
@@ -39,7 +40,7 @@ export class Inputs extends React.Component{
             this.infectionLengthRef.current.value = 100;
             this.transmissionRef.current.value = 0.2;
 
-            paramStorage = ParameterStorage(
+            this.paramStorage = new ParameterStorage(
                 this.infectionLengthRef.current.value,
                 this.transmissionRef.current.value,
                 this.virulenceRef.current.value,
@@ -93,7 +94,7 @@ export class Inputs extends React.Component{
                 .then(() => {
                     this.setState({message: null}); // remove possible err message
                     Simulator.nextDay();
-                    paramStorage.saveParamsDict(this.getInputsDictionary());
+                    this.paramStorage.saveParamsDict(this.getInputsDictionary());
                 })
                 .catch(err => this.setState({message: err.message}));
         }
@@ -112,7 +113,7 @@ export class Inputs extends React.Component{
                 .then(() => {
                     this.setState({message: null}); // remove possible err message
                     Simulator.autoRun();
-                    paramStorage.saveParamsDict(this.getInputsDictionary());
+                    this.paramStorage.saveParamsDict(this.getInputsDictionary());
                 })
                 .catch(err => this.setState({message: err.message}));
         }
