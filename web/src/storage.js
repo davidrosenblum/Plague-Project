@@ -61,9 +61,9 @@ class ParameterStorage {
             return paramDict;
         }
 
-    getMostRecentDay() {
-        return sessionStorage.getItem(this._paramCount);
-    }
+    // getMostRecentDay() {
+    //     return sessionStorage.getItem(this._paramCount);
+    // }
 
     convertInputsDict(inputsDict) {
         return this.createParamDict(
