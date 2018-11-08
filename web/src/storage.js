@@ -34,8 +34,7 @@ class ParameterStorage extends EventEmitter {
         initialInfected,
         simLength
     ) {
-        this._paramCount++;
-        this._paramSet = this.createParamDict(
+        newParams = this.createParamDict(
             infectionLength,
             transmissionRate,
             virulence,
@@ -44,13 +43,20 @@ class ParameterStorage extends EventEmitter {
             initialInfected,
             simLength
         )
-        sessionStorage.setItem(this._paramCount, this._paramSet);
+
+    if (!(JSON.stringify(newParams) == JSON.stringify(this._paramSet))) {
+            this._paramCount++;
+            this._paramSet = newParams;
+            sessionStorage.setItem(this._paramCount, this._paramSet);
+        }
     }
     
     saveParamsDict(paramsDict) {
-        this._paramCount++;
-        this._paramSet = this.convertInputsDict(paramsDict);
-        sessionStorage.setItem(this._paramCount, this._paramSet);
+        if (!this.checkDuplicateLastSave(paramsDict)) {
+            this._paramCount++;
+            this._paramSet = this.convertInputsDict(paramsDict);
+            sessionStorage.setItem(this._paramCount, this._paramSet);
+        }
     }
 
     createParamDict(
