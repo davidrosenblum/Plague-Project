@@ -6,7 +6,7 @@ class ParameterStorage extends EventEmitter {
         transmissionRate,
         virulence,
         initialPop,
-        initialImmune,
+        immunePercent,
         initialInfected,
         simLength
     ) {
@@ -17,7 +17,7 @@ class ParameterStorage extends EventEmitter {
             transmissionRate,
             virulence,
             initialPop,
-            initialImmune,
+            immunePercent,
             initialInfected,
             simLength
         )
@@ -30,7 +30,7 @@ class ParameterStorage extends EventEmitter {
         transmissionRate,
         virulence,
         initialPop,
-        initialImmune,
+        immunePercent,
         initialInfected,
         simLength
     ) {
@@ -40,7 +40,7 @@ class ParameterStorage extends EventEmitter {
             transmissionRate,
             virulence,
             initialPop,
-            initialImmune,
+            immunePercent,
             initialInfected,
             simLength
         )
@@ -52,7 +52,7 @@ class ParameterStorage extends EventEmitter {
         transmissionRate,
         virulence,
         initialPop,
-        initialImmune,
+        immunePercent,
         initialInfected,
         simLength
         ) {
@@ -61,7 +61,7 @@ class ParameterStorage extends EventEmitter {
                 "TransmissionRate": transmissionRate,
                 "Virulence"       : virulence,
                 "InitialPop"      : initialPop,
-                "InitialImmune"   : initialImmune,
+                "ImmunePercent"   : immunePercent,
                 "InitialInfected" : initialInfected,
                 "SimLength"       : simLength,
             };
@@ -72,8 +72,24 @@ class ParameterStorage extends EventEmitter {
         return sessionStorage.getItem(this._paramCount);
     }
 
-    checkDuplicate(paramDict) {
+    convertInputsDict(inputsDict) {
+        return this.createParamDict(
+            inputsDict["infection_length"],
+            inputsDict["transmission_rate"],
+            inputsDict["virulence"],
+            inputsDict["initial_population"],
+            inputsDict["immune_percent"],
+            inputsDict["initial_infected"],
+            inputsDict["simulation_length"]
+        );
+    }
 
+    checkDuplicateLastSave(paramDict) {
+        newParams = this.convertInputsDict(paramDict);
+        lastSaveParams = this.getMostRecentDay();
+
+        if (JSON.stringify(newParams) == JSON.stringify(lastSaveParams)) { return true; }
+        return false;
     }
 }
 
