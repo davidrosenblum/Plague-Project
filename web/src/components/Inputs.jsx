@@ -93,6 +93,7 @@ export class Inputs extends React.Component{
                 .then(() => {
                     this.setState({message: null}); // remove possible err message
                     Simulator.nextDay();
+                    paramStorage.saveParamsDict(this.getInputsDictionary());
                 })
                 .catch(err => this.setState({message: err.message}));
         }
@@ -111,6 +112,7 @@ export class Inputs extends React.Component{
                 .then(() => {
                     this.setState({message: null}); // remove possible err message
                     Simulator.autoRun();
+                    paramStorage.saveParamsDict(this.getInputsDictionary());
                 })
                 .catch(err => this.setState({message: err.message}));
         }
