@@ -2,6 +2,7 @@ import React from "react";
 import Simulator from "../Simulator";
 import ParameterStorage from "../Storage";
 import { NumSlider } from "./NumSlider";
+import ParameterStorage from "../Storage";
 
 export class Inputs extends React.Component{
     constructor(props){
@@ -21,7 +22,7 @@ export class Inputs extends React.Component{
             message: null,          // message to display (errors)
             lastBtn: null,
             isDisabled: false       // to disable/enable fields depending on what preset is selected
-        };
+        };        
     }
 
     componentDidMount(){
@@ -37,6 +38,16 @@ export class Inputs extends React.Component{
             this.daysRef.current.value = 365;
             this.infectionLengthRef.current.value = 100;
             this.transmissionRef.current.value = 0.2;
+
+            paramStorage = ParameterStorage(
+                this.infectionLengthRef.current.value,
+                this.transmissionRef.current.value,
+                this.virulenceRef.current.value,
+                this.intialPopRef.current.value,
+                this.intialImmunityRef.current.value,
+                this.initialInfectedRef.current.value,
+                this.daysRef.current.value
+            );
         }
     }
 
