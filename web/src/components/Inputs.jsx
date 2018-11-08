@@ -23,7 +23,7 @@ export class Inputs extends React.Component{
             isDisabled: false       // to disable/enable fields depending on what preset is selected
         };
         
-        this.paramStorage = {};
+        this.paramStorage = ParameterStorage;
     }
 
     componentDidMount(){
@@ -40,7 +40,7 @@ export class Inputs extends React.Component{
             this.infectionLengthRef.current.value = 100;
             this.transmissionRef.current.value = 0.2;
 
-            this.paramStorage = new ParameterStorage(
+            this.paramStorage.saveParams(
                 this.infectionLengthRef.current.value,
                 this.transmissionRef.current.value,
                 this.virulenceRef.current.value,
