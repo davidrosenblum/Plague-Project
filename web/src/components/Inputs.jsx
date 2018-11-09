@@ -189,6 +189,24 @@ export class Inputs extends React.Component{
         }
     }
 
+    accessParamStorage(direction) {
+        let newParams = null;
+        if (direction == "backward") {
+            newParams = JSON.parse(this.paramStorage.moveBackwardsThroughStorage());
+        } else if (direction == "forward") {
+            newParams = JSON.parse(this.paramStorage.moveForwardsThroughStorage());
+        } else return;
+
+        this.initialInfectedRef.current.value = newParams.InitialInfected;
+        this.intialImmunityRef.current.value = newParams.ImmunePercent;
+        this.intialPopRef.current.value = newParams.InitialPop;
+        this.virulenceRef.current.value = newParams.Virulence;
+        this.daysRef.current.value = newParams.SimLength;
+        this.infectionLengthRef.current.value = newParams.InfectionLength;
+        this.transmissionRef.current.value = newParams.TransmissionRate;
+
+    }
+
     render(){
         return (
             <div>
