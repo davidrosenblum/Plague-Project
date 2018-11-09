@@ -204,7 +204,6 @@ export class Inputs extends React.Component{
         this.daysRef.current.value = newParams.SimLength;
         this.infectionLengthRef.current.value = newParams.InfectionLength;
         this.transmissionRef.current.value = newParams.TransmissionRate;
-
     }
 
     render(){
