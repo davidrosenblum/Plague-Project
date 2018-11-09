@@ -31,6 +31,7 @@ class ParameterStorage {
             this._paramSet = newParams;
             sessionStorage.setItem(this._paramCount, JSON.stringify(this._paramSet));
             this._paramCount++;
+            this._storageIter = this._paramCount;
         }
     }
     
@@ -39,6 +40,7 @@ class ParameterStorage {
             this._paramSet = this.convertInputsDict(paramsDict);
             sessionStorage.setItem(this._paramCount, JSON.stringify(this._paramSet));
             this._paramCount++;
+            this._storageIter = this._paramCount;
         }
     }
 
