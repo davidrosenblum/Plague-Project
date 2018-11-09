@@ -8,9 +8,10 @@ let Simulator = class Simulator extends EventEmitter{
     constructor(){
         super();
 
-        this.data = null;           // simulation data array
-        this._currentDay = 0;       // 'private' current simulation day
-        this._firstInvalidDay = -1; // first invalid day (-1 = no invalid days)
+        this.data = null;                   // simulation data array
+        this._currentDay = 0;               // 'private' current simulation day
+        this._firstInvalidDay = -1;         // first invalid day (-1 = no invalid days)
+        this._useErrCorrecting = false;      // use error correction?
     }
 
     // hits the API for data, signals progress
@@ -22,7 +23,8 @@ let Simulator = class Simulator extends EventEmitter{
             
             // CORS headers (use foreign domain)
             let headers = {
-                "Access-Control-Allow-Origin": window.location.origin
+                "Access-Control-Allow-Origin": window.location.origin,
+                "Error-Correction": this.isErrCorrecting
             };
 
             // ajax call with query string
@@ -77,7 +79,8 @@ let Simulator = class Simulator extends EventEmitter{
             // http request headers
             let headers = {
                 "Access-Control-Allow-Origin": window.location.origin,
-                "Content-Type": "text/csv"
+                "Content-Type": "text/csv",
+                "Error-Correction": this.isErrCorrecting
             };
 
             // get csv file via Ajax
@@ -151,6 +154,13 @@ let Simulator = class Simulator extends EventEmitter{
         this.emit(new SimulationUpdateEvent("update", this.currentDay));
     }
 
+    set isErrCorrecting(value){
+        if(typeof value === "boolean"){
+            this._useErrCorrecting = value;
+        }
+        else throw new Error("isErrCorrecting must be set to a boolean value.");
+    }
+
     get hasData(){
         return this.data !== null;
     }
@@ -161,6 +171,10 @@ let Simulator = class Simulator extends EventEmitter{
 
     get firstInvalidDay(){
         return this._firstInvalidDay;
+    }
+
+    get isErrCorrecting(){
+        return this._useErrCorrecting;
     }
 }
 
