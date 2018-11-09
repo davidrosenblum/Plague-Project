@@ -55,14 +55,24 @@ export class Chart extends React.Component{
 
 				// first invalid day?
 				let style = null, tooltip = null;
-				if(i === Simulator.firstInvalidDay){
-					// this row is first invalid day
-					style = {
-						borderLeft: "5px solid red",
-						borderRight: "5px solid red"
-					};
 
-					tooltip = `Data correction begins at day ${i}.`;
+				if(Simulator.firstInvalidDay > -1){
+					if(i === Simulator.firstInvalidDay){
+						// this row is first invalid day
+						style = {
+							borderLeft: "5px solid red",
+							borderRight: "5px solid red"
+						};
+	
+						tooltip = `Data correction begins at day ${i}.`;
+					}
+					else if(i > Simulator.firstInvalidDay){
+						// subsequent invalid days
+						style = {
+							borderLeft: "1px solid red",
+							borderRight: "1px solid red"
+						};
+					}
 				}
 
 				rows[i] = (
