@@ -101,6 +101,9 @@ export class Chart extends React.Component{
 						{this.renderRows()}
 					</tbody>
 				</table>
+				<div className="text-center">
+					* {Simulator.isErrCorrecting ? "Error correction is enabled" : null} *
+				</div>
 			</div>
 		) : null;
 	}
