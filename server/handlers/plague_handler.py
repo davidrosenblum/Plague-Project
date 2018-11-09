@@ -13,9 +13,8 @@ class PlagueHandler(CORSHandler):
         first_invalid_day = -1  # first day where numbers become invalid (and corrected)
 
         # extract non-simulation parameters/headers
-        content_type = self.request.headers.get("Content-Type")
-        # special option - csv (default is json)
-        csv_format = content_type == "text/csv"
+        content_type = self.request.headers.get("Content-Type", "text/json")
+        err_correction_opt = self.request.headers.get("Error-Correction", "true")
 
         # run simulation and store results
         try:
@@ -31,7 +30,8 @@ class PlagueHandler(CORSHandler):
                 init_pop=params["initial_population"],
                 immune_percent=params["immune_percent"],
                 init_infected=params["initial_infected"],
-                model_length=params["simulation_length"]
+                model_length=params["simulation_length"],
+                bound_checking=(err_correction_opt == "true")
             )
 
             # set invalid day (where the simulation started to 'break')
@@ -50,7 +50,7 @@ class PlagueHandler(CORSHandler):
                 self.set_header("First-Invalid-Day", first_invalid_day)
 
             # json or csv
-            if csv_format is True:
+            if content_type == "text/csv":
                 # csv format requested
                 self.set_header("Content-Type", "text/csv")
                 self.set_header("Content-Disposition", "attachment; filename=data.csv")
@@ -60,6 +60,9 @@ class PlagueHandler(CORSHandler):
                 self.set_header("Content-Type", "text/json")
                 self.set_header("Content-Disposition", "attachment; filename=data.json")
                 results = sim.simulation_json
+
+            # respond with error correction in use or not
+            self.set_header("Error-Correction", "true" if (err_correction_opt == "true") else "false")
 
             # respond
             self.finish(results)

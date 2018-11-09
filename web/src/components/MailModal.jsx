@@ -24,7 +24,13 @@ export class MailModal extends React.Component{
         };
 
         //Modal.setAppElement(this.props.app);
+	}
 
+	componentDidUpdate(prevProps){
+		// clear messages when the visibility changes
+		if(prevProps.showModal && !this.props.showModal){
+			this.setState({errMessage: null, successMessage: null});
+		}
 	}
 
 	// on click of submit button 
@@ -61,9 +67,6 @@ export class MailModal extends React.Component{
                     // ajax request died (really bad NOT a 400 error!)
 					this.setState({errMessage:"Cannot reach server"});// request died signal
                 });
-		}else{
-		
-				
 		}
 	}
 	
@@ -89,12 +92,8 @@ export class MailModal extends React.Component{
 		//get the type of the radio button selected
 	 	this.type = type;
 
-		 // check to see if other is selected
-	 	if(this.type == "other"){
-	 		this.setState({other: true});
-	 	}else{
-	 		this.setState({other: false});
-	 	}
+		// check to see if other is selected
+		this.setState({other: this.type === "other"});
 
 	 	this.typeError = false;
 	 }
@@ -135,11 +134,11 @@ export class MailModal extends React.Component{
 								</div>
 							</div>
 							<div className="col-lg-12 center">
-								<input type="radio" onChange={(t) => this.onTypeSelect("Bug Report")} name="types" value="problem" required/>Have a problem?
+								<input type="radio" onChange={() => this.onTypeSelect("Bug Report")} name="types" value="problem" required/>Have a problem?
 								&nbsp;
-								<input type="radio" onChange={(t) => this.onTypeSelect("Feature Request")} name="types" value="idea" required/>Have an idea?
+								<input type="radio" onChange={() => this.onTypeSelect("Feature Request")} name="types" value="idea" required/>Have an idea?
 								&nbsp;
-								<input type="radio" onChange={(t) => this.onTypeSelect("other")} name="types" value="other" required/>Other
+								<input type="radio" onChange={() => this.onTypeSelect("other")} name="types" value="other" required/>Other
 							</div>
 							<div className="col-lg-12 center">
 								{this.TypeOther()}
