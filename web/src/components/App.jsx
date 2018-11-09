@@ -12,7 +12,7 @@ export class App extends React.Component{
             <div>
                 <Navbar/>
                 <br/>
-                <span className="Version">V0.1</span>
+                <span className="Version">V0.2</span>
                 <main className="container card card-body bg-light">
                     <div className="row">
                         <div className="col-lg-6">
