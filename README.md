@@ -26,4 +26,4 @@ Optional PORT variable (default 8080)
 
 Optional DEBUG variable (default false)
 
-```PORT=9999 DEBUG=1 python server.py```
+```PORT=9999 DEBUG=true python server.py```

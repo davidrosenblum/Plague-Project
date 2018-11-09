@@ -11,7 +11,7 @@ let Simulator = class Simulator extends EventEmitter{
         this.data = null;                   // simulation data array
         this._currentDay = 0;               // 'private' current simulation day
         this._firstInvalidDay = -1;         // first invalid day (-1 = no invalid days)
-        this._useErrCorrecting = false;      // use error correction?
+        this._useErrCorrecting = true;      // use error correction?
     }
 
     // hits the API for data, signals progress
