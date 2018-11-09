@@ -24,7 +24,13 @@ export class MailModal extends React.Component{
         };
 
         //Modal.setAppElement(this.props.app);
+	}
 
+	componentDidUpdate(prevProps){
+		// clear messages when the visibility changes
+		if(prevProps.showModal && !this.props.showModal){
+			this.setState({errMessage: null, successMessage: null});
+		}
 	}
 
 	// on click of submit button 
