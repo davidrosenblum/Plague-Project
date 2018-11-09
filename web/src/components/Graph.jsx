@@ -56,27 +56,72 @@ export class Graph extends React.Component{
 		this.setState({yLabel: evt.target.value})
 	}
 
+	// gets the data values (multiple lines) up to do the current
+	getDataForAllLabels(){
+		let largestY = 0;
+
+		let values = [];		// holds the correctly formatted values
+		let valuesObj = {};		// helps to sort by label ('Infected', 'Susceptible', etc)
+
+		// iterate over each day...
+		for(let i = 0; i <= this.state.day; i++){
+			// day json, example: {'Infected': 100, 'Susceptible': 5, etc}
+			let row = this.state.data[i]; 
+
+			// for each label... (row[label] is the y value for the y label (ex: how many infected))
+			for(let label in row){
+				let y = parseFloat(row[label]);
+
+				largestY = Math.max(largestY, y);
+
+				let pt = {x: i, y};
+
+				if(label in valuesObj){
+					valuesObj[label].values.push(pt);
+				}
+				else{
+					valuesObj[label] = {
+						label, values: [pt]
+					};
+				}
+			}
+		}
+
+		// convert the dictionary into the correctly formatted array
+		for(let key in valuesObj){
+			values.push(valuesObj[key]);
+		}
+
+		// allData is used by render method to determine multiline
+		return {values, largestY, allData: true};
+	}
+
 	// gets the data values up to the current day
 	getData(){
+		// make sure there is data
 		if(!this.state.data || this.state.day < 1){
 			return null;
 		}
 
+		// All = multiline, this function is for one line
+		if(this.state.yLabel === "All"){
+			return this.getDataForAllLabels();
+		}
+
 		let largestY = 0;
 
-		let data = this.state.data.map((row, index) => {
-			let y = parseFloat(row[this.state.yLabel]);
+		let values = [];
 
-			largestY = Math.max(largestY, y);
+		// iterate... find largest Y and populate values with {x, y} format
+		for(let i = 0; i <= this.state.day; i++){
+			let y = parseFloat(this.state.data[i][this.state.yLabel]);
 
-			return {
-				x: index,
-				y
-			};
-		});
+				largestY = Math.max(largestY, y);
+
+				values.push({x: i, y});
+		}
 
 		// d3 wants {values:[...]}
-		let values = data.slice(0, this.state.day + 1);
 		return {values, largestY};
 	}
 
@@ -91,9 +136,16 @@ export class Graph extends React.Component{
 
 		let data = this.getData();
 		if(data){
+			// 2 ways to render based on multiline or 1 line
+			// 1 line = {values: [....]}
+			// multiline = [ { label: "", values: [ {x, y} ] } ]
+			// "allData" in data === multiline 
+			let dataToRender = "allData" in data ? data.values : data;
+			let endX = "allData" in data ? data.values[0].values.length : data.values.length;
+
 			// scale the x-axis (0 - last day) with graph width
 			let xScale = d3.scale.linear()
-				.domain([0, data.values.length-1])
+				.domain([0, endX-1])
 				.range([0, WIDTH - MARGIN_LEFT - MARGIN_RIGHT]);
 			
 			// scale the y-axis based on (0 - biggest y) with graph height
@@ -110,11 +162,12 @@ export class Graph extends React.Component{
 							<option>Susceptible</option>
 							<option>Immune</option>
 							<option>Dead</option>
+							<option>All</option>
 						</select>
 					</div>
 					<div>
 						<LineChart
-							data={data}
+							data={dataToRender}
 							axes
 							width={WIDTH}
 							height={HEIGHT}
@@ -126,7 +179,10 @@ export class Graph extends React.Component{
 							yAxis={{label: this.state.yLabel}}
 							xScale={xScale}
 							yScale={yScale}
-							//tooltipHtml={(label, pt) => `Day ${pt.x} - ${pt.y} ${this.state.yLabel}`}
+							colorScale={d3.scale.category20()}
+							tooltipMode={"element"}
+							tooltipContained={true}
+							tooltipHtml={(label, pt) => `Day ${pt.x} - ${pt.y} ${label || this.state.yLabel}`}
 						/>
 					</div>
 				</div>
