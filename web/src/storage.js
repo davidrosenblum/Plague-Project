@@ -87,6 +87,20 @@ class ParameterStorage {
         if (JSON.stringify(newParams) == JSON.stringify(this._paramSet)) { return true; }
         return false;
     }
+
+    moveBackwardsThroughStorage() {
+        if (this._storageIter > 0) {
+            this._storageIter--;
+            return sessionStorage.getItem(this._storageIter);
+        }
+    }
+
+    moveForwardsThroughStorage() {
+        if (this._storageIter < this._paramCount) {
+            this._storageIter++;
+            return sessionStorage.getItem(this._storageIter);
+        }
+    }
 }
 
 export default new ParameterStorage();
