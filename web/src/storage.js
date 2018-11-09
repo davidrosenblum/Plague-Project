@@ -2,8 +2,10 @@
 //  parameter values that were rendered
 class ParameterStorage {
     constructor() {
-        this._paramCount = 0;        
+        this._paramCount = 0;
+        this._storageIter = 0;        
         this._paramSet = {};
+        sessionStorage.clear();
     }
 
     saveParams(
