@@ -90,13 +90,17 @@ export class Graph extends React.Component{
 			}
 		}
 
+		// labels IN ORDER
+		let labels = [];
+
 		// convert the dictionary into the correctly formatted array
 		for(let key in valuesObj){
 			values.push(valuesObj[key]);
+			labels.push(key);
 		}
 
 		// allData is used by render method to determine multiline
-		return {values, largestY: this.state.data[0].TotalPopulation};
+		return {values, labels, largestY: this.state.data[0].TotalPopulation};
 	}
 
 	// gets the data values up to the current day (single line)
@@ -131,7 +135,7 @@ export class Graph extends React.Component{
 		if(this.state.yLabel !== "All"){
 			let {x, y} = data;
 
-			this.setState({tooltip: `${Math.round(y)} ${this.state.yLabel.toLowerCase()} on day ${x}.`});
+			this.setState({tooltip: `${Math.round(y)} people ${this.state.yLabel.toLowerCase()} on day ${x}.`});
 		}
 	}
 
@@ -183,7 +187,7 @@ export class Graph extends React.Component{
 							dataPoints={numDays < 50 && this.state.yLabel !== "All"}
 							xDomainRange={[0, numDays]}
 							yDomainRange={[0, data.largestY]}
-							lineColors={data.values.length !== 1 ? Object.values(COLORS) : [COLORS[data.label]]}
+							lineColors={data.values.length !== 1 ? data.labels.map(label => COLORS[label]) : [COLORS[data.label]]}
 							clickHandler={this.onGraphClick.bind(this)}
 							style={{
 								".label": {fill: "black"},
