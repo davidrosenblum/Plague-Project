@@ -1,4 +1,6 @@
 // class for managing parameter data history using session storage
+const PARAM_STORAGE_LIMIT = 100;
+
 class ParamStorage{
     constructor(){
         this._numParamSets = 0;
@@ -25,6 +27,12 @@ class ParamStorage{
         if(this.paramsNotLastSave(params)){
             window.sessionStorage.setItem(++this._numParamSets, JSON.stringify(params))
             this._currDay = this.numParamSets;
+
+            // enforce storage capacity - begin deleting from the left bound
+            if(this.numParamSets > PARAM_STORAGE_LIMIT){
+                window.sessionStorage.removeItem(this.numParamSets - PARAM_STORAGE_LIMIT);
+            }
+
             return true;
         }
         return false;
@@ -64,7 +72,7 @@ class ParamStorage{
 
     // moves current day one into the backwards
     stepBackwards(){
-        if(this._currDay - 1 >= 0){
+        if(this._currDay - 1 >= this.firstStoredDay){
             this._lastParamSet = this.getSavedParams(--this._currDay);
         }
     }
@@ -74,6 +82,13 @@ class ParamStorage{
         if(this._currDay + 1 <= this.numParamSets){
             this._lastParamSet = this.getSavedParams(++this._currDay);
         }
+    }
+
+    get firstStoredDay(){
+        if(this.numParamSets > PARAM_STORAGE_LIMIT){
+            return this.numParamSets - PARAM_STORAGE_LIMIT;
+        }
+        return 0;
     }
 
     get currentParams(){
