@@ -1,7 +1,7 @@
 # utility class hat extracts parameters from a request's query string arguments
 # and makes sure they are in range, correct type (int vs float) and all defined
 
-from .ParamValues import ParamValues
+from . import ParamValues
 
 
 class ParamExtractor:
