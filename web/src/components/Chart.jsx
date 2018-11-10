@@ -75,14 +75,16 @@ export class Chart extends React.Component{
 					}
 				}
 
+				// create table row
+				// (toLocalString adds the ',' as the number grows in thousands)
 				rows[i] = (
 					<tr key={i} style={style} title={tooltip}>
 						<td onClick={()=>Simulator.setGraphDay(i)}>{i}</td>
-						<td>{susceptible}</td>
-						<td>{infected}</td>
-						<td>{immune}</td>
-						<td>{dead}</td>
-						<td>{population}</td>
+						<td>{susceptible.toLocaleString()}</td>
+						<td>{infected.toLocaleString()}</td>
+						<td>{immune.toLocaleString()}</td>
+						<td>{dead.toLocaleString()}</td>
+						<td>{population.toLocaleString()}</td>
 					</tr>
 				);
 			}
@@ -112,7 +114,7 @@ export class Chart extends React.Component{
 					</tbody>
 				</table>
 				<div className="text-center">
-					* {Simulator.isErrCorrecting ? "Error correction is enabled" : null} *
+					{Simulator.firstInvalidDay > -1 ? `* Error correction begins on day ${Simulator.firstInvalidDay} *` : null}
 				</div>
 			</div>
 		) : null;
