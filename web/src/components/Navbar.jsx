@@ -1,5 +1,5 @@
 import React from "react";
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Navbar as RNavbar, NavItem, Collapse, NavbarToggler, Nav } from "reactstrap";
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Navbar as RNavbar, NavItem, Collapse, NavbarToggler, Nav, NavLink } from "reactstrap";
 import { MailModal } from "./MailModal"
 import Simulator from "../Simulator";
 
@@ -44,12 +44,12 @@ export class Navbar extends React.Component{
 	render(){
 		return (
 			<div>
-				<RNavbar color="light" expand="md">
-					<NavbarToggler onClick={this.toggleNavbar.bind(this)}/>
+				<RNavbar color="light" light expand="md">
+					<NavbarToggler color="dark" onClick={this.toggleNavbar.bind(this)}/>
 					<Collapse isOpen={this.state.showNav} navbar>
 						<Nav navbar>
 							<NavItem>
-								<span className="nav-link" onClick={this.openModal.bind(this)}>Contact Us <span className="sr-only">(current)</span></span>
+								<NavLink selected onClick={this.openModal.bind(this)}>Contact Us</NavLink>
 							</NavItem>
 							<NavItem>
 								<Dropdown isOpen={this.state.showAdvanced} toggle={this.toggleDropdown.bind(this)}>
