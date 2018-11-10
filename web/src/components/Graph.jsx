@@ -1,6 +1,6 @@
 import React from "react";
 import Simulator from "../Simulator";
-import { LineChart, T } from "react-easy-chart"
+import { LineChart } from "react-easy-chart"
 
 export class Graph extends React.Component{
 	constructor(props){

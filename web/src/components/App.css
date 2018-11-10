@@ -122,3 +122,23 @@ footer a:hover{
     color: orangered;
     text-decoration: none;
 }
+
+#inputs-header-container h5{
+    width: 75%;
+    margin: auto;
+    display: inline-block;
+}
+
+#inputs-header-container button{
+    width: 32px;
+    height: 32px;
+    border: 1px solid gray;
+    border-radius: 6px;
+    background-color: white;
+    transition: 0.5s;
+}
+
+#inputs-header-container button:hover{
+    background-color: black;
+    color: white;
+}

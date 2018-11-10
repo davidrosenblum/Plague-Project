@@ -1,5 +1,6 @@
 import React from "react";
 import Simulator from "../Simulator";
+import ParamStorage from "../ParamStorage";
 import { NumSlider } from "./NumSlider";
 import preset from "../preset"
 
@@ -15,6 +16,7 @@ export class Inputs extends React.Component{
         this.intialPopRef = React.createRef();
         this.infectionLengthRef = React.createRef();
         this.daysRef = React.createRef();
+        this.presetRef = React.createRef();
 
         this.state = {
             pending: false,         // no new requests while pending (disable buttons)
@@ -37,6 +39,8 @@ export class Inputs extends React.Component{
             this.daysRef.current.value = 365;
             this.infectionLengthRef.current.value = 100;
             this.transmissionRef.current.value = 0.2;
+
+            ParamStorage.saveParamsInputsDict(this.getInputsDictionary());
         }
     }
 
@@ -49,13 +53,14 @@ export class Inputs extends React.Component{
             initial_infected =      this.initialInfectedRef.current.value,
             initial_population =    this.intialPopRef.current.value,
             infection_length =      this.infectionLengthRef.current.value,
-            simulation_length =     this.daysRef.current.value;
+            simulation_length =     this.daysRef.current.value,
+            preset =                this.presetRef.current.value;
 
         // make sure infected <= population
         initial_infected = Math.min(initial_infected, initial_population);
 
         // MUST match API expectations! 
-        return {immune_percent, transmission_rate, virulence, initial_infected, initial_population, infection_length, simulation_length};
+        return {immune_percent, transmission_rate, virulence, initial_infected, initial_population, infection_length, simulation_length, preset};
     }
 
     onSimulatorError(){
@@ -82,6 +87,8 @@ export class Inputs extends React.Component{
                 .then(() => {
                     this.setState({message: null}); // remove possible err message
                     Simulator.nextDay();
+
+                    ParamStorage.saveParamsInputsDict(this.getInputsDictionary());  // save parameters
                 })
                 .catch(err => this.setState({message: err.message}));
         }
@@ -100,6 +107,8 @@ export class Inputs extends React.Component{
                 .then(() => {
                     this.setState({message: null}); // remove possible err message
                     Simulator.autoRun();
+
+                    ParamStorage.saveParamsInputsDict(this.getInputsDictionary());  // save parameters
                 })
                 .catch(err => this.setState({message: err.message}));
         }
@@ -159,21 +168,56 @@ export class Inputs extends React.Component{
         this.setState({lastBtn: evt.target.getAttribute("btn")});
     }
 
-    onPresetChange(evt){
-        if(evt.target.value != "Custom"){
-            this.setState({isDisabled:true});
-            this.infectionLengthRef.current.value = preset[evt.target.value]["Infection Length"];
-            this.transmissionRef.current.value = preset[evt.target.value]["Transmission"];
-            this.virulenceRef.current.value = preset[evt.target.value]["Virulence"]
+    onPresetChange(){
+        let value = this.presetRef.current.value;
+        
+        if(value !== "Custom"){
+            this.setState({isDisabled: true});
+            this.infectionLengthRef.current.value = preset[value]["Infection Length"];
+            this.transmissionRef.current.value = preset[value]["Transmission"];
+            this.virulenceRef.current.value = preset[value]["Virulence"]
         }else{
-            this.setState({isDisabled:false});
+            this.setState({isDisabled: false});
         }
+    }
+
+    // moves the parameter storage day & updates UI inputs
+    switchParamSet(direction){
+        // move the day
+        if(direction === "backwards"){
+            ParamStorage.stepBackwards();
+        }
+        else if(direction === "forwards"){
+            ParamStorage.stepForwards();
+        }
+        else throw new Error("Parameter switch direction must be 'forwards' or 'backwards'.");
+
+        // bail if nothing already saved
+        let params = ParamStorage.currentParams || null;
+        if(!params) return; // nothing saved
+
+        // fill out UI form
+        this.infectionLengthRef.current.value = params.infectionLength;
+        this.transmissionRef.current.value = params.transmissionRate;
+        this.virulenceRef.current.value = params.virulence;
+        this.intialPopRef.current.value = params.initialPopulation;
+        this.intialImmunityRef.current.value = params.immunePercent;
+        this.initialInfectedRef.current.value = params.initialInfected;
+        this.daysRef.current.value = params.simulationLength;
+
+        this.presetRef.current.value = params.preset;
+        this.onPresetChange();
     }
 
     render(){
         return (
             <div>
-                <h5 className="text-center">Experimental Variables</h5>
+                <div id="inputs-header-container" className="text-center">
+                    <button onClick={() => this.switchParamSet("backwards")}>&larr;</button>
+                    <h5 className="text-center">Experimental Variables</h5>
+                    <button onClick={() => this.switchParamSet("forwards")}>&rarr;</button>
+                </div>
+                <br/>
                 <form onSubmit={this.onSubmit.bind(this)}>
                     <div className="row">
                         <div className="form-group col-lg-6">
@@ -265,7 +309,7 @@ export class Inputs extends React.Component{
                         </div>
                         <div className="form-group col-lg-6">
                             <label>Presets:</label>
-                            <select className="form-control" onChange={this.onPresetChange.bind(this)}>
+                            <select ref={this.presetRef} className="form-control" onChange={this.onPresetChange.bind(this)}>
                                 <option>Custom</option>
                                 <option>Seasonal Flu</option>
                                 <option>Smallpox</option>
