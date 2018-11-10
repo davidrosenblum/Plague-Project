@@ -22,7 +22,8 @@ export class App extends React.Component{
                             <Graph/>
                         </div>
                     </div>
-                    <div className="col-lg-12">
+                    <br/>
+                    <div>
                         <Chart/>
                     </div>
                 </main>
