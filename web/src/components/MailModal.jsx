@@ -44,24 +44,23 @@ export class MailModal extends React.Component{
 			// localhost = dev, else = prod
 			let origin = window.location.origin.includes("localhost") ? "http://localhost:8080" : window.location.origin;
 
-			Ajax.post(`${origin}/mail`,null,{message})
-				.then(xhr => {    
+			Ajax.post(`${origin}/mail`, null, message)
+				.then(xhr => {  
                     // ajax resolved (could be bad/good request, but server responded)
                     if(xhr.status === 200){
-                        // good request - attempt to parse results json
-                        try{
-							this.setState({successMessage:"Submit Successful"});
-                        }
-                        catch(err){
-							// json parse error (should never happen)
-							this.setState({errMessage:JSON.parse(err)});
-							// server responded with bad request signal
-                        }
+						// good request - attempt to parse results json
+						this.setState({successMessage:"Submit Successful"});
                     }
                     else{
 						// bad request
 						this.setState({errMessage:"Bad Request Error"});
-                    }
+					}
+					
+					// clear inputs
+					if(this.headerRef.current){
+						this.headerRef.current.value = "";
+					}
+					this.textRef.current.value = "";
                 })
                 .catch(err => {
                     // ajax request died (really bad NOT a 400 error!)
@@ -115,44 +114,46 @@ export class MailModal extends React.Component{
 	 
 	render(){
 		return this.props.showModal ? (
-			<form>
+			<div>
 				<ReactModal isOpen={this.props.showModal} >
 					<div className="col-lg-1">
 			  			<span className="nav-link" onClick={this.props.closeModal}>&times;</span>
 			  		</div>
 			  		<div className="container border">
 					  <form onSubmit={this.submitClick.bind(this)}>
-							<div className="col-lg-12 header center">
-								<h2 className="modalHeader">Contact Us</h2>
-								<div>
+					  		<div>
+								<div className="header center">
+									<h2 className="modalHeader">Contact Us</h2>
+									<div>
 									<span className="error">
 										{this.state.errMessage}
 									</span>
 									<span className="success">
 										{this.state.successMessage}
 									</span>
+									</div>
 								</div>
-							</div>
-							<div className="col-lg-12 center">
-								<input type="radio" onChange={() => this.onTypeSelect("Bug Report")} name="types" value="problem" required/>Have a problem?
-								&nbsp;
-								<input type="radio" onChange={() => this.onTypeSelect("Feature Request")} name="types" value="idea" required/>Have an idea?
-								&nbsp;
-								<input type="radio" onChange={() => this.onTypeSelect("other")} name="types" value="other" required/>Other
-							</div>
-							<div className="col-lg-12 center">
-								{this.TypeOther()}
-							</div>
-							<div className="col-lg-12 center">
-								<textarea rows="4" cols="100" placeholder="Type message in here." ref={this.textRef} required></textarea>
-							</div>
-							<div className="col-lg-12 center">
-								<input type="submit" />
+								<div className="form-group center">
+									<input type="radio" onChange={() => this.onTypeSelect("Bug Report")} name="types" value="problem" required/>Have a problem?
+									&nbsp;
+									<input type="radio" onChange={() => this.onTypeSelect("Feature Request")} name="types" value="idea" required/>Have an idea?
+									&nbsp;
+									<input type="radio" onChange={() => this.onTypeSelect("other")} name="types" value="other" required/>Other
+								</div>
+								<div className="form-group center">
+									{this.TypeOther()}
+								</div>
+								<div className="form-group center">
+									<textarea className="modal-text-area" placeholder="Type message in here." ref={this.textRef} required></textarea>
+								</div>
+								<div className="form-group center">
+									<input className="input-btn" type="submit" />
+								</div>
 							</div>
 						</form>
 					</div>
       			</ReactModal>
-			</form>
+			</div>
 		) : null;
 	}
 }
