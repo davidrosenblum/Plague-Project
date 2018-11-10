@@ -1,16 +1,36 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import Simulator from "../Simulator";
 import { LineChart } from "react-easy-chart"
+
+// graph size constants
+const WIDTH = 		540,
+	HEIGHT = 		475,
+	MARGIN_TOP = 	10,
+	MARGIN_BOTTOM =	50,
+	MARGIN_LEFT = 	80,
+	MARGIN_RIGHT = 	10;
+
+// graph line colors
+const COLORS = {
+	"Infected": 	"green",
+	"Susceptible": 	"red",
+	"Immune": 		"steelblue",
+	"Dead": 		"gray"
+};
 
 export class Graph extends React.Component{
 	constructor(props){
 		super(props);
+
+		this.graphContainerRef = React.createRef();
 		
 	    this.state = {
-			data: 			null,			// graph data
-			day: 			0,				// current simulation day
-			yLabel: 		"Infected",		// y-axis value
-			tooltip:		null
+			data: null,							// graph data
+			day: 0,								// current simulation day
+			yLabel: "Infected",					// y-axis value
+			tooltip: null,						// text to display
+			containerWidth: WIDTH				// line graph parent width
 	    };
 	}
 
@@ -26,6 +46,10 @@ export class Graph extends React.Component{
 
 		// when the simulator changes the graph
 		Simulator.on("update-graph", this.onSimulatorUpdateGraph.bind(this));
+
+		// when the window size changes - resize the graph if neccessary
+		window.addEventListener("resize", this.onResize.bind(this));
+		this.onResize();
 	}
 
 	componentDidUpdate(prevProps, prevState){
@@ -131,6 +155,7 @@ export class Graph extends React.Component{
 		return {values: [values], label: this.state.yLabel, largestY};
 	}
 
+	// when a point on the graph is clicked...
 	onGraphClick(data, evt){
 		if(this.state.yLabel !== "All"){
 			let {x, y} = data;
@@ -139,29 +164,38 @@ export class Graph extends React.Component{
 		}
 	}
 
+    onResize(){
+        // updates the state to reflect the maximum size allowed for the graph
+        let element = this.graphContainerRef.current;
+		if(element){
+			this.setState({containerWidth: element.getBoundingClientRect().width});
+		}
+    }
+
+	// renders a simple HTML key for the graph line/colors
+	renderGraphKey(){
+		let keys = [];
+
+		for(let label in COLORS){
+			keys.push(
+				<span style={{color: COLORS[label]}}>
+					{` ${label} `}
+				</span>
+			)
+		}
+
+		return <div>{keys}</div>
+	}
+
 	render(){
-		// graph size constants
-		const WIDTH = 		540,
-			HEIGHT = 		475,
-			MARGIN_TOP = 	10,
-			MARGIN_BOTTOM =	50,
-			MARGIN_LEFT = 	80,
-			MARGIN_RIGHT = 	10;
-
-		// graph line colors
-		const COLORS = {
-			"Infected": 	"green",
-			"Susceptible": 	"red",
-			"Immune": 		"steelblue",
-			"Dead": 		"gray"
-		};
-
 		let data = this.getData();
 		if(data){
 			let numDays = data.values[0].length - 1; // day zero = initial params
-			
+
+			let width = Math.min(this.state.containerWidth, WIDTH);
+
 			return (
-				<div>
+				<div ref={this.graphContainerRef}>
 					<h5>Simulated {this.state.yLabel}</h5>
 					<div className="GraphDropdown" onChange={this.onYLabelChange.bind(this)}>
 						<select className="form-control">
@@ -175,7 +209,7 @@ export class Graph extends React.Component{
 					<div>
 						<LineChart
 							data={data.values}
-							width={WIDTH}
+							width={width}
 							height={HEIGHT}
 							margin={{
 								top: MARGIN_TOP, bottom: MARGIN_BOTTOM,
@@ -195,12 +229,15 @@ export class Graph extends React.Component{
 							}}
 						/>
 					</div>
+					<div>
+						{this.renderGraphKey()}
+					</div>
 					<div className="text-center">
 						{this.state.tooltip}
 					</div>
 				</div>
 			);
 		}
-		return null;
+		return <div ref={this.graphContainerRef}></div> // required for resize to work! 
 	}
 }
