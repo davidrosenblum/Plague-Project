@@ -20,7 +20,8 @@ export class MailModal extends React.Component{
         this.state = { 
 			other: false,
 			errMessage:null,
-			successMessage:null
+			successMessage:null,
+			disabled: false
         };
 
         //Modal.setAppElement(this.props.app);
@@ -44,16 +45,19 @@ export class MailModal extends React.Component{
 			// localhost = dev, else = prod
 			let origin = window.location.origin.includes("localhost") ? "http://localhost:8080" : window.location.origin;
 
+			// sending message, disable send button
+			this.setState({successMessage: "Sending...", errMessage: null, disabled: true});
+
 			Ajax.post(`${origin}/mail`, null, message)
 				.then(xhr => {  
                     // ajax resolved (could be bad/good request, but server responded)
                     if(xhr.status === 200){
 						// good request - attempt to parse results json
-						this.setState({successMessage:"Submit Successful"});
+						this.setState({successMessage:"Submit Successful", errMessage: null, disabled: false});
                     }
                     else{
 						// bad request
-						this.setState({errMessage:"Bad Request Error"});
+						this.setState({errMessage:"Bad Request Error", successMessage: null, disabled: false});
 					}
 					
 					// clear inputs
@@ -64,7 +68,7 @@ export class MailModal extends React.Component{
                 })
                 .catch(err => {
                     // ajax request died (really bad NOT a 400 error!)
-					this.setState({errMessage:"Cannot reach server"});// request died signal
+					this.setState({errMessage:"Cannot reach server", disabled: false});// request died signal
                 });
 		}
 	}
@@ -147,7 +151,7 @@ export class MailModal extends React.Component{
 									<textarea className="modal-text-area" placeholder="Type message in here." ref={this.textRef} required></textarea>
 								</div>
 								<div className="form-group center">
-									<input className="input-btn" type="submit" />
+									<input className="input-btn" type="submit" disabled={this.state.disabled} />
 								</div>
 							</div>
 						</form>
