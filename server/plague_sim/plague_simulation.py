@@ -45,8 +45,8 @@ class PlagueSimulation:
     @property
     def simulation_csv(self):
         csv_string = ""
-        paramnames = ['Infection_Length', 'Transmission_Rate', 'Virulence', 'Initial_Population', 'Initial_Percent_Immune', 'Initial_Infected', 'Sim_Length'] 
-        fieldnames = ['Susceptible', 'Infected', 'Immune', 'Dead', 'TotalPopulation']
+        paramnames = ['Infection Length', 'Transmission Rate', 'Virulence', 'Initial Population', 'Initial Percent Immune', 'Initial Infected', 'Simulation Length'] 
+        fieldnames = ['Susceptible', 'Infected', 'Immune', 'Dead', 'Total Population']
         
         csv_string += ",".join(paramnames)
         # csv_string += 
