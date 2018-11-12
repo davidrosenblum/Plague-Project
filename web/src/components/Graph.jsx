@@ -217,7 +217,6 @@ export class Graph extends React.Component{
 							}}
 							axes
 							axisLabels={{x: "Days Elapsed", y: (this.state.yLabel === "All" ? "People" : `People ${this.state.yLabel}`)}}
-							interpolate={"cardinal"}
 							dataPoints={numDays < 50 && this.state.yLabel !== "All"}
 							xDomainRange={[0, numDays]}
 							yDomainRange={[0, data.largestY]}
