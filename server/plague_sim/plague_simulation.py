@@ -60,8 +60,6 @@ class PlagueSimulation:
         csv_string += ",".join(fieldnames)
         csv_string += '\n'
 
-        print(csv_string)
-
         for row in self.simulation_array:
             csv_string += "{s},{inf},{im},{d},{p}\n".format(
                     s=row["Susceptible"],
