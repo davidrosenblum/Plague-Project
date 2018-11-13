@@ -50,13 +50,15 @@ class PlagueSimulation:
         fieldnames = ['Susceptible', 'Infected', 'Immune', 'Dead', 'Total Population']
         
         csv_string += ",".join(paramnames)
-        csv_string += "," + self._plague._plague_params.infection_length
-        csv_string += "," + self._plague._plague_params.transmission_rate
-        csv_string += "," + self._plague._plague_params.virulence
-        csv_string += "," + self._plague._plague_params.initial_pop
-        csv_string += "," + self._plague._plague_params.immune_percent
-        csv_string += "," + self._plague._plague_params.initial_infected
-        csv_string += '\n\n'
+        csv_string += '\n'
+        csv_string += "{inf_l},{tr},{v},{init_p},{imm},{init_inf},{}\n\n",format(
+            inf_l=self._plague._plague_params.infection_length,
+            tr=self._plague._plague_params.transmission_rate,
+            v=self._plague._plague_params.virulence,
+            init_p=self._plague._plague_params.initial_pop,
+            imm=self._plague._plague_params.immune_percent,
+            init_inf=self._plague._plague_params.initial_infected
+        )
         
         csv_string += ",".join(fieldnames)
         csv_string += '\n'
