@@ -75,6 +75,30 @@ class Plague:
     def invalid_result_day(self):
         return self._out_of_bound_result_day
 
+    @property
+    def infection_length(self):
+        return self._plague_params._infection_length
+
+    @property
+    def transmission_rate(self):
+        return self._plague_params.transmission_rate
+
+    @property
+    def virulence(self):
+        return self._plague_params._virulence
+
+    @property
+    def initial_pop(self):
+        return self._plague_params._initial_pop
+
+    @property
+    def immune_percent(self):
+        return self._plague_params._immune_percent
+
+    @property
+    def initial_infected(self):
+        return self._plague_params._initial_infected
+
     @staticmethod
     def _serialize_spread(spread):
         return  [ { 'Susceptible' : str(day['Susceptible']),
