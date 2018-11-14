@@ -1,4 +1,5 @@
 from .plague import Plague
+from decimal import Decimal, ROUND_HALF_UP
 import json
 
 class PlagueSimulation:
@@ -30,6 +31,10 @@ class PlagueSimulation:
     def run_plague_sim(self, model_length):
         self._plague.run_sim(model_length)
 
+    # normal round (no bankers rounding) for csv values
+    def _round(self, n):
+        return Decimal(n).quantize(0, rounding=ROUND_HALF_UP)
+
     @property
     def simulation_array(self):
         return self._plague.plague_simulation_str
@@ -44,20 +49,22 @@ class PlagueSimulation:
 
     @property
     def simulation_csv(self):
-        csv_string = ""
         paramnames = ['Infection Length', 'Transmission Rate', 'Virulence', 'Initial Population',
             'Initial Percent Immune', 'Initial Infected'] 
         fieldnames = ['Susceptible', 'Infected', 'Immune', 'Dead', 'Total Population']
    
-        csv_string += ",".join(paramnames)
+        csv_string = ",".join(paramnames)
         csv_string += '\n'
+
+        # rounds each value up
+        # (python uses banker's rounding - this uses normal rounding)
         csv_string += "{inf_l},{tr},{v},{init_p},{imm},{init_inf}\n\n".format(
-            inf_l=self._plague._plague_params.infection_length,
-            tr=self._plague._plague_params.transmission_rate,
-            v=self._plague._plague_params.virulence,
-            init_p=self._plague._plague_params.initial_pop,
-            imm=self._plague._plague_params.immune_percent,
-            init_inf=self._plague._plague_params.initial_infected
+            inf_l=self._round(self._plague.infection_length),
+            tr=self._round(self._plague.transmission_rate),
+            v=self._round(self._plague.virulence),
+            init_p=self._round(self._plague.initial_pop),
+            imm=self._round(self._plague.immune_percent),
+            init_inf=self._round(self._plague.initial_infected)
         )
         
         csv_string += ",".join(fieldnames)
@@ -65,10 +72,10 @@ class PlagueSimulation:
 
         for row in self.simulation_array:
             csv_string += "{s},{inf},{im},{d},{p}\n".format(
-                    s=row["Susceptible"],
-                    inf=row["Infected"],
-                    im=row["Immune"],
-                    d=row["Dead"],
-                    p=row["TotalPopulation"])
+                    s=self._round(row["Susceptible"]),
+                    inf=self._round(row["Infected"]),
+                    im=self._round(row["Immune"]),
+                    d=self._round(row["Dead"]),
+                    p=self._round(row["TotalPopulation"]))
 
         return csv_string
