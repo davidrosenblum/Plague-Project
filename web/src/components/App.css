@@ -22,6 +22,11 @@
     text-align: center;
 }
 
+.graph-button{
+    border: none;
+    background: transparent;
+}
+
 .Version{
     float: right;
     text-align: center;
@@ -107,8 +112,7 @@
     height: 300px;
 }
 
-/* make cursor into pointer */
-.nav-link{
+.pointer{
     cursor: pointer;
 }
 

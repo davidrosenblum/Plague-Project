@@ -197,12 +197,18 @@ export class Graph extends React.Component{
 			return (
 				<div ref={this.graphContainerRef}>
 					<h5>Simulated {this.state.yLabel}</h5>
+					<div>
+						<button style={{color: COLORS["Infected"]}} className="pointer graph-button">Infected</button>
+						<button style={{color: COLORS["Susceptible"]}} className="pointer graph-button">Susceptible</button>
+						<button style={{color: COLORS["Immune"]}} className="pointer graph-button">Immune</button>
+						<button style={{color: COLORS["Dead"]}} className="pointer graph-button">Dead</button>
+					</div>
 					<div className="GraphDropdown" onChange={this.onYLabelChange.bind(this)}>
 						<select className="form-control">
-							<option>Infected</option>
-							<option>Susceptible</option>
-							<option>Immune</option>
-							<option>Dead</option>
+							<option >Infected</option>
+							<option className="susceptible">Susceptible</option>
+							<option className="immune">Immune</option>
+							<option className="dead">Dead</option>
 							<option>All</option>
 						</select>
 					</div>

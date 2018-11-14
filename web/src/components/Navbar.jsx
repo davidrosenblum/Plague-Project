@@ -49,7 +49,7 @@ export class Navbar extends React.Component{
 					<Collapse isOpen={this.state.showNav} navbar>
 						<Nav navbar>
 							<NavItem>
-								<NavLink selected onClick={this.openModal.bind(this)}>Contact Us</NavLink>
+								<NavLink  className="pointer" selected onClick={this.openModal.bind(this)}>Contact Us</NavLink>
 							</NavItem>
 							<NavItem>
 								<Dropdown isOpen={this.state.showAdvanced} toggle={this.toggleDropdown.bind(this)}>

@@ -121,7 +121,7 @@ export class MailModal extends React.Component{
 			<div>
 				<ReactModal isOpen={this.props.showModal} >
 					<div className="col-lg-1">
-			  			<span className="nav-link" onClick={this.props.closeModal}>&times;</span>
+			  			<span className="pointer" onClick={this.props.closeModal}>&times;</span>
 			  		</div>
 			  		<div className="container border">
 					  <form onSubmit={this.submitClick.bind(this)}>
