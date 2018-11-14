@@ -96,9 +96,9 @@ let Simulator = class Simulator extends EventEmitter{
                         // create a 'secret' link using the blob
                         let a = document.createElement("a");
                         let url = window.URL.createObjectURL(csvDataBlob);
-
+                        
                         // setup the link to download blob data
-                        a.setAttribute("download", "data.csv");
+                        a.setAttribute("download", `data_${Date.now()}.csv`);
                         a.setAttribute("href", url);
 
                         // click the link to download the file
