@@ -12,21 +12,13 @@ class ParamStorage{
     
     // saves parameters to session storage - expects query string format (as provided by inputs.jsx)
     saveParamsInputsDict(dict){
-        let params = {
-            infectionLength:    dict.infection_length,
-            transmissionRate:   dict.transmission_rate,
-            virulence:          dict.virulence,
-            initialPopulation:  dict.initial_population,
-            immunePercent:      dict.immune_percent,
-            initialInfected:    dict.initial_infected,
-            simulationLength:   dict.simulation_length,
-            preset:             dict.preset
-        };
+        let params = this.convertToTitleCase(dict);
 
         // prevent saving multiple set same time in a row
         if(this.paramsNotLastSave(params)){
             window.sessionStorage.setItem(++this._numParamSets, JSON.stringify(params))
             this._currDay = this.numParamSets;
+            this._lastParamSet = params;
 
             // enforce storage capacity - begin deleting from the left bound
             if(this.numParamSets > PARAM_STORAGE_LIMIT){
@@ -50,6 +42,20 @@ class ParamStorage{
             simulation_length:  simulationLength,
             preset
         });
+    }
+
+    // converts underscore format dict to title case (ex: initial_population to InitialPopulation)
+    convertToTitleCase(dict){
+        return {
+            infectionLength:    dict.infection_length,
+            transmissionRate:   dict.transmission_rate,
+            virulence:          dict.virulence,
+            initialPopulation:  dict.initial_population,
+            immunePercent:      dict.immune_percent,
+            initialInfected:    dict.initial_infected,
+            simulationLength:   dict.simulation_length,
+            preset:             dict.preset
+        };
     }
 
     // checks if 'newParams' is content different from the last save param set

@@ -21,7 +21,6 @@ export class Inputs extends React.Component{
         this.state = {
             pending: false,         // no new requests while pending (disable buttons)
             message: null,          // message to display (errors)
-            lastBtn: null,
             isDisabled: false       // to disable/enable fields depending on what preset is selected
         };
     }
@@ -77,46 +76,6 @@ export class Inputs extends React.Component{
         Simulator.reset();
     }
 
-    dayByDay(){
-        if(!Simulator.hasData){
-            // disable buttons for loading time
-            this.setState({pending: true});
-
-            // load data then show next day
-            Simulator.load(this.getInputsDictionary())
-                .then(() => {
-                    this.setState({message: null}); // remove possible err message
-                    Simulator.nextDay();
-
-                    ParamStorage.saveParamsInputsDict(this.getInputsDictionary());  // save parameters
-                })
-                .catch(err => this.setState({message: err.message}));
-        }
-        else{
-            Simulator.nextDay();
-        }
-    }
-
-    autoRun(){
-        if(!Simulator.hasData){
-            // disable buttons for loading time
-            this.setState({pending: true});
-
-            // load data then auto run
-            Simulator.load(this.getInputsDictionary())
-                .then(() => {
-                    this.setState({message: null}); // remove possible err message
-                    Simulator.autoRun();
-
-                    ParamStorage.saveParamsInputsDict(this.getInputsDictionary());  // save parameters
-                })
-                .catch(err => this.setState({message: err.message}));
-        }
-        else{
-            Simulator.autoRun();
-        }
-    }
-
     // downloads the csv file
     downloadCSV(){
         if(!this.state.pending){
@@ -136,6 +95,35 @@ export class Inputs extends React.Component{
         }
     }
 
+    runSimulation(){
+        // no simulation data - load it (first simulation or reset happened)
+        if(!Simulator.hasData){
+            // disable buttons for loading time
+            this.setState({pending: true});
+
+            // load data then auto run
+            Simulator.load(this.getInputsDictionary())
+                .then(() => {
+                    this.setState({message: null}); // remove possible err message
+
+                    ParamStorage.saveParamsInputsDict(this.getInputsDictionary());  // save parameters
+                })
+                .catch(err => this.setState({message: err.message}));
+        }
+        else{
+            // verify current parameters are not the same as the ones already run
+            // (prevents reloading data that we already have!)
+            let currParams = ParamStorage.convertToTitleCase(this.getInputsDictionary());
+
+            if(ParamStorage.paramsNotLastSave(currParams)){
+                // parameters are different than last time
+                // run new simulation
+                Simulator.reset();      // triggers clearing graph/table and clears data
+                this.runSimulation();   // runs again, but sim will have no data
+            }
+        }
+    }
+
     // called when the form is 'submitted'
     // entire purpose is to block the sending of the form
     // (submit enforces 'required', 'min', 'max' constraints)
@@ -143,29 +131,7 @@ export class Inputs extends React.Component{
         // no default submission (using ajax instead)
         evt.preventDefault();
 
-        // problem - both autorun + next day activate this... (only way to do it with using form requires)
-
-        // day-by-day was the trigger
-        if(this.state.lastBtn === "day-by-day"){
-            this.dayByDay();
-        }
-
-        // autorun was the trigger
-        else if(this.state.lastBtn === "auto-run"){
-            this.autoRun();
-        }
-
-        // csv export was the trigger
-        else if(this.state.lastBtn === "export-csv"){
-            this.downloadCSV();
-        }
-        
-    }
-
-    // sets the last button to 'day-by-day' or 'autorun'
-    // kinda ugly but its because form has 2 submit buttons
-    onFormClick(evt){
-        this.setState({lastBtn: evt.target.getAttribute("btn")});
+        this.runSimulation();
     }
 
     onPresetChange(){
@@ -323,10 +289,9 @@ export class Inputs extends React.Component{
                         </div>
                     </div>
                     <div className="form-group text-center">
-                        <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="day-by-day">Day-By-Day</button>&nbsp;
-                        <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="auto-run">Auto Run</button>&nbsp;
+                        <button className="input-btn" disabled={this.state.pending} btn="auto-run">Run</button>&nbsp;
                         <button onClick={this.onReset.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Reset</button>&nbsp;
-                        <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="export-csv">Export CSV</button>
+                        <button className="input-btn" disabled={this.state.pending}>Export CSV</button>
                     </div>
                 </form>
                 <div>{this.state.message}</div>

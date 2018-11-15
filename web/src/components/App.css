@@ -22,6 +22,20 @@
     text-align: center;
 }
 
+.graph-button{
+    border: none;
+    background: transparent;
+    transition: 0.5s;
+}
+
+.graph-button:hover{
+    text-decoration: underline;
+}
+
+.graph-button:focus{
+    outline: none;
+}
+
 .Version{
     float: right;
     text-align: center;
@@ -71,11 +85,6 @@
     border-left: none;
 }
 
-.overflow-table tr td:nth-child(1){
-    font-weight: bold;
-    cursor: pointer;
-}
-
 /* Modal CSS */
 
 .modalHeader{
@@ -107,8 +116,7 @@
     height: 300px;
 }
 
-/* make cursor into pointer */
-.nav-link{
+.pointer{
     cursor: pointer;
 }
 

@@ -1,0 +1,18 @@
+.graph-range-container{
+    text-align: center;
+    display: inline;
+}
+
+.graph-range-container input[type="number"]{
+    width: 100px;
+    border: 1px solid silver;
+    border-radius: 6px;
+    padding: 3px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.graph-range-container input[type="number"]:focus{
+    outline: none;
+}

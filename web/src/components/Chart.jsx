@@ -6,80 +6,65 @@ export class Chart extends React.Component{
 		super(props);
 
 		this.state = {
-			data: null,		// simulatoion data set
-			day: 0			// current simulation day
+			visible: false	//true/false if simulator data to render
 		};
 	}
 
 	componentDidMount(){
-		// simulator singles data set loaded
-		Simulator.on("data", this.onSimulatorData.bind(this));
+		// simulator singles data set loaded - render data
+		Simulator.on("data", () => this.setState({visible: true}));
 
-		// simulator signals a reset
-		Simulator.on("reset", this.onSimulatorReset.bind(this));
-
-		// simulator signals a different day
-		Simulator.on("update", this.onSimulatorUpdate.bind(this));
+		// simulator signals a reset - nothing to render
+		Simulator.on("reset", () => this.setState({visible: false}));
 	}
 
-	// simulator got data - store it
-	onSimulatorData(){
-		this.setState({data: Simulator.data});
-	}
 
-	// simulator reset - reset this component
-	onSimulatorReset(){
-		this.setState({data: null, day: 0});
-	}
+	getStyleForDay(index){
+		let style = null;
 
-	// simulator day changed - update component day
-	onSimulatorUpdate(){
-		this.setState({day: Simulator.currentDay});
+		if(Simulator.firstInvalidDay > -1){
+			if(index === Simulator.firstInvalidDay){
+				// this row is first invalid day
+				style = {
+					borderLeft: "5px solid red",
+					borderRight: "5px solid red"
+				};
+			}
+			else if(index > Simulator.firstInvalidDay){
+				// subsequent invalid days
+				style = {
+					borderLeft: "1px solid red",
+					borderRight: "1px solid red"
+				};
+			}
+		}		
+
+		return style;
 	}
 
 	// renders table rows up to the current simulation day
 	renderRows(){
-		if(Simulator.hasData){
-			let rows = new Array(Simulator.currentDay + 1);
+		let data = Simulator.data;
 
-			for(let i = 0; i <= Simulator.currentDay; i++){
-				// get json for the say
-				let day = Simulator.data[i];
+		if(data){
+			let rows = new Array(data.length + 1);
 
+			data.forEach((dayData, index) => {
 				// extract data
-				let susceptible = Math.round(day.Susceptible),
-					infected = Math.round(day.Infected),
-					immune = Math.round(day.Immune),
-					dead = Math.round(day.Dead),
-					population = Math.round(day.TotalPopulation);
+				let susceptible = 	Math.round(dayData.Susceptible),
+					infected = 		Math.round(dayData.Infected),
+					immune = 		Math.round(dayData.Immune),
+					dead = 			Math.round(dayData.Dead),
+					population = 	Math.round(dayData.TotalPopulation);
 
-				// first invalid day?
-				let style = null, tooltip = null;
-
-				if(Simulator.firstInvalidDay > -1){
-					if(i === Simulator.firstInvalidDay){
-						// this row is first invalid day
-						style = {
-							borderLeft: "5px solid red",
-							borderRight: "5px solid red"
-						};
-	
-						tooltip = `Data correction begins at day ${i}.`;
-					}
-					else if(i > Simulator.firstInvalidDay){
-						// subsequent invalid days
-						style = {
-							borderLeft: "1px solid red",
-							borderRight: "1px solid red"
-						};
-					}
-				}
+				// get the style (for data correction)
+				let style = this.getStyleForDay(index);
 
 				// create table row
 				// (toLocalString adds the ',' as the number grows in thousands)
-				rows[i] = (
-					<tr key={i} style={style} title={tooltip}>
-						<td onClick={()=>Simulator.setGraphDay(i)}>{i}</td>
+				rows[index] = (
+					<tr key={index} style={style}>
+						<td>{index}</td>
 						<td>{susceptible.toLocaleString()}</td>
 						<td>{infected.toLocaleString()}</td>
 						<td>{immune.toLocaleString()}</td>
@@ -87,7 +72,7 @@ export class Chart extends React.Component{
 						<td>{population.toLocaleString()}</td>
 					</tr>
 				);
-			}
+			});
 
 			return rows;
 		}
@@ -96,7 +81,7 @@ export class Chart extends React.Component{
 	}
 
 	render(){
-		return this.state.data !== null ? (
+		return this.state.visible ? (
 			<div>
 				<table className="table table-striped overflow-table">
 					<thead>
