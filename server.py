@@ -6,11 +6,11 @@ from server.handlers import *
 
 # create tornado app with routes and static path
 app = tornado.web.Application([
-        (r"/", MainHandler),
         (r"/mail", MailHandler),
         (r"/plague", PlagueHandler),
-        (r"/test", TestHandler)
-    ], static_path="./web/build/static", debug=bool(os.environ.get("DEBUG", False)))
+        (r"/test", TestHandler),
+        (r"/(.*)", tornado.web.StaticFileHandler, {"path": "./web/build", "default_filename": "index.html"}),
+    ], debug=bool(os.environ.get("DEBUG", False)))
 
 http_server = tornado.httpserver.HTTPServer(app)
 
