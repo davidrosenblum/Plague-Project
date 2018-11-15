@@ -77,11 +77,8 @@ export class Graph extends React.Component{
 
 	// when a point on the graph is clicked...
 	onGraphClick(data, evt){
-		if(this.state.yLabel !== "All"){
-			let {x, y} = data;
-
-			this.setState({tooltip: `${Math.round(y)} people on day ${x}.`});
-		}
+		let {x, y} = data;
+		this.setState({tooltip: `${Math.round(y)} people on day ${x}.`});
 	}
 
     onResize(){
@@ -135,7 +132,7 @@ export class Graph extends React.Component{
 							}}
 							axes
 							axisLabels={{x: "Days Elapsed", y: "People"}}
-							dataPoints={dayCount < 50}
+							dataPoints={dayCount < 0} // enable this later
 							xDomainRange={[GraphData.startDay, GraphData.endDay]}
 							yDomainRange={[0, data.largestY]}
 							lineColors={data.labels.map(label => COLORS[label])}
@@ -160,4 +157,4 @@ export class Graph extends React.Component{
 		}
 		return <div ref={this.graphContainerRef}></div> // required for resize to work! 
 	}
-}
+} 

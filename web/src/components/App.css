@@ -32,6 +32,10 @@
     text-decoration: underline;
 }
 
+.graph-button:focus{
+    outline: none;
+}
+
 .Version{
     float: right;
     text-align: center;

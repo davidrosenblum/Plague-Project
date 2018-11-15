@@ -19,8 +19,6 @@ class GraphData extends EventEmitter{
             let start = this.startDay > -1 ? this.startDay : 0;
             let end = this.endDay < simData.length ? this.endDay : simData.length;
 
-            console.log(start, end)
-
             for(let i = start; i < end; i++){
                 let day = simData[i];
 
@@ -54,7 +52,7 @@ class GraphData extends EventEmitter{
         let values = [];
         Object.keys(labeledPoints).forEach(key => values.push(labeledPoints[key]));
 
-        // gets all the labels that are in the dictionary and true
+        // gets all the labels that are in the dictionary and true (in order)
         let labels = Object.keys(keysDict).filter(key => keysDict[key] === true);
 
         return {values, largestY, labels};
