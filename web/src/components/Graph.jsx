@@ -1,7 +1,8 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import Simulator from "../Simulator";
 import { LineChart } from "react-easy-chart"
+import Simulator from "../Simulator";
+import GraphData from "../GraphData";
+import { GraphRange } from "./GraphRange";
 
 // graph size constants
 const WIDTH = 		540,
@@ -26,26 +27,25 @@ export class Graph extends React.Component{
 		this.graphContainerRef = React.createRef();
 		
 	    this.state = {
-			data: null,							// graph data
-			day: 0,								// current simulation day
-			yLabel: "Infected",					// y-axis value
+			visible: false,						// true/false if simulator data to render
 			tooltip: null,						// text to display
-			containerWidth: WIDTH				// line graph parent width
+			containerWidth: WIDTH,				// line graph parent width
+			graphLabels: {}
 	    };
 	}
 
 	componentDidMount(){
-		// when the simulator signals it has received data
-		Simulator.on("data", this.onSimulatorData.bind(this));
+		// auto select infected
+		this.toggleLabel("Infected");
 
-		// when the simulator signals a reset
-		Simulator.on("reset", this.onSimulatorReset.bind(this));
+		// simulator singles data set loaded - render data
+		Simulator.on("data", () => this.setState({visible: true}));
 
-		// when the simulator changes the day
-		Simulator.on("update", this.onSimulatorUpdate.bind(this));
+		// simulator reset - nothing to render
+		Simulator.on("reset", () => this.setState({visible: false}));
 
-		// when the simulator changes the graph
-		Simulator.on("update-graph", this.onSimulatorUpdateGraph.bind(this));
+		// graph update
+		GraphData.on("update", () => this.forceUpdate());
 
 		// when the window size changes - resize the graph if neccessary
 		window.addEventListener("resize", this.onResize.bind(this));
@@ -58,101 +58,21 @@ export class Graph extends React.Component{
 		}
 	}
 
-	// simulator has data - convert to d3 format and store it
-	onSimulatorData(){
-		// update
-		this.setState({data: Simulator.data});
-	}
+	// when a label ('Infected', 'Susceptible', etc) is clicked...
+	toggleLabel(label){
+		// copy labels dictionary
+		let nextLabels = Object.assign({}, this.state.graphLabels);
 
-	// simulator reset - reset this component
-	onSimulatorReset(){
-		this.setState({data: null, day: 0});
-	}
-
-	// simulator update - update to the current day
-	onSimulatorUpdate(){
-		this.setState({day: Simulator.currentDay});
-	}
-
-	// simulator update - graph change
-	onSimulatorUpdateGraph(evt){
-		// day change
-		if(typeof evt.day === "number"){
-			this.setState({day: evt.day});
+		// toggle parameter label
+		if(label in nextLabels){
+			nextLabels[label] = !nextLabels[label];
 		}
-	}
-
-	// when the graph y axis drop down is changed
-	onYLabelChange(evt){
-		this.setState({yLabel: evt.target.value})
-	}
-
-	// gets the data values (multiple lines) up to do the current
-	getDataForAllLabels(){
-		let values = [];		// holds the correctly formatted values
-		let valuesObj = {};		// helps to sort by label ('Infected', 'Susceptible', etc)
-
-		// iterate over each day...
-		for(let i = 0; i <= this.state.day; i++){
-			// day json, example: {'Infected': 100, 'Susceptible': 5, etc}
-			let row = this.state.data[i]; 
-
-			// for each label... (row[label] is the y value for the y label (ex: how many infected))
-			for(let label in row){
-				if(label === "TotalPopulation") continue;
-
-				let y = parseFloat(row[label]);
-
-				let pt = {x: i, y};
-
-				if(label in valuesObj){
-					valuesObj[label].push(pt);
-				}
-				else{
-					valuesObj[label] = [pt];
-				}
-			}
+		else{
+			nextLabels[label] = true;
 		}
 
-		// labels IN ORDER
-		let labels = [];
-
-		// convert the dictionary into the correctly formatted array
-		for(let key in valuesObj){
-			values.push(valuesObj[key]);
-			labels.push(key);
-		}
-
-		// allData is used by render method to determine multiline
-		return {values, labels, largestY: this.state.data[0].TotalPopulation};
-	}
-
-	// gets the data values up to the current day (single line)
-	getData(){
-		// make sure there is data
-		if(!this.state.data || this.state.day < 1){
-			return null;
-		}
-
-		// All = multiline, this function is for one line
-		if(this.state.yLabel === "All"){
-			return this.getDataForAllLabels();
-		}
-
-		let largestY = 0;
-
-		let values = [];
-
-		// iterate... find largest Y and populate values with {x, y} format
-		for(let i = 0; i <= this.state.day; i++){
-			let y = parseFloat(this.state.data[i][this.state.yLabel]);
-
-			largestY = Math.max(largestY, y);
-
-			values.push({x: i, y});
-		}
-
-		return {values: [values], label: this.state.yLabel, largestY};
+		// update state
+		this.setState({graphLabels: nextLabels});
 	}
 
 	// when a point on the graph is clicked...
@@ -173,45 +93,37 @@ export class Graph extends React.Component{
     }
 
 	// renders a simple HTML key for the graph line/colors
-	renderGraphKey(){
-		let keys = [];
+	renderLabelButtons(){
+		let labels = this.state.graphLabels;
 
-		for(let label in COLORS){
-			keys.push(
-				<span style={{color: COLORS[label]}}>
-					{` ${label} `}
-				</span>
-			)
-		}
+		// border style for button (null = no change)
+		let borders = [
+			(labels.Infected === true) ? `2px solid ${COLORS.Infected}` : null,
+			(labels.Susceptible === true) ? `2px solid ${COLORS.Susceptible}` : null,
+			(labels.Immune === true) ? `2px solid ${COLORS.Immune}` : null,
+			(labels.Dead === true) ? `2px solid ${COLORS.Dead}` : null
+		];
 
-		return <div>{keys}</div>
+		return (
+			<div>
+				<button style={{color: COLORS["Infected"], borderBottom: borders[0]}} onClick={() => this.toggleLabel("Infected")} className="pointer graph-button">Infected</button>
+				<button style={{color: COLORS["Susceptible"], borderBottom: borders[1]}} onClick={() => this.toggleLabel("Susceptible")} className="pointer graph-button">Susceptible</button>
+				<button style={{color: COLORS["Immune"], borderBottom: borders[2]}} onClick={() => this.toggleLabel("Immune") }className="pointer graph-button">Immune</button>
+				<button style={{color: COLORS["Dead"], borderBottom: borders[3]}} onClick={() => this.toggleLabel("Dead")} className="pointer graph-button">Dead</button>
+			</div>
+		);
 	}
 
 	render(){
-		let data = this.getData();
-		if(data){
-			let numDays = data.values[0].length - 1; // day zero = initial params
-
+		if(this.state.visible){
+			let data = GraphData.getData(this.state.graphLabels);
+			let numDays = data.values.length ? data.values[0].length : 0;
 			let width = Math.min(this.state.containerWidth, WIDTH);
 
 			return (
 				<div ref={this.graphContainerRef}>
-					<h5>Simulated {this.state.yLabel}</h5>
-					<div>
-						<button style={{color: COLORS["Infected"]}} className="pointer graph-button">Infected</button>
-						<button style={{color: COLORS["Susceptible"]}} className="pointer graph-button">Susceptible</button>
-						<button style={{color: COLORS["Immune"]}} className="pointer graph-button">Immune</button>
-						<button style={{color: COLORS["Dead"]}} className="pointer graph-button">Dead</button>
-					</div>
-					<div className="GraphDropdown" onChange={this.onYLabelChange.bind(this)}>
-						<select className="form-control">
-							<option >Infected</option>
-							<option className="susceptible">Susceptible</option>
-							<option className="immune">Immune</option>
-							<option className="dead">Dead</option>
-							<option>All</option>
-						</select>
-					</div>
+					<h5>{data.labels.join(" + ") || "(Nothing Selected)"}</h5>
+					{this.renderLabelButtons()}
 					<div>
 						<LineChart
 							data={data.values}
@@ -222,11 +134,11 @@ export class Graph extends React.Component{
 								left: MARGIN_LEFT, right: MARGIN_RIGHT
 							}}
 							axes
-							axisLabels={{x: "Days Elapsed", y: (this.state.yLabel === "All" ? "People" : `People ${this.state.yLabel}`)}}
-							dataPoints={numDays < 50 && this.state.yLabel !== "All"}
+							axisLabels={{x: "Days Elapsed", y: "People"}}
+							dataPoints={numDays < 50}
 							xDomainRange={[0, numDays]}
 							yDomainRange={[0, data.largestY]}
-							lineColors={data.values.length !== 1 ? data.labels.map(label => COLORS[label]) : [COLORS[data.label]]}
+							lineColors={data.labels.map(label => COLORS[label])}
 							clickHandler={this.onGraphClick.bind(this)}
 							style={{
 								".label": {fill: "black"},
@@ -235,7 +147,10 @@ export class Graph extends React.Component{
 						/>
 					</div>
 					<div>
-						{this.renderGraphKey()}
+						<GraphRange
+							min={1}
+							max={numDays}
+						/>
 					</div>
 					<div className="text-center">
 						{this.state.tooltip}

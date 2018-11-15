@@ -25,6 +25,11 @@
 .graph-button{
     border: none;
     background: transparent;
+    transition: 0.5s;
+}
+
+.graph-button:hover{
+    text-decoration: underline;
 }
 
 .Version{
@@ -74,11 +79,6 @@
     text-align: center;
     border-bottom: none;
     border-left: none;
-}
-
-.overflow-table tr td:nth-child(1){
-    font-weight: bold;
-    cursor: pointer;
 }
 
 /* Modal CSS */

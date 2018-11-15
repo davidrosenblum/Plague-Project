@@ -1,15 +1,13 @@
 import { Ajax } from "./Ajax";
 import { EventEmitter } from "./EventEmitter";
-import { SimulationUpdateEvent } from "./SimulationUpdateEvent";
 
 // singleton for holding simulation data
 // event-driven to keep chart + graph updated
-let Simulator = class Simulator extends EventEmitter{
+class Simulator extends EventEmitter{
     constructor(){
         super();
 
         this.data = null;                   // simulation data array
-        this._currentDay = 0;               // 'private' current simulation day
         this._firstInvalidDay = -1;         // first invalid day (-1 = no invalid days)
         this._useErrCorrecting = true;      // use error correction?
     }
@@ -110,48 +108,23 @@ let Simulator = class Simulator extends EventEmitter{
                     }
                     else{
                         // bad http status - trigger listeners with error
-                        reject(new Error(xhr.response || "Error downloading CSV file."));
+                        console.log(xhr.response);
+                        reject(new Error("Error downloading CSV file."));
                     }
                 })
                 .catch(err => {
                     // server did not responed - trigger listeners with error
-                    reject(new Error(err.message || "Unable to download CSV file."))
+                    console.log(err.message);
+                    reject(new Error("Unable to download CSV file."))
                 });
         });
-    }
-
-    // simulation moves to the last day
-    // (triggers listeners)
-    autoRun(){
-        this.currentDay = this.data.length - 1; // auto emits update
-    }
-
-    // steps the simulation forward one day
-    // (triggers listeners)
-    nextDay(){
-        if(this.currentDay < this.data.length){
-            this.currentDay++;  // auto emits update
-        }
     }
 
     // resets simulation to day 0 and clears all stored data
     // (triggers listeners)
     reset(){
         this.data = null;
-        this.currentDay = 0;
         this.emit(new Event("reset"));
-    }
-
-    // updates the graph day 
-    setGraphDay(day){
-        this.emit(new SimulationUpdateEvent("update-graph", day));
-    }
-
-    // always emit update
-    set currentDay(day){
-        let maxDays = this.hasData ? (this.data.length - 1) : 0;
-        this._currentDay = Math.min(day, maxDays); 
-        this.emit(new SimulationUpdateEvent("update", this.currentDay));
     }
 
     set isErrCorrecting(value){
@@ -163,10 +136,6 @@ let Simulator = class Simulator extends EventEmitter{
 
     get hasData(){
         return this.data !== null;
-    }
-
-    get currentDay(){
-        return this._currentDay;
     }
 
     get firstInvalidDay(){
