@@ -79,14 +79,16 @@ class ParamStorage{
     // moves current day one into the backwards
     stepBackwards(){
         if(this._currDay - 1 >= this.firstStoredDay){
-            this._lastParamSet = this.getSavedParams(--this._currDay);
+            --this._currDay;
+            //this._lastParamSet = this.getSavedParams(--this._currDay);
         }
     }
 
     // move sthe current day one day forwards
     stepForwards(){
         if(this._currDay + 1 <= this.numParamSets){
-            this._lastParamSet = this.getSavedParams(++this._currDay);
+            ++this._currDay;
+            //this._lastParamSet = this.getSavedParams(++this._currDay);
         }
     }
 
