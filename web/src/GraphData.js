@@ -6,7 +6,7 @@ class GraphData extends EventEmitter{
         super();
 
         this._startDay = -1;
-        this._endDay = -1;
+        this._endDay = Number.MAX_SAFE_INTEGER;
     }
 
     getData(keysDict){
@@ -16,16 +16,18 @@ class GraphData extends EventEmitter{
 
         if(simData){
             // start & end indeces 
-            let start = 0;
-            let end = simData.length;
+            let start = this.startDay > -1 ? this.startDay : 0;
+            let end = this.endDay < simData.length ? this.endDay : simData.length;
+
+            console.log(start, end)
 
             for(let i = start; i < end; i++){
                 let day = simData[i];
 
                 // label is 'Infected', 'Susceptible', etc (whatever is provided)
-                Object.keys(keysDict).forEach(label => {
+                for(let label in keysDict){
                     if(keysDict[label] !== true){
-                        return;
+                        continue;
                     }
 
                     // get y value (x is always the day/index)
@@ -44,7 +46,7 @@ class GraphData extends EventEmitter{
 
                     // update largest Y
                     largestY = Math.max(largestY, y);
-                });
+                };
             }
         }
 
@@ -77,11 +79,11 @@ class GraphData extends EventEmitter{
     }
 
     get startDay(){
-        return this._startDay;
+        return Math.max(0, this._startDay);
     }
 
     get endDay(){
-        return this._endDay;
+        return Math.min(this._endDay, Simulator.data ? Simulator.data.length : 0);
     }
 }
 

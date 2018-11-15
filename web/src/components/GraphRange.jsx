@@ -10,73 +10,78 @@ export class GraphRange extends React.Component{
         this.upperRef = React.createRef();
     }
 
-    onChange(evt){
+    onChangeLow(){
         let lowValue = this.selectedMin.toString(),
-            highValue = this.selectedMax.toString();
-
-        let low = parseInt(lowValue),
-            high = parseInt(highValue);
+            low = this.selectedMin;
 
         if(lowValue.length){
-            // low in range (ignoring high value)
-            low = Math.max(low, this.props.min);
-            low = Math.min(low, this.props.max);
+            let high = this.selectedMax || this.props.max;
 
+            low = Math.max(this.props.min, low);
+            low = Math.min(low, high - 1);
+
+            this.lowerRef.current.value = low;
+
+            GraphData.startDay = low;
         }
+    }
+
+    onChangeHigh(){
+        let highValue = this.selectedMax.toString(),
+            high = this.selectedMax;
 
         if(highValue.length){
-           // high in range (ignoring low value)
-            high = Math.max(high, this.props.min);
-            high = Math.min(high, this.props.max);
-        }
+            let low = this.selectedMin || this.props.min;
 
-        if(lowValue.length && highValue.length){
-            // don't let the values pass each other
-            // (reverse the lines order to allow decrease high to move low)
             high = Math.max(low + 1, high);
-            low = Math.min(low, high + 1)
-        }
-       
-        this.lowerRef.current.value = low;
-        this.upperRef.current.value = high;
+            high = Math.min(high, this.props.max);
 
-        GraphData.setDaysRange(low, high);
+            this.upperRef.current.value = high;
+
+            GraphData.endDay = high;
+        }
+    }
+
+    onSubmit(evt){
+        evt.preventDefault();
     }
 
     render(){
         return (
             <div className="graph-range-container">
-                <input
-                    ref={this.lowerRef}
-                    min={this.props.min}
-                    max={this.props.max}
-                    step={1}
-                    defaultValue={this.props.min}
-                    placeholder="Start"
-                    type="number"
-                    required
-                    onChange={this.onChange.bind(this)}
-                />&nbsp;
-                <input
-                    ref={this.upperRef}
-                    min={this.props.min}
-                    max={this.props.max}
-                    step={1}
-                    defaultValue={this.props.max}
-                    placeholder="End"
-                    type="number"
-                    required
-                    onChange={this.onChange.bind(this)}
-                />
+                <form onSubmit={this.onSubmit.bind(this)}>
+                    <input
+                        ref={this.lowerRef}
+                        min={this.props.min}
+                        max={this.props.max}
+                        step={1}
+                        defaultValue={this.props.min}
+                        placeholder="Start"
+                        type="number"
+                        required
+                        onChange={this.onChangeLow.bind(this)}
+                    />&nbsp;
+                    <input
+                        ref={this.upperRef}
+                        min={this.props.min}
+                        max={this.props.max}
+                        step={1}
+                        defaultValue={this.props.max}
+                        placeholder="End"
+                        type="number"
+                        required
+                        onChange={this.onChangeHigh.bind(this)}
+                    />
+                </form>
             </div>
         )
     }
 
     get selectedMin(){
-        return parseFloat(this.lowerRef.current.value);
+        return parseFloat(this.lowerRef.current.value) || this.props.min;
     }
 
     get selectedMax(){
-        return parseFloat(this.upperRef.current.value);
+        return parseFloat(this.upperRef.current.value) || this.props.max;
     }
 }

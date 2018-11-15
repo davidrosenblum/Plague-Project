@@ -80,7 +80,7 @@ export class Graph extends React.Component{
 		if(this.state.yLabel !== "All"){
 			let {x, y} = data;
 
-			this.setState({tooltip: `${Math.round(y)} people ${this.state.yLabel.toLowerCase()} on day ${x}.`});
+			this.setState({tooltip: `${Math.round(y)} people on day ${x}.`});
 		}
 	}
 
@@ -117,7 +117,7 @@ export class Graph extends React.Component{
 	render(){
 		if(this.state.visible){
 			let data = GraphData.getData(this.state.graphLabels);
-			let numDays = data.values.length ? data.values[0].length : 0;
+			let dayCount = data.values.length ? data.values[0].length : 0;
 			let width = Math.min(this.state.containerWidth, WIDTH);
 
 			return (
@@ -135,8 +135,8 @@ export class Graph extends React.Component{
 							}}
 							axes
 							axisLabels={{x: "Days Elapsed", y: "People"}}
-							dataPoints={numDays < 50}
-							xDomainRange={[0, numDays]}
+							dataPoints={dayCount < 50}
+							xDomainRange={[GraphData.startDay, GraphData.endDay]}
 							yDomainRange={[0, data.largestY]}
 							lineColors={data.labels.map(label => COLORS[label])}
 							clickHandler={this.onGraphClick.bind(this)}
@@ -149,7 +149,7 @@ export class Graph extends React.Component{
 					<div>
 						<GraphRange
 							min={1}
-							max={numDays}
+							max={Simulator.data.length || 1}
 						/>
 					</div>
 					<div className="text-center">
