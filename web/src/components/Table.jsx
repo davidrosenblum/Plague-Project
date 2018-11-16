@@ -1,7 +1,7 @@
 import React from "react";
 import Simulator from "../Simulator";
 
-export class Chart extends React.Component{
+export class Table extends React.Component{
 	constructor(props){
 		super(props);
 

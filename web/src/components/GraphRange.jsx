@@ -11,8 +11,8 @@ export class GraphRange extends React.Component{
     }
 
     onChangeLow(){
-        let lowValue = this.selectedMin.toString(),
-            low = this.selectedMin;
+        let lowValue = this.lowerRef.current.value,
+            low = parseInt(this.selectedMin);
 
         if(lowValue.length){
             let high = this.selectedMax || this.props.max;
@@ -27,8 +27,8 @@ export class GraphRange extends React.Component{
     }
 
     onChangeHigh(){
-        let highValue = this.selectedMax.toString(),
-            high = this.selectedMax;
+        let highValue = this.upperRef.current.value,
+            high = parseInt(highValue);
 
         if(highValue.length){
             let low = this.selectedMin || this.props.min;

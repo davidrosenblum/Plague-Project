@@ -3,7 +3,7 @@ import "./App.css";
 import React from "react";
 import { Inputs } from "./Inputs";
 import { Navbar } from "./Navbar";
-import { Chart } from "./Chart";
+import { Table } from "./Table";
 import { Graph } from "./Graph";
 
 export class App extends React.Component{
@@ -24,7 +24,7 @@ export class App extends React.Component{
                     </div>
                     <br/>
                     <div>
-                        <Chart/>
+                        <Table/>
                     </div>
                 </main>
                 <footer className="container text-center">
