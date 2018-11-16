@@ -289,9 +289,9 @@ export class Inputs extends React.Component{
                         </div>
                     </div>
                     <div className="form-group text-center">
-                        <button className="input-btn" disabled={this.state.pending} btn="auto-run">Run</button>&nbsp;
+                        <button className="input-btn" disabled={this.state.pending}>Run</button>&nbsp;
                         <button onClick={this.onReset.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Reset</button>&nbsp;
-                        <button className="input-btn" disabled={this.state.pending}>Export CSV</button>
+                        <button onClick={this.downloadCSV.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Export CSV</button>
                     </div>
                 </form>
                 <div>{this.state.message}</div>
