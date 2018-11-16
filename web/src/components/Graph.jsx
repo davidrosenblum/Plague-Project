@@ -111,11 +111,21 @@ export class Graph extends React.Component{
 		);
 	}
 
+	toPNG(){
+		let container = this.graphContainerRef.current.value;
+		if(container){
+			console.log(container);
+		}
+		else console.log("NO Container");
+	}
+
 	render(){
 		if(this.state.visible){
 			let data = GraphData.getData(this.state.graphLabels);
 			let dayCount = data.values.length ? data.values[0].length : 0;
 			let width = Math.min(this.state.containerWidth, WIDTH);
+
+			this.toPNG();
 
 			return (
 				<div ref={this.graphContainerRef}>
@@ -145,8 +155,8 @@ export class Graph extends React.Component{
 					</div>
 					<div>
 						<GraphRange
-							min={1}
-							max={Simulator.data.length || 1}
+							min={0}
+							max={Simulator.data.length - 1 || 0}
 						/>
 					</div>
 					<div className="text-center">
