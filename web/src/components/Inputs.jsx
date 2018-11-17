@@ -4,6 +4,17 @@ import ParamStorage from "../ParamStorage";
 import { NumSlider } from "./NumSlider";
 import preset from "../preset"
 
+// input range constraints (min, max, step)
+export const INPUT_RANGES = {
+    INFECTION_LENGTH:   [1, 365, 1],
+    TRANSMISSION_RATE:  [0, 20, 0.01],
+    VIRULENCE:          [0, 1, 0.001],
+    INITIAL_POPULATION: [1, 1000000, 1],
+    IMMUNE_PERCENT:     [0, 1, 0.01],
+    INITIAL_INFECTED:   [0, 1000000, 1],
+    SIMULATION_LENGTH:  [1, 365, 1]
+};
+
 export class Inputs extends React.Component{
     constructor(props){
         super(props);
@@ -29,18 +40,44 @@ export class Inputs extends React.Component{
         Simulator.on("load", this.onSimulatorLoad.bind(this));
         Simulator.on("error", this.onSimulatorError.bind(this));
 
-        // test values
-        if(new URLSearchParams(window.location.search).get("test") === "true"){
-            this.initialInfectedRef.current.value = 500;
-            this.intialImmunityRef.current.value = 0.10;
-            this.intialPopRef.current.value = 1000000;
-            this.virulenceRef.current.value = 0.25;
-            this.daysRef.current.value = 365;
-            this.infectionLengthRef.current.value = 100;
-            this.transmissionRef.current.value = 0.2;
+        // query string params?
+        this.extractQueryStringParams();
 
-            ParamStorage.saveParamsInputsDict(this.getInputsDictionary());
+        // test values?
+        if(new URLSearchParams(window.location.search).get("test") === "true"){
+            this.useTestValues();
         }
+    }
+    
+    // extracts optional query string parameters from the query string
+    extractQueryStringParams(){
+        // get query string data
+        let qs = new URLSearchParams(window.location.search);
+
+        // extract values from query string - set to the number value or default to min
+        // (setting value to below min will result in min)
+        this.initialInfectedRef.current.value = parseInt(qs.get("initial_infected")) || -1;
+        this.intialImmunityRef.current.value =  parseFloat(qs.get("immune_percent")) || -1;
+        this.intialPopRef.current.value =       parseInt(qs.get("initial_population")) || -1;
+        this.virulenceRef.current.value =       parseFloat(qs.get("virulence")) || -1;
+        this.daysRef.current.value =            parseInt(qs.get("simulation_length")) || -1;
+        this.infectionLengthRef.current.value = parseInt(qs.get("infection_length")) || -1;
+        this.transmissionRef.current.value =    parseFloat(qs.get("transmission_rate")) || -1;
+    }
+
+    // changes the input parameters to predefined test values
+    useTestValues(){
+        // set values
+        this.initialInfectedRef.current.value = 500;
+        this.intialImmunityRef.current.value = 0.10;
+        this.intialPopRef.current.value = 1000000;
+        this.virulenceRef.current.value = 0.25;
+        this.daysRef.current.value = 365;
+        this.infectionLengthRef.current.value = 100;
+        this.transmissionRef.current.value = 0.2;
+
+        // force save
+        ParamStorage.saveParamsInputsDict(this.getInputsDictionary());
     }
 
     // creates a dictionary of all the inputs and their values (names formatted for the API call) 
@@ -190,9 +227,9 @@ export class Inputs extends React.Component{
                             <NumSlider
                                 label={"Length of Infection (Days)"}
                                 showRange={true}
-                                min={1}
-                                max={365}
-                                step={1}
+                                min={INPUT_RANGES.INFECTION_LENGTH[0]}
+                                max={INPUT_RANGES.INFECTION_LENGTH[1]}
+                                step={INPUT_RANGES.INFECTION_LENGTH[2]}
                                 required={true}
                                 ref={this.infectionLengthRef}
                                 disabled={this.state.isDisabled}
@@ -202,9 +239,9 @@ export class Inputs extends React.Component{
                             <NumSlider
                                 label={"Transmission Rate"}
                                 showRange={true}
-                                min={0}
-                                max={20}
-                                step={0.01}
+                                min={INPUT_RANGES.TRANSMISSION_RATE[0]}
+                                max={INPUT_RANGES.TRANSMISSION_RATE[1]}
+                                step={INPUT_RANGES.TRANSMISSION_RATE[2]}
                                 required={true}
                                 ref={this.transmissionRef}
                                 disabled={this.state.isDisabled}
@@ -216,9 +253,9 @@ export class Inputs extends React.Component{
                             <NumSlider
                                 label={"Virulence"}
                                 showRange={true}
-                                min={0}
-                                max={1}
-                                step={0.001}
+                                min={INPUT_RANGES.VIRULENCE[0]}
+                                max={INPUT_RANGES.VIRULENCE[1]}
+                                step={INPUT_RANGES.VIRULENCE[2]}
                                 required={true}
                                 ref={this.virulenceRef}
                                 disabled={this.state.isDisabled}
@@ -228,9 +265,9 @@ export class Inputs extends React.Component{
                             <NumSlider
                                 label={"Initial Population"}
                                 showRange={true}
-                                min={1}
-                                max={1000000}
-                                step={1}
+                                min={INPUT_RANGES.INITIAL_POPULATION[0]}
+                                max={INPUT_RANGES.INITIAL_POPULATION[1]}
+                                step={INPUT_RANGES.INITIAL_POPULATION[2]}
                                 required={true}
                                 ref={this.intialPopRef}
                             />
@@ -241,9 +278,9 @@ export class Inputs extends React.Component{
                             <NumSlider
                                 label={"Initial Immunity Percent"}
                                 showRange={true}
-                                min={0}
-                                max={1}
-                                step={0.01}
+                                min={INPUT_RANGES.IMMUNE_PERCENT[0]}
+                                max={INPUT_RANGES.IMMUNE_PERCENT[1]}
+                                step={INPUT_RANGES.IMMUNE_PERCENT[2]}
                                 required={true}
                                 ref={this.intialImmunityRef}
                             />
@@ -252,10 +289,10 @@ export class Inputs extends React.Component{
                             <NumSlider
                                 label={"Initial Infected"}
                                 showRange={true}
-                                min={0}
-                                max={1000000}
+                                min={INPUT_RANGES.INITIAL_INFECTED[0]}
+                                max={INPUT_RANGES.INITIAL_INFECTED[1]}
+                                step={INPUT_RANGES.INITIAL_INFECTED[2]}
                                 maxText={"Population"}
-                                step={1}
                                 required={true}
                                 ref={this.initialInfectedRef}
                             />
@@ -266,9 +303,9 @@ export class Inputs extends React.Component{
                             <NumSlider
                                 label={"Simulation Length (Days)"}
                                 showRange={true}
-                                min={1}
-                                max={365}
-                                step={1}
+                                min={INPUT_RANGES.SIMULATION_LENGTH[0]}
+                                max={INPUT_RANGES.SIMULATION_LENGTH[1]}
+                                step={INPUT_RANGES.SIMULATION_LENGTH[2]}
                                 required={true}
                                 ref={this.daysRef}
                             />

@@ -17,7 +17,8 @@ const COLORS = {
 	"Infected": 	"green",
 	"Susceptible": 	"red",
 	"Immune": 		"steelblue",
-	"Dead": 		"gray"
+	"Dead": 		"gray",
+	"TrendLine":	"black"
 };
 
 export class Graph extends React.Component{
@@ -30,7 +31,7 @@ export class Graph extends React.Component{
 			visible: false,						// true/false if simulator data to render
 			tooltip: null,						// text to display
 			containerWidth: WIDTH,				// line graph parent width
-			graphLabels: {}
+			graphLabels: {}						// selected graph labels (Infected, Susceptible, etc)
 	    };
 	}
 
@@ -57,7 +58,7 @@ export class Graph extends React.Component{
 			this.setState({tooltip: null});
 		}
 	}
-
+	
 	// when a label ('Infected', 'Susceptible', etc) is clicked...
 	toggleLabel(label){
 		// copy labels dictionary
