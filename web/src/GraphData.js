@@ -17,9 +17,9 @@ class GraphData extends EventEmitter{
         if(simData){
             // start & end indeces 
             let start = this.startDay > -1 ? this.startDay : 0;
-            let end = this.endDay < simData.length ? this.endDay : simData.length;
+            let end = this.endDay < simData.length ? this.endDay : (simData.length - 1);
 
-            for(let i = start; i < end; i++){
+            for(let i = start; i <= end; i++){
                 let day = simData[i];
 
                 // label is 'Infected', 'Susceptible', etc (whatever is provided)
