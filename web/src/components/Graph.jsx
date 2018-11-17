@@ -111,12 +111,57 @@ export class Graph extends React.Component{
 		);
 	}
 
-	toPNG(){
-		let container = this.graphContainerRef.current.value;
+	// exports the current svg graph to a jpg file 
+	downloadJPG(){
+		let container = this.graphContainerRef.current;
 		if(container){
-			console.log(container);
+			// get svg element
+			let svgElement = container.querySelector("svg");
+
+			// create canvas
+			let canvas = document.createElement("canvas");
+			let ctx = canvas.getContext("2d");
+
+			// resize canvas to svg
+			canvas.width = svgElement.getAttribute("width");
+			canvas.height = svgElement.getAttribute("height");
+
+			// convert svg element to xml 
+			let svgXml = new XMLSerializer().serializeToString(svgElement);
+
+			// create a data url from the svg+xml
+			let blob = new Blob([svgXml], {type: "image/svg+xml"});
+			let svgUrl = window.URL.createObjectURL(blob);
+
+			// create an image to hold the svg data url 
+			let svgImage = document.createElement("img");
+
+			// when the svgxml image loads...
+			svgImage.onload = () => {
+				// draw svg+xml onto canvas
+				ctx.imageSmoothingEnabled = true;
+				ctx.imageSmoothingQuality = "high";
+				ctx.drawImage(svgImage, 0, 0);
+
+				// remove black background for white 
+				ctx.globalCompositeOperation = "destination-over";
+				ctx.fillStyle = "white";
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+				// get jpg data
+				let jpg = document.createElement("img");
+				jpg.onload = () => {
+					// jpg is rasterized svg
+					// (implement download here)
+					//document.body.appendChild(jpg);
+					window.URL.revokeObjectURL(svgUrl);
+				}
+				jpg.setAttribute("src", canvas.toDataURL("image/jpeg"));
+			};
+
+			// load the svgxml data
+			svgImage.setAttribute("src", svgUrl);
 		}
-		else console.log("NO Container");
 	}
 
 	render(){
@@ -124,8 +169,6 @@ export class Graph extends React.Component{
 			let data = GraphData.getData(this.state.graphLabels);
 			let dayCount = data.values.length ? data.values[0].length : 0;
 			let width = Math.min(this.state.containerWidth, WIDTH);
-
-			this.toPNG();
 
 			return (
 				<div ref={this.graphContainerRef}>
