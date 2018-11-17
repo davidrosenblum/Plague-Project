@@ -83,6 +83,11 @@ export class NumSlider extends React.Component{
     }
 
     set value(n){
+        // must be in range
+        n = Math.max(this.props.min, n);
+        n = Math.min(n, this.props.max);
+
+        // update elements 
         this.numRef.current.value = n;
         this.rangeRef.current.value = n;
     }

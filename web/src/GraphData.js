@@ -7,6 +7,19 @@ class GraphData extends EventEmitter{
 
         this._startDay = -1;
         this._endDay = Number.MAX_SAFE_INTEGER;
+        this._trendLineY = 0;
+
+        this.extractTrendLine();
+    }
+
+    // extracts trend line from query strings
+    extractTrendLine(){
+        // query strings
+        let qs = new URLSearchParams(window.location.search);
+        
+        // get trend line as float (default 0)
+		let trendLineY = parseFloat(qs.get("trend_line")) || 0;
+        this._trendLineY = trendLineY;
     }
 
     getData(keysDict){
@@ -44,7 +57,13 @@ class GraphData extends EventEmitter{
 
                     // update largest Y
                     largestY = Math.max(largestY, y);
-                };
+                }
+            }
+
+            // optional trend line points
+            if(this.trendLineY > 0){
+                // creates an array of [{x, y},...] where x is the day and y is the trend line Y
+                labeledPoints["TrendLine"] = new Array(end - start).fill(null).map((val, index) => ({x: index + start, y: this.trendLineY}));
             }
         }
 
@@ -76,12 +95,21 @@ class GraphData extends EventEmitter{
         this.emit(new Event("update"));
     }
 
+    set trendLineY(value){
+        this._trendLineY = value;
+        this.emit(new Event("update"));
+    }
+
     get startDay(){
         return Math.max(0, this._startDay);
     }
 
     get endDay(){
         return Math.min(this._endDay, Simulator.data ? Simulator.data.length : 0);
+    }
+
+    get trendLineY(){
+        return this._trendLineY;
     }
 }
 

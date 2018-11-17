@@ -4,7 +4,7 @@
 }
 
 .graph-range-container input[type="number"]{
-    width: 100px;
+    width: 75px;
     border: 1px solid silver;
     border-radius: 6px;
     padding: 3px;
