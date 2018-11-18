@@ -58,12 +58,15 @@ class ParamValues:
             raise ValueError("Initial Population value must be in the range {a}-{b}.".format(a=min_val, b=max_val))
 
     @staticmethod
-    def validate_immune_percent(immune_percent):
+    def validate_immune_percent(immune_percent, initial_population=None, initial_infected=None):
         if isnan(immune_percent) or not isinstance(immune_percent, float):
             raise TypeError("Immune Percent must be of type float.")
 
         min_val = ParamValues.IMMUNE_PERCENT[0]
         max_val = ParamValues.IMMUNE_PERCENT[1]
+
+        if initial_population is not None and initial_infected is not None:
+            max_val = (initial_population - initial_infected) / initial_population
 
         if immune_percent < min_val or immune_percent > max_val:
             raise ValueError("Immune Percent value must be in the range {a}-{b}.".format(a=min_val, b=max_val))
@@ -120,19 +123,19 @@ class ParamValues:
         else:
             raise ValueError("Initial Population parameter missing.")
 
-        # immmune percent check
-        if "immune_percent" in params_dict:
-            immune_percent = params_dict["immune_percent"]
-            ParamValues.validate_immune_percent(immune_percent)
-        else:
-            raise ValueError("Immune Percent parameter missing.")
-
         # intial infected check
         if "initial_infected" in params_dict:
             initial_infected = params_dict["initial_infected"]
             ParamValues.validate_initial_infected(initial_infected, initial_population)
         else:
             raise ValueError("Initial Infected parameter missing.")
+
+        # immmune percent check
+        if "immune_percent" in params_dict:
+            immune_percent = params_dict["immune_percent"]
+            ParamValues.validate_immune_percent(immune_percent, initial_population, initial_infected)
+        else:
+            raise ValueError("Immune Percent parameter missing.")
 
         # simulation length check
         if "simulation_length" in params_dict:

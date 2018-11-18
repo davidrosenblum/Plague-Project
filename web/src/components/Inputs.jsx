@@ -95,6 +95,10 @@ export class Inputs extends React.Component{
         // make sure infected <= population
         initial_infected = Math.min(initial_infected, initial_population);
 
+        // make sure immune percent is <= healthy population
+        let healthy = (initial_population - initial_infected) / initial_population;
+        immune_percent = Math.min(immune_percent, healthy);
+
         // MUST match API expectations! 
         return {immune_percent, transmission_rate, virulence, initial_infected, initial_population, infection_length, simulation_length, preset};
     }

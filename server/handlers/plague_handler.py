@@ -68,6 +68,5 @@ class PlagueHandler(CORSHandler):
             self.finish(results)
         else:
             # error occurred - respond with bad request
-            print(err_msg)
             self.set_status(400)
             self.finish(err_msg)
