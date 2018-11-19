@@ -3,6 +3,7 @@ import { LineChart } from "react-easy-chart"
 import Simulator from "../Simulator";
 import GraphData from "../GraphData";
 import { GraphRange } from "./GraphRange";
+import { TrendLine } from "./TrendLine";
 
 // graph size constants
 const WIDTH = 		540,
@@ -172,30 +173,33 @@ export class Graph extends React.Component{
 			let width = Math.min(this.state.containerWidth, WIDTH);
 
 			return (
-				<div ref={this.graphContainerRef}>
+				<div>
 					<h5>{data.labels.join(" + ") || "(Nothing Selected)"}</h5>
 					{this.renderLabelButtons()}
-					<div>
-						<LineChart
-							data={data.values}
-							width={width}
-							height={HEIGHT}
-							margin={{
-								top: MARGIN_TOP, bottom: MARGIN_BOTTOM,
-								left: MARGIN_LEFT, right: MARGIN_RIGHT
-							}}
-							axes
-							axisLabels={{x: "Days Elapsed", y: "People"}}
-							dataPoints={dayCount < 0} // enable this later
-							xDomainRange={[GraphData.startDay, GraphData.endDay]}
-							yDomainRange={[0, data.largestY]}
-							lineColors={data.labels.map(label => COLORS[label])}
-							clickHandler={this.onGraphClick.bind(this)}
-							style={{
-								".label": {fill: "black"},
-								".axis": {fontSize: "0.75em", fontFamily: "arial"}
-							}}
-						/>
+					<div ref={this.graphContainerRef}>
+						<div>
+							<LineChart
+								data={data.values}
+								width={width}
+								height={HEIGHT}
+								margin={{
+									top: MARGIN_TOP, bottom: MARGIN_BOTTOM,
+									left: MARGIN_LEFT, right: MARGIN_RIGHT
+								}}
+								axes
+								axisLabels={{x: "Days Elapsed", y: "People"}}
+								dataPoints={dayCount < 0} // enable this later
+								xDomainRange={[GraphData.startDay, GraphData.endDay]}
+								yDomainRange={[0, data.largestY]}
+								lineColors={data.labels.map(label => COLORS[label])}
+								clickHandler={this.onGraphClick.bind(this)}
+								style={{
+									".label": {fill: "black"},
+									".axis": {fontSize: "0.75em", fontFamily: "arial"}
+								}}
+							/>
+							<TrendLine max={data.largestY}/>
+						</div>
 					</div>
 					<div>
 						<GraphRange

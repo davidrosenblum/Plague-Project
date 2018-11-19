@@ -47,8 +47,8 @@
     float:right;
 }
 
-/* CSS for the chart */
-{box-sizing: border-box;}
+/* CSS for the chart 
+{box-sizing: border-box;}*/
 
 .overflow-table table{
     width:100%;
