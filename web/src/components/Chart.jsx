@@ -82,7 +82,7 @@ export class Chart extends React.Component{
 
 	render(){
 		return this.state.visible ? (
-			<div>
+			<div className="chart-container">
 				<table className="table table-striped overflow-table">
 					<thead>
 						<tr>

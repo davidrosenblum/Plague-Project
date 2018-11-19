@@ -7,15 +7,23 @@
         display: none;
     }
 
-    .card-body {
-        background-color: transparent;
+    @page {
+        margin: 0.75cm;
     }
 
-    form {
-     
+    .card-body, .card {
+        border: none;
     }
 
-    svg {
-    
+    .graph-container {
+        
+    }
+
+    .input-container {
+        
+    }
+
+    .chart-container {
+        
     }
 }

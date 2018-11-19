@@ -118,7 +118,7 @@ export class Graph extends React.Component{
 			let width = Math.min(this.state.containerWidth, WIDTH);
 
 			return (
-				<div ref={this.graphContainerRef}>
+				<div className="graph-container" ref={this.graphContainerRef}>
 					<h5>{data.labels.join(" + ") || "(Nothing Selected)"}</h5>
 					{this.renderLabelButtons()}
 					<div>
