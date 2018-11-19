@@ -1,0 +1,17 @@
+@media print {
+    @page {
+        margin: 0.75cm;
+    }
+
+    .graph-container {
+
+    }
+
+    .input-container {
+        
+    }
+
+    .input-graph-container {
+
+    }
+}

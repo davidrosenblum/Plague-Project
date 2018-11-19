@@ -18,7 +18,7 @@ export class App extends React.Component{
                     <Container>
                         <Card color="light">
                             <CardBody>
-                                <Row className="text-center">
+                                <Row className="text-center input-graph-container">
                                     <Col lg={6}>
                                         <Inputs/>
                                     </Col>

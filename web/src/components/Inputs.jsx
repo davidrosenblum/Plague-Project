@@ -218,7 +218,7 @@ export class Inputs extends React.Component{
 
     render(){
         return (
-            <div>
+            <div className="input-container">
                 <div id="inputs-header-container" className="text-center">
                     <button onClick={() => this.switchParamSet("backwards")}>&larr;</button>
                     <h5 className="text-center">Experimental Variables</h5>
