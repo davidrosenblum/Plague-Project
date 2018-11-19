@@ -16,11 +16,12 @@
     }
 
     .graph-container {
-        
     }
 
     .input-container {
-        
+        font-size: 13px;
+        max-width: 20%; 
+        margin: 10px;
     }
 
     .chart-container {
