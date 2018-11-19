@@ -1,5 +1,6 @@
 import "../lib/bootstrap.min.css";
 import "./App.css";
+import "./Print.css";
 import React from "react";
 import { Container, Row, Col, Card, CardBody } from "reactstrap";
 import { Inputs } from "./Inputs";
