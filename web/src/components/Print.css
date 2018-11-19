@@ -1,0 +1,21 @@
+@media print {
+    #root {
+        font-family: 'Times New Roman', Times, serif;
+    }
+
+    nav, footer, .Version, button, .num-slider-slider {
+        display: none;
+    }
+
+    .card-body {
+        background-color: transparent;
+    }
+
+    form {
+     
+    }
+
+    svg {
+    
+    }
+}

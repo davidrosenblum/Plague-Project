@@ -1,159 +1,162 @@
-.input-btn{
-    width: 100px;
-    background-color: white;
-    border: 1px solid silver;
-    border-radius: 6px;
-    padding: 4px;
-    transition: 0.5s;
-}
+@media screen  {
 
-.input-btn:hover{
-    background-color: black;
-    color: white;
-    border-color: white;
-}
+    .input-btn{
+        width: 100px;
+        background-color: white;
+        border: 1px solid silver;
+        border-radius: 6px;
+        padding: 4px;
+        transition: 0.5s;
+    }
 
-::selection{
-    background-color: black;
-    color: white;
-}
+    .input-btn:hover{
+        background-color: black;
+        color: white;
+        border-color: white;
+    }
 
-.graph{
-    text-align: center;
-}
+    ::selection{
+        background-color: black;
+        color: white;
+    }
 
-.graph-button{
-    border: none;
-    background: transparent;
-    transition: 0.5s;
-}
+    .graph{
+        text-align: center;
+    }
 
-.graph-button:hover{
-    text-decoration: underline;
-}
+    .graph-button{
+        border: none;
+        background: transparent;
+        transition: 0.5s;
+    }
 
-.graph-button:focus{
-    outline: none;
-}
+    .graph-button:hover{
+        text-decoration: underline;
+    }
 
-.Version{
-    float: right;
-    text-align: center;
-    color: gray;
-}
+    .graph-button:focus{
+        outline: none;
+    }
 
-/* CSS for graph dropdown  */ 
-.GraphDropdown{
-    float:right;
-}
+    .Version{
+        float: right;
+        text-align: center;
+        color: gray;
+    }
 
-/* CSS for the chart */
-{box-sizing: border-box;}
+    /* CSS for graph dropdown  */ 
+    .GraphDropdown{
+        float:right;
+    }
 
-.overflow-table table{
-    width:100%;
-}
+    /* CSS for the chart */
+    {box-sizing: border-box;}
 
-.overflow-table thead{
-    display: table;
-    width: 100%; /* scroll bar width is 17px*/
-}
+    .overflow-table table{
+        width:100%;
+    }
 
-.overflow-table tbody{
-    display: block;
-    max-height: 250px;
-    overflow-y: auto;
-}
+    .overflow-table thead{
+        display: table;
+        width: 100%; /* scroll bar width is 17px*/
+    }
 
-.overflow-table th{
-    text-align: center;
-}
+    .overflow-table tbody{
+        display: block;
+        max-height: 250px;
+        overflow-y: auto;
+    }
 
-.overflow-table th, td{
-    width:calc(100% / 6);/* Divide the full width by number of columns in table */
-    text-align: center;
-}
+    .overflow-table th{
+        text-align: center;
+    }
 
-.overflow-table tr{
-    display: table;
-    width: 100%
-}
+    .overflow-table th, td{
+        width:calc(100% / 6);/* Divide the full width by number of columns in table */
+        text-align: center;
+    }
 
-.overflow-table td{
-    text-align: center;
-    border-bottom: none;
-    border-left: none;
-}
+    .overflow-table tr{
+        display: table;
+        width: 100%
+    }
 
-/* Modal CSS */
+    .overflow-table td{
+        text-align: center;
+        border-bottom: none;
+        border-left: none;
+    }
 
-.modalHeader{
-    text-align: center;
-}
+    /* Modal CSS */
 
-.header{
-    background-color: lightgray;
-}
+    .modalHeader{
+        text-align: center;
+    }
 
-.closeTag{
-    float: left;
-}
+    .header{
+        background-color: lightgray;
+    }
 
-.error{
-    color: red;
-}
+    .closeTag{
+        float: left;
+    }
 
-.success{
-    color: blue;
-}
+    .error{
+        color: red;
+    }
 
-.center{
-    text-align: center;
-}
+    .success{
+        color: blue;
+    }
 
-.reportsTable{
-    border: 1px solid black;
-    height: 300px;
-}
+    .center{
+        text-align: center;
+    }
 
-.pointer{
-    cursor: pointer;
-}
+    .reportsTable{
+        border: 1px solid black;
+        height: 300px;
+    }
 
-footer a{
-    color: black;
-    text-decoration: none;
-    transition: 0.5s;
-}
+    .pointer{
+        cursor: pointer;
+    }
 
-footer a:hover{
-    color: orangered;
-    text-decoration: none;
-}
+    footer a{
+        color: black;
+        text-decoration: none;
+        transition: 0.5s;
+    }
 
-#inputs-header-container h5{
-    width: 75%;
-    margin: auto;
-    display: inline-block;
-}
+    footer a:hover{
+        color: orangered;
+        text-decoration: none;
+    }
 
-#inputs-header-container button{
-    width: 32px;
-    height: 32px;
-    border: 1px solid gray;
-    border-radius: 6px;
-    background-color: white;
-    transition: 0.5s;
-}
+    #inputs-header-container h5{
+        width: 75%;
+        margin: auto;
+        display: inline-block;
+    }
 
-#inputs-header-container button:hover{
-    background-color: black;
-    color: white;
-}
+    #inputs-header-container button{
+        width: 32px;
+        height: 32px;
+        border: 1px solid gray;
+        border-radius: 6px;
+        background-color: white;
+        transition: 0.5s;
+    }
 
-.modal-text-area{
-    width: 100%;
-    height: 100%;
-    max-width: 650px;
-    max-height: 200px;
+    #inputs-header-container button:hover{
+        background-color: black;
+        color: white;
+    }
+
+    .modal-text-area{
+        width: 100%;
+        height: 100%;
+        max-width: 650px;
+        max-height: 200px;
+    }
 }

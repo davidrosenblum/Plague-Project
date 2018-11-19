@@ -1,5 +1,6 @@
 import "../lib/bootstrap.min.css";
 import "./App.css";
+import "./Print.css";
 import React from "react";
 import { Inputs } from "./Inputs";
 import { Navbar } from "./Navbar";
