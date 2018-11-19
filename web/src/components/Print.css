@@ -9,7 +9,8 @@
 
     nav, footer, .Version, 
     button, .num-slider-slider,
-    .trend-line-container {
+    .trend-line-container,
+    .trend-slider, .trend-line-text {
         display: none;
     }
 
@@ -18,16 +19,16 @@
     }
 
     .graph-container {
-
+        float: right !important;
     }
 
     .input-container {
+        float: left !important;
         font-size: 13px;
         max-width: 20%;
         margin: 10px;
     }
 
     .input-graph-container {
-
     }
 }
