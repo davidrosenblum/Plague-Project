@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Form, FormGroup, Modal, ModalBody, ModalHeader, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button } from "reactstrap";
+import { Row, Col, Form, FormGroup, Modal, ModalBody, ModalHeader, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Input } from "reactstrap";
 import Simulator from "../Simulator";
 import ParamStorage from "../ParamStorage";
 import { NumSlider } from "./NumSlider";
@@ -33,6 +33,7 @@ export class Inputs extends React.Component{
 
         // export refs
         this.exportUrlRef = React.createRef();
+        this.csvFilenameElement = null;         // later to set an <input> (reactstrap inner ref)
 
         this.state = {
             pending: false,         // no new requests while pending (disable buttons)
@@ -131,7 +132,10 @@ export class Inputs extends React.Component{
             // disable buttons
             this.setState({pending: true});
 
-            Simulator.downloadCSVFile(this.getInputsDictionary())
+            // optional filename override
+            let filename = this.csvFilenameElement ? this.csvFilenameElement.value : null;
+
+            Simulator.downloadCSVFile(this.getInputsDictionary(), filename)
                 .catch(err => {
                     // something went wrong (server did not respond or bad request)
                     this.setState({message: err.message});
@@ -261,6 +265,15 @@ export class Inputs extends React.Component{
                     <div>
                         Exports a comma separated value (.csv) file containing the results displayed in the table.
                         This file is easily accesible in Excel. 
+                    </div>
+                    <br/>
+                    <div>
+                        <Input
+                            innerRef={element => this.csvFilenameElement = element}
+                            placeholder="Optional filename (.csv automatically appended)"
+                            type="text"
+                            maxLength={25}
+                        />        
                     </div>
                     <br/>
                     <div>
