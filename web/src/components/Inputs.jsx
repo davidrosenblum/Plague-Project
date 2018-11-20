@@ -1,10 +1,11 @@
 import React from "react";
-import { Row, Col, Form, FormGroup, Modal, ModalBody, ModalHeader, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Input } from "reactstrap";
+import { Row, Col, Form, FormGroup, Button, Input } from "reactstrap";
 import Simulator from "../Simulator";
 import ParamStorage from "../ParamStorage";
-import { NumSlider } from "./NumSlider";
-import preset from "../preset"
 import GraphData from "../GraphData";
+import { NumSlider } from "./NumSlider";
+import { ExportsModal } from "./ExportsModal";
+import preset from "../preset"
 
 // input range constraints (min, max, step)
 export const INPUT_RANGES = {
@@ -31,17 +32,11 @@ export class Inputs extends React.Component{
         this.daysRef = React.createRef();
         this.presetRef = React.createRef();
 
-        // export refs
-        this.exportUrlRef = React.createRef();
-        this.csvFilenameElement = null;         // later to set an <input> (reactstrap inner ref)
-
         this.state = {
-            pending: false,         // no new requests while pending (disable buttons)
-            message: null,          // message to display (errors)
-            isDisabled: false,      // to disable/enable fields depending on what preset is selected
-            exportModal: false,     // export options modal visibility
-            exportOption: null,
-            exportDropdown: false
+            pending: false,             // no new requests while pending (disable buttons)
+            message: null,              // message to display (errors)
+            isDisabled: false,          // to disable/enable fields depending on what preset is selected
+            exportModalOpen: false      // export options modal visibility
         };
     }
 
@@ -126,28 +121,6 @@ export class Inputs extends React.Component{
         Simulator.reset();
     }
 
-    // downloads the csv file
-    downloadCSV(){
-        if(!this.state.pending){
-            // disable buttons
-            this.setState({pending: true});
-
-            // optional filename override
-            let filename = this.csvFilenameElement ? this.csvFilenameElement.value : null;
-
-            Simulator.downloadCSVFile(this.getInputsDictionary(), filename)
-                .catch(err => {
-                    // something went wrong (server did not respond or bad request)
-                    this.setState({message: err.message});
-                })
-                .then(() => {
-                    // (this fires when any response happens not successful only!)
-                    // always enable buttons
-                    this.setState({pending: false})
-                });
-        }
-    }
-
     runSimulation(){
         // no simulation data - load it (first simulation or reset happened)
         if(!Simulator.hasData){
@@ -201,11 +174,7 @@ export class Inputs extends React.Component{
     }
 
     toggleExportModal(){
-        this.setState(prev => ({exportModal: !prev.exportModal}));
-    }
-
-    toggleExportDropdown(){
-        this.setState(prev => ({exportDropdown: !prev.exportDropdown}));
+        this.setState(prev => ({exportModalOpen: !prev.exportModalOpen}));
     }
 
     // moves the parameter storage day & updates UI inputs
@@ -234,77 +203,6 @@ export class Inputs extends React.Component{
 
         this.presetRef.current.value = params.preset;
         this.onPresetChange();
-    }
-
-    getExportURL(){
-        let dict = this.getInputsDictionary();
-
-        let url = `${window.location.origin}?`;
-
-        for(let param in dict){
-            url += `${param}=${dict[param]}&`;
-        }
-
-        url += `trend_line=${GraphData.trendLineY}`;
-
-        return url;
-    }
-
-    copyLinkText(){
-        let elem = this.exportUrlRef.current;
-        if(elem){
-            elem.select();
-            document.execCommand("copy");
-        }
-    }
-
-    renderExportOptBody(){
-        if(this.state.exportOption === "csv"){
-            return (
-                <div>
-                    <div>
-                        Exports a comma separated value (.csv) file containing the results displayed in the table.
-                        This file is easily accesible in Excel. 
-                    </div>
-                    <br/>
-                    <div>
-                        <Input
-                            innerRef={element => this.csvFilenameElement = element}
-                            placeholder="Optional filename (.csv automatically appended)"
-                            type="text"
-                            maxLength={25}
-                        />        
-                    </div>
-                    <br/>
-                    <div>
-                        <Button color="fade" onClick={this.downloadCSV.bind(this)}>Download CSV</Button>
-                    </div>
-                </div>
-            );
-        }
-        else if(this.state.exportOption === "sim-link"){
-            return (
-                <div>
-                    <div>
-                        Exports a URL for this application with preset values that can be shared.
-                    </div>
-                    <br/>
-                    <div>
-                        <textarea ref={this.exportUrlRef} className="modal-url-text" defaultValue={this.getExportURL()} readOnly>
-                        </textarea>
-                    </div>
-                    <br/>
-                    <div>
-                        <Button color="fade" onClick={this.copyLinkText.bind(this)}>Copy Link</Button>
-                    </div>
-                </div>
-            );
-        }
-        return (
-            <div>
-                Please select an export option.
-            </div>
-        )
     }
 
     render(){
@@ -427,28 +325,11 @@ export class Inputs extends React.Component{
                     </div>
                 </form>
                 <div>{this.state.message}</div>
-                <Modal isOpen={this.state.exportModal}>
-                    <ModalHeader toggle={this.toggleExportModal.bind(this)}>
-                        <Dropdown isOpen={this.state.exportDropdown} toggle={this.toggleExportDropdown.bind(this)}>
-                            <DropdownToggle color="fade" caret>
-                                Export Options
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem onClick={() => this.setState({exportOption: "csv"})}>
-                                    Table CSV
-                                </DropdownItem>
-                                <DropdownItem onClick={() => this.setState({exportOption: "sim-link"})}>
-                                    Simulation Link
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                    </ModalHeader>
-                    <ModalBody>
-                        <div>
-                            {this.renderExportOptBody()}
-                        </div>
-                    </ModalBody>
-                </Modal>
+                <ExportsModal
+                    isOpen={this.state.exportModalOpen}
+                    toggle={this.toggleExportModal.bind(this)}
+                    getInputsDictionary={this.getInputsDictionary.bind(this)}
+                />
             </div>
         );
     }
