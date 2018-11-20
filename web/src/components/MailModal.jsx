@@ -20,12 +20,19 @@ export class MailModal extends React.Component{
         this.state = { 
 			other: false,
 			errMessage:null,
-			successMessage:null
+			successMessage:null,
+			disabled: false
         };
 
-        //Modal.setAppElement(el);
+        //Modal.setAppElement(this.props.app);
+	}
 
-    }
+	componentDidUpdate(prevProps){
+		// clear messages when the visibility changes
+		if(prevProps.showModal && !this.props.showModal){
+			this.setState({errMessage: null, successMessage: null});
+		}
+	}
 
 	// on click of submit button 
 	submitClick(e){
@@ -34,58 +41,35 @@ export class MailModal extends React.Component{
 		let goodHeader = this.headerRef.current ? (this.headerRef.current.value.length > 0) : true;
 		if(this.type != null && this.textRef.current.value != "" && goodHeader){
 			let message = this.BuildArray();
-			Ajax.post(`${window.location.origin}/mail`,null,{message})
-				.then(xhr => {    
+
+			// localhost = dev, else = prod
+			let origin = window.location.origin.includes("localhost") ? "http://localhost:8080" : window.location.origin;
+
+			// sending message, disable send button
+			this.setState({successMessage: "Sending...", errMessage: null, disabled: true});
+
+			Ajax.post(`${origin}/mail`, null, message)
+				.then(xhr => {  
                     // ajax resolved (could be bad/good request, but server responded)
                     if(xhr.status === 200){
-                        // good request - attempt to parse results json
-                        try{
-							this.setState({successMessage:"Submit Successful"});
-                        }
-                        catch(err){
-							// json parse error (should never happen)
-							this.setState({errMessage:JSON.parse(err)});
-							// server responded with bad request signal
-                        }
+						// good request - attempt to parse results json
+						this.setState({successMessage:"Submit Successful", errMessage: null, disabled: false});
                     }
                     else{
 						// bad request
-						this.setState({errMessage:"Bad Request Error"});
-                    }
+						this.setState({errMessage:"Bad Request Error", successMessage: null, disabled: false});
+					}
+					
+					// clear inputs
+					if(this.headerRef.current){
+						this.headerRef.current.value = "";
+					}
+					this.textRef.current.value = "";
                 })
                 .catch(err => {
                     // ajax request died (really bad NOT a 400 error!)
-					this.setState({errMessage:"Cannot reach server"});// request died signal
+					this.setState({errMessage:"Cannot reach server", disabled: false});// request died signal
                 });
-		}else{
-			let textError = this.textRef.current.value;
-			//JSON.stringify
-			var errors = [];
-
-			if(this.typeError == true){
-				errors.push("No Header Selected");
-			}
-
-			if(this.typeError == false){
-				if(this.type == "other" && this.headerRef.current.value == ""){
-					errors.push("No Text Entered in Other Input")
-				}
-			}
-
-			if(textError == ""){
-				errors.push("No Text Entered");
-			}
-
-			if(errors.length > 0){
-				var errorString="";
-				for(var i = 0;i < errors.length;i++){
-					errorString += errors[i]+"|";
-				}
-				this.setState({errMessage:errorString.substring(0,errorString.length-1)});
-			}else if(errors.length == 0){
-				this.setState({errMessage:null});
-			}
-				
 		}
 	}
 	
@@ -111,12 +95,8 @@ export class MailModal extends React.Component{
 		//get the type of the radio button selected
 	 	this.type = type;
 
-		 // check to see if other is selected
-	 	if(this.type == "other"){
-	 		this.setState({other: true});
-	 	}else{
-	 		this.setState({other: false});
-	 	}
+		// check to see if other is selected
+		this.setState({other: this.type === "other"});
 
 	 	this.typeError = false;
 	 }
@@ -130,52 +110,54 @@ export class MailModal extends React.Component{
 			 //load element onto screen
 	 		return(
 	 			<div>
-	 				<label>Other: </label> <input type="text" placeholder="Input for other" ref={this.headerRef}/>
+	 				<label>Other: </label> <input type="text" placeholder="Input for other" ref={this.headerRef} required/>
 	 			</div>
 	 		);
 	 	}
 	 }
 	 
 	render(){
-		return (
-			<form>
+		return this.props.showModal ? (
+			<div>
 				<ReactModal isOpen={this.props.showModal} >
 					<div className="col-lg-1">
-			  			<span className="nav-link" onClick={this.props.closeModal}>&times;</span>
+			  			<span className="pointer" onClick={this.props.closeModal}>&times;</span>
 			  		</div>
 			  		<div className="container border">
 					  <form onSubmit={this.submitClick.bind(this)}>
-							<div className="col-lg-12 header center">
-								<h2 className="modalHeader">Contact Us</h2>
-								<div>
+					  		<div>
+								<div className="header center">
+									<h2 className="modalHeader">Contact Us</h2>
+									<div>
 									<span className="error">
 										{this.state.errMessage}
 									</span>
 									<span className="success">
 										{this.state.successMessage}
 									</span>
+									</div>
 								</div>
-							</div>
-							<div className="col-lg-12 center">
-								<input type="radio" onChange={(t) => this.onTypeSelect("Bug Report")} name="types" value="problem"/>Have a problem?
-								&nbsp;
-								<input type="radio" onChange={(t) => this.onTypeSelect("Feature Request")} name="types" value="idea"/>Have an idea?
-								&nbsp;
-								<input type="radio" onChange={(t) => this.onTypeSelect("other")} name="types" value="other"/>Other
-							</div>
-							<div className="col-lg-12 center">
-								{this.TypeOther()}
-							</div>
-							<div className="col-lg-12 center">
-								<textarea rows="4" cols="100" placeholder="Type message in here." ref={this.textRef}></textarea>
-							</div>
-							<div className="col-lg-12 center">
-								<input type="submit" />
+								<div className="form-group center">
+									<input type="radio" onChange={() => this.onTypeSelect("Bug Report")} name="types" value="problem" required/>Have a problem?
+									&nbsp;
+									<input type="radio" onChange={() => this.onTypeSelect("Feature Request")} name="types" value="idea" required/>Have an idea?
+									&nbsp;
+									<input type="radio" onChange={() => this.onTypeSelect("other")} name="types" value="other" required/>Other
+								</div>
+								<div className="form-group center">
+									{this.TypeOther()}
+								</div>
+								<div className="form-group center">
+									<textarea className="modal-text-area" placeholder="Type message in here." ref={this.textRef} required></textarea>
+								</div>
+								<div className="form-group center">
+									<input className="input-btn" type="submit" disabled={this.state.disabled} />
+								</div>
 							</div>
 						</form>
 					</div>
       			</ReactModal>
-			</form>
-		);
+			</div>
+		) : null;
 	}
 }

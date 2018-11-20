@@ -1,7 +1,19 @@
 import React from "react";
 import Simulator from "../Simulator";
+import ParamStorage from "../ParamStorage";
 import { NumSlider } from "./NumSlider";
 import preset from "../preset"
+
+// input range constraints (min, max, step)
+export const INPUT_RANGES = {
+    INFECTION_LENGTH:   [1, 365, 1],
+    TRANSMISSION_RATE:  [0, 20, 0.01],
+    VIRULENCE:          [0, 1, 0.001],
+    INITIAL_POPULATION: [1, 1000000, 1],
+    IMMUNE_PERCENT:     [0, 1, 0.01],
+    INITIAL_INFECTED:   [0, 1000000, 1],
+    SIMULATION_LENGTH:  [1, 365, 1]
+};
 
 export class Inputs extends React.Component{
     constructor(props){
@@ -15,11 +27,11 @@ export class Inputs extends React.Component{
         this.intialPopRef = React.createRef();
         this.infectionLengthRef = React.createRef();
         this.daysRef = React.createRef();
+        this.presetRef = React.createRef();
 
         this.state = {
             pending: false,         // no new requests while pending (disable buttons)
             message: null,          // message to display (errors)
-            lastBtn: null,
             isDisabled: false       // to disable/enable fields depending on what preset is selected
         };
     }
@@ -28,16 +40,44 @@ export class Inputs extends React.Component{
         Simulator.on("load", this.onSimulatorLoad.bind(this));
         Simulator.on("error", this.onSimulatorError.bind(this));
 
-        // test values
+        // query string params?
+        this.extractQueryStringParams();
+
+        // test values?
         if(new URLSearchParams(window.location.search).get("test") === "true"){
-            this.initialInfectedRef.current.value = 500;
-            this.intialImmunityRef.current.value = 0.10;
-            this.intialPopRef.current.value = 1000000;
-            this.virulenceRef.current.value = 0.25;
-            this.daysRef.current.value = 365;
-            this.infectionLengthRef.current.value = 100;
-            this.transmissionRef.current.value = 0.2;
+            this.useTestValues();
         }
+    }
+    
+    // extracts optional query string parameters from the query string
+    extractQueryStringParams(){
+        // get query string data
+        let qs = new URLSearchParams(window.location.search);
+
+        // extract values from query string - set to the number value or default to min
+        // (setting value to below min will result in min)
+        this.initialInfectedRef.current.value = parseInt(qs.get("initial_infected")) || -1;
+        this.intialImmunityRef.current.value =  parseFloat(qs.get("immune_percent")) || -1;
+        this.intialPopRef.current.value =       parseInt(qs.get("initial_population")) || -1;
+        this.virulenceRef.current.value =       parseFloat(qs.get("virulence")) || -1;
+        this.daysRef.current.value =            parseInt(qs.get("simulation_length")) || -1;
+        this.infectionLengthRef.current.value = parseInt(qs.get("infection_length")) || -1;
+        this.transmissionRef.current.value =    parseFloat(qs.get("transmission_rate")) || -1;
+    }
+
+    // changes the input parameters to predefined test values
+    useTestValues(){
+        // set values
+        this.initialInfectedRef.current.value = 500;
+        this.intialImmunityRef.current.value = 0.10;
+        this.intialPopRef.current.value = 1000000;
+        this.virulenceRef.current.value = 0.25;
+        this.daysRef.current.value = 365;
+        this.infectionLengthRef.current.value = 100;
+        this.transmissionRef.current.value = 0.2;
+
+        // force save
+        ParamStorage.saveParamsInputsDict(this.getInputsDictionary());
     }
 
     // creates a dictionary of all the inputs and their values (names formatted for the API call) 
@@ -49,13 +89,18 @@ export class Inputs extends React.Component{
             initial_infected =      this.initialInfectedRef.current.value,
             initial_population =    this.intialPopRef.current.value,
             infection_length =      this.infectionLengthRef.current.value,
-            simulation_length =     this.daysRef.current.value;
+            simulation_length =     this.daysRef.current.value,
+            preset =                this.presetRef.current.value;
 
         // make sure infected <= population
         initial_infected = Math.min(initial_infected, initial_population);
 
+        // make sure immune percent is <= healthy population
+        let healthy = (initial_population - initial_infected) / initial_population;
+        immune_percent = Math.min(immune_percent, healthy);
+
         // MUST match API expectations! 
-        return {immune_percent, transmission_rate, virulence, initial_infected, initial_population, infection_length, simulation_length};
+        return {immune_percent, transmission_rate, virulence, initial_infected, initial_population, infection_length, simulation_length, preset};
     }
 
     onSimulatorError(){
@@ -72,25 +117,27 @@ export class Inputs extends React.Component{
         Simulator.reset();
     }
 
-    dayByDay(){
-        if(!Simulator.hasData){
-            // disable buttons for loading time
+    // downloads the csv file
+    downloadCSV(){
+        if(!this.state.pending){
+            // disable buttons
             this.setState({pending: true});
 
-            // load data then show next day
-            Simulator.load(this.getInputsDictionary())
-                .then(() => {
-                    this.setState({message: null}); // remove possible err message
-                    Simulator.nextDay();
+            Simulator.downloadCSVFile(this.getInputsDictionary())
+                .catch(err => {
+                    // something went wrong (server did not respond or bad request)
+                    this.setState({message: err.message});
                 })
-                .catch(err => this.setState({message: err.message}));
-        }
-        else{
-            Simulator.nextDay();
+                .then(() => {
+                    // (this fires when any response happens not successful only!)
+                    // always enable buttons
+                    this.setState({pending: false})
+                });
         }
     }
 
-    autoRun(){
+    runSimulation(){
+        // no simulation data - load it (first simulation or reset happened)
         if(!Simulator.hasData){
             // disable buttons for loading time
             this.setState({pending: true});
@@ -99,39 +146,22 @@ export class Inputs extends React.Component{
             Simulator.load(this.getInputsDictionary())
                 .then(() => {
                     this.setState({message: null}); // remove possible err message
-                    Simulator.autoRun();
+
+                    ParamStorage.saveParamsInputsDict(this.getInputsDictionary());  // save parameters
                 })
                 .catch(err => this.setState({message: err.message}));
         }
         else{
-            Simulator.autoRun();
-        }
-    }
+            // verify current parameters are not the same as the ones already run
+            // (prevents reloading data that we already have!)
+            let currParams = ParamStorage.convertToTitleCase(this.getInputsDictionary());
 
-    // downloads the csv file
-    downloadCSV(){
-        if(!this.state.pending){
-            // create download link (never rendered)
-            let url = Simulator.createCSVDownloadURL(this.getInputsDictionary());
-
-            // create a link tag
-            let link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("target", "_blank");
-            link.setAttribute("download", "download");
-
-            // click the tag
-            link.click();
-            link = null;
-
-            /*
-            //this.setState({pending: true});     // disable buttons
-
-            // async csv download request
-            Simulator.downloadCSV(this.getInputsDictionary())
-                .catch(err => this.setState({message: err.message}))    // error
-                .then(() => this.setState({pending: false}));           // enable buttons after fulfilled/rejected
-            */
+            if(ParamStorage.paramsNotLastSave(currParams)){
+                // parameters are different than last time
+                // run new simulation
+                Simulator.reset();      // triggers clearing graph/table and clears data
+                this.runSimulation();   // runs again, but sim will have no data
+            }
         }
     }
 
@@ -142,55 +172,68 @@ export class Inputs extends React.Component{
         // no default submission (using ajax instead)
         evt.preventDefault();
 
-        // problem - both autorun + next day activate this... (only way to do it with using form requires)
+        this.runSimulation();
+    }
 
-        // day-by-day was the trigger
-        if(this.state.lastBtn === "day-by-day"){
-            this.dayByDay();
-        }
-
-        // autorun was the trigger
-        else if(this.state.lastBtn === "auto-run"){
-            this.autoRun();
-        }
-
-        // csv export was the trigger
-        else if(this.state.lastBtn === "export-csv"){
-            this.downloadCSV();
-        }
+    onPresetChange(){
+        let value = this.presetRef.current.value;
         
-    }
-
-    // sets the last button to 'day-by-day' or 'autorun'
-    // kinda ugly but its because form has 2 submit buttons
-    onFormClick(evt){
-        this.setState({lastBtn: evt.target.getAttribute("btn")});
-    }
-
-    onPresetChange(evt){
-        if(evt.target.value != "Custom"){
-            this.setState({isDisabled:true});
-            this.infectionLengthRef.current.value = preset[evt.target.value]["Infection Length"];
-            this.transmissionRef.current.value = preset[evt.target.value]["Transmission"];
-            this.virulenceRef.current.value = preset[evt.target.value]["Virulence"]
+        if(value !== "Custom"){
+            this.setState({isDisabled: true});
+            this.infectionLengthRef.current.value = preset[value]["Infection Length"];
+            this.transmissionRef.current.value = preset[value]["Transmission"];
+            this.virulenceRef.current.value = preset[value]["Virulence"]
         }else{
-            this.setState({isDisabled:false});
+            this.setState({isDisabled: false});
         }
+    }
+
+    // moves the parameter storage day & updates UI inputs
+    switchParamSet(direction){
+        // move the day
+        if(direction === "backwards"){
+            ParamStorage.stepBackwards();
+        }
+        else if(direction === "forwards"){
+            ParamStorage.stepForwards();
+        }
+        else throw new Error("Parameter switch direction must be 'forwards' or 'backwards'.");
+
+        // bail if nothing already saved
+        let params = ParamStorage.currentParams || null;
+        if(!params) return; // nothing saved
+
+        // fill out UI form
+        this.infectionLengthRef.current.value = params.infectionLength;
+        this.transmissionRef.current.value = params.transmissionRate;
+        this.virulenceRef.current.value = params.virulence;
+        this.intialPopRef.current.value = params.initialPopulation;
+        this.intialImmunityRef.current.value = params.immunePercent;
+        this.initialInfectedRef.current.value = params.initialInfected;
+        this.daysRef.current.value = params.simulationLength;
+
+        this.presetRef.current.value = params.preset;
+        this.onPresetChange();
     }
 
     render(){
         return (
             <div>
-                <h5 className="text-center">Experimental Variables</h5>
+                <div id="inputs-header-container" className="text-center">
+                    <button onClick={() => this.switchParamSet("backwards")}>&larr;</button>
+                    <h5 className="text-center">Experimental Variables</h5>
+                    <button onClick={() => this.switchParamSet("forwards")}>&rarr;</button>
+                </div>
+                <br/>
                 <form onSubmit={this.onSubmit.bind(this)}>
                     <div className="row">
                         <div className="form-group col-lg-6">
                             <NumSlider
                                 label={"Length of Infection (Days)"}
                                 showRange={true}
-                                min={1}
-                                max={365}
-                                step={1}
+                                min={INPUT_RANGES.INFECTION_LENGTH[0]}
+                                max={INPUT_RANGES.INFECTION_LENGTH[1]}
+                                step={INPUT_RANGES.INFECTION_LENGTH[2]}
                                 required={true}
                                 ref={this.infectionLengthRef}
                                 disabled={this.state.isDisabled}
@@ -200,9 +243,9 @@ export class Inputs extends React.Component{
                             <NumSlider
                                 label={"Transmission Rate"}
                                 showRange={true}
-                                min={0}
-                                max={20}
-                                step={0.01}
+                                min={INPUT_RANGES.TRANSMISSION_RATE[0]}
+                                max={INPUT_RANGES.TRANSMISSION_RATE[1]}
+                                step={INPUT_RANGES.TRANSMISSION_RATE[2]}
                                 required={true}
                                 ref={this.transmissionRef}
                                 disabled={this.state.isDisabled}
@@ -214,9 +257,9 @@ export class Inputs extends React.Component{
                             <NumSlider
                                 label={"Virulence"}
                                 showRange={true}
-                                min={0}
-                                max={1}
-                                step={0.001}
+                                min={INPUT_RANGES.VIRULENCE[0]}
+                                max={INPUT_RANGES.VIRULENCE[1]}
+                                step={INPUT_RANGES.VIRULENCE[2]}
                                 required={true}
                                 ref={this.virulenceRef}
                                 disabled={this.state.isDisabled}
@@ -226,9 +269,9 @@ export class Inputs extends React.Component{
                             <NumSlider
                                 label={"Initial Population"}
                                 showRange={true}
-                                min={1}
-                                max={1000000}
-                                step={1}
+                                min={INPUT_RANGES.INITIAL_POPULATION[0]}
+                                max={INPUT_RANGES.INITIAL_POPULATION[1]}
+                                step={INPUT_RANGES.INITIAL_POPULATION[2]}
                                 required={true}
                                 ref={this.intialPopRef}
                             />
@@ -239,9 +282,9 @@ export class Inputs extends React.Component{
                             <NumSlider
                                 label={"Initial Immunity Percent"}
                                 showRange={true}
-                                min={0}
-                                max={1}
-                                step={0.01}
+                                min={INPUT_RANGES.IMMUNE_PERCENT[0]}
+                                max={INPUT_RANGES.IMMUNE_PERCENT[1]}
+                                step={INPUT_RANGES.IMMUNE_PERCENT[2]}
                                 required={true}
                                 ref={this.intialImmunityRef}
                             />
@@ -250,10 +293,10 @@ export class Inputs extends React.Component{
                             <NumSlider
                                 label={"Initial Infected"}
                                 showRange={true}
-                                min={0}
-                                max={1000000}
+                                min={INPUT_RANGES.INITIAL_INFECTED[0]}
+                                max={INPUT_RANGES.INITIAL_INFECTED[1]}
+                                step={INPUT_RANGES.INITIAL_INFECTED[2]}
                                 maxText={"Population"}
-                                step={1}
                                 required={true}
                                 ref={this.initialInfectedRef}
                             />
@@ -264,29 +307,32 @@ export class Inputs extends React.Component{
                             <NumSlider
                                 label={"Simulation Length (Days)"}
                                 showRange={true}
-                                min={1}
-                                max={365}
-                                step={1}
+                                min={INPUT_RANGES.SIMULATION_LENGTH[0]}
+                                max={INPUT_RANGES.SIMULATION_LENGTH[1]}
+                                step={INPUT_RANGES.SIMULATION_LENGTH[2]}
                                 required={true}
                                 ref={this.daysRef}
                             />
                         </div>
                         <div className="form-group col-lg-6">
                             <label>Presets:</label>
-                            <select className="form-control" onChange={this.onPresetChange.bind(this)}>
+                            <select ref={this.presetRef} className="form-control" onChange={this.onPresetChange.bind(this)}>
                                 <option>Custom</option>
                                 <option>Seasonal Flu</option>
                                 <option>Smallpox</option>
                                 <option>Polio</option>
                                 <option>Measles</option>
+                                <option>Ebola</option>
+                                <option>H1N1 Flu</option>
+                                <option>H5N1 Flu</option>
+                                <option>1918 Flu</option>
                             </select>
                         </div>
                     </div>
                     <div className="form-group text-center">
-                        <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="day-by-day">Day-By-Day</button>&nbsp;
-                        <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="auto-run">Auto Run</button>&nbsp;
+                        <button className="input-btn" disabled={this.state.pending}>Run</button>&nbsp;
                         <button onClick={this.onReset.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Reset</button>&nbsp;
-                        <button onClick={this.onFormClick.bind(this)} className="input-btn" disabled={this.state.pending} btn="export-csv">Export CSV</button>
+                        <button onClick={this.downloadCSV.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Export CSV</button>
                     </div>
                 </form>
                 <div>{this.state.message}</div>

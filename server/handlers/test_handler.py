@@ -1,5 +1,5 @@
 from server.plague_sim import PlagueSimulation
-from server.handlers import CORSHandler
+from . import CORSHandler
 
 
 # HTTP request handler for test JSON data

@@ -15,7 +15,8 @@ class CORSHandler(tornado.web.RequestHandler):
 
         self.set_header("Access-Control-Allow-Origin", "*")
         self.set_header("Access-Control-Allow-Methods", "OPTIONS")
-        self.set_header("Access-Control-Allow-Headers", "Access-Control-Allow-Origin, Content-Type")
+        self.set_header("Access-Control-Allow-Headers", "Access-Control-Allow-Origin, Content-Type, First-Invalid-Day, Error-Correction")
+        self.set_header("Access-Control-Expose-Headers", "First-Invalid-Day, Error-Correction")
 
     # http options - sends the defaults (allow origins)
     def options(self, *args, **kwargs):

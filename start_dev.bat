@@ -2,7 +2,7 @@
 
 @echo off
 
-set debug=1
+set debug=true
 
 start cmd /k "python server.py %debug%"
 

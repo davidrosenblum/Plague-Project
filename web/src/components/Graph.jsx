@@ -1,137 +1,218 @@
 import React from "react";
+import { LineChart } from "react-easy-chart"
 import Simulator from "../Simulator";
-import { LineChart, d3 } from "react-d3-components";
+import GraphData from "../GraphData";
+import { GraphRange } from "./GraphRange";
+import { TrendLine } from "./TrendLine";
+
+// graph size constants
+const WIDTH = 		540,
+	HEIGHT = 		475,
+	MARGIN_TOP = 	10,
+	MARGIN_BOTTOM =	50,
+	MARGIN_LEFT = 	80,
+	MARGIN_RIGHT = 	10;
+
+// graph line colors
+const COLORS = {
+	"Infected": 	"green",
+	"Susceptible": 	"red",
+	"Immune": 		"steelblue",
+	"Dead": 		"gray",
+	"TrendLine":	"black"
+};
 
 export class Graph extends React.Component{
 	constructor(props){
 		super(props);
+
+		this.graphContainerRef = React.createRef();
 		
 	    this.state = {
-			data: null,			// graph data
-			day: 0,				// current simulation day
-			yLabel: "Infected"	// y-axis value
+			visible: false,						// true/false if simulator data to render
+			tooltip: null,						// text to display
+			containerWidth: WIDTH,				// line graph parent width
+			graphLabels: {}						// selected graph labels (Infected, Susceptible, etc)
 	    };
 	}
 
 	componentDidMount(){
-		// when the simulator signals it has received data
-		Simulator.on("data", this.onSimulatorData.bind(this));
+		// auto select infected
+		this.toggleLabel("Infected");
 
-		// when the simulator signals a reset
-		Simulator.on("reset", this.onSimulatorReset.bind(this));
+		// simulator singles data set loaded - render data
+		Simulator.on("data", () => this.setState({visible: true}));
 
-		// when the simulator changes the day
-		Simulator.on("update", this.onSimulatorUpdate.bind(this));
+		// simulator reset - nothing to render
+		Simulator.on("reset", () => this.setState({visible: false}));
 
-		// when the simulator changes the graph
-		Simulator.on("update-graph", this.onSimulatorUpdateGraph.bind(this));
+		// graph update
+		GraphData.on("update", () => this.forceUpdate());
+
+		// when the window size changes - resize the graph if neccessary
+		window.addEventListener("resize", this.onResize.bind(this));
+		this.onResize();
 	}
 
-	// simulator has data - convert to d3 format and store it
-	onSimulatorData(){
-		// update
-		this.setState({data: Simulator.data});
-	}
-
-	// simulator reset - reset this component
-	onSimulatorReset(){
-		this.setState({data: null, day: 0});
-	}
-
-	// simulator update - update to the current day
-	onSimulatorUpdate(){
-		this.setState({day: Simulator.currentDay});
-	}
-
-	// simulator update - graph change
-	onSimulatorUpdateGraph(evt){
-		// day change
-		if(typeof evt.day === "number"){
-			this.setState({day: evt.day});
+	componentDidUpdate(prevProps, prevState){
+		if(prevState.yLabel !== this.state.yLabel){
+			this.setState({tooltip: null});
 		}
 	}
+	
+	// when a label ('Infected', 'Susceptible', etc) is clicked...
+	toggleLabel(label){
+		// copy labels dictionary
+		let nextLabels = Object.assign({}, this.state.graphLabels);
 
-	// when the graph y axis drop down is changed
-	onYLabelChange(evt){
-		this.setState({yLabel: evt.target.value})
-	}
-
-	// gets the data values up to the current day
-	getData(){
-		if(!this.state.data || this.state.day < 1){
-			return null;
+		// toggle parameter label
+		if(label in nextLabels){
+			nextLabels[label] = !nextLabels[label];
+		}
+		else{
+			nextLabels[label] = true;
 		}
 
-		let largestY = 0;
+		// update state
+		this.setState({graphLabels: nextLabels});
+	}
 
-		let data = this.state.data.map((row, index) => {
-			let y = parseFloat(row[this.state.yLabel]);
+	// when a point on the graph is clicked...
+	onGraphClick(data, evt){
+		let {x, y} = data;
+		this.setState({tooltip: `${Math.round(y)} people on day ${x}.`});
+	}
 
-			largestY = Math.max(largestY, y);
+    onResize(){
+        // updates the state to reflect the maximum size allowed for the graph
+        let element = this.graphContainerRef.current;
+		if(element){
+			this.setState({containerWidth: element.getBoundingClientRect().width});
+		}
+    }
 
-			return {
-				x: index,
-				y
+	// renders a simple HTML key for the graph line/colors
+	renderLabelButtons(){
+		let labels = this.state.graphLabels;
+
+		// border style for button (null = no change)
+		let borders = [
+			(labels.Infected === true) ? `2px solid ${COLORS.Infected}` : null,
+			(labels.Susceptible === true) ? `2px solid ${COLORS.Susceptible}` : null,
+			(labels.Immune === true) ? `2px solid ${COLORS.Immune}` : null,
+			(labels.Dead === true) ? `2px solid ${COLORS.Dead}` : null
+		];
+
+		return (
+			<div>
+				<button style={{color: COLORS["Infected"], borderBottom: borders[0]}} onClick={() => this.toggleLabel("Infected")} className="pointer graph-button">Infected</button>
+				<button style={{color: COLORS["Susceptible"], borderBottom: borders[1]}} onClick={() => this.toggleLabel("Susceptible")} className="pointer graph-button">Susceptible</button>
+				<button style={{color: COLORS["Immune"], borderBottom: borders[2]}} onClick={() => this.toggleLabel("Immune") }className="pointer graph-button">Immune</button>
+				<button style={{color: COLORS["Dead"], borderBottom: borders[3]}} onClick={() => this.toggleLabel("Dead")} className="pointer graph-button">Dead</button>
+			</div>
+		);
+	}
+
+	// exports the current svg graph to a jpg file 
+	downloadJPG(){
+		let container = this.graphContainerRef.current;
+		if(container){
+			// get svg element
+			let svgElement = container.querySelector("svg");
+
+			// create canvas
+			let canvas = document.createElement("canvas");
+			let ctx = canvas.getContext("2d");
+
+			// resize canvas to svg
+			canvas.width = svgElement.getAttribute("width");
+			canvas.height = svgElement.getAttribute("height");
+
+			// convert svg element to xml 
+			let svgXml = new XMLSerializer().serializeToString(svgElement);
+
+			// create a data url from the svg+xml
+			let blob = new Blob([svgXml], {type: "image/svg+xml"});
+			let svgUrl = window.URL.createObjectURL(blob);
+
+			// create an image to hold the svg data url 
+			let svgImage = document.createElement("img");
+
+			// when the svgxml image loads...
+			svgImage.onload = () => {
+				// draw svg+xml onto canvas
+				ctx.imageSmoothingEnabled = true;
+				ctx.imageSmoothingQuality = "high";
+				ctx.drawImage(svgImage, 0, 0);
+
+				// remove black background for white 
+				ctx.globalCompositeOperation = "destination-over";
+				ctx.fillStyle = "white";
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+				// get jpg data
+				let jpg = document.createElement("img");
+				jpg.onload = () => {
+					// jpg is rasterized svg
+					// (implement download here)
+					//document.body.appendChild(jpg);
+					window.URL.revokeObjectURL(svgUrl);
+				}
+				jpg.setAttribute("src", canvas.toDataURL("image/jpeg"));
 			};
-		});
 
-		// d3 wants {values:[...]}
-		let values = data.slice(0, this.state.day + 1);
-		return {values, largestY};
+			// load the svgxml data
+			svgImage.setAttribute("src", svgUrl);
+		}
 	}
 
 	render(){
-		// graph size constants
-		const WIDTH = 		540,
-			HEIGHT = 		525,
-			MARGIN_TOP = 	10,
-			MARGIN_BOTTOM =	50,
-			MARGIN_LEFT = 	80,
-			MARGIN_RIGHT = 	10;
-
-		let data = this.getData();
-		if(data){
-			// scale the x-axis (0 - last day) with graph width
-			let xScale = d3.scale.linear()
-				.domain([0, data.values.length-1])
-				.range([0, WIDTH - MARGIN_LEFT - MARGIN_RIGHT]);
-			
-			// scale the y-axis based on (0 - biggest y) with graph height
-			let yScale = d3.scale.linear()
-				.domain([data.largestY, 0])
-				.range([0, HEIGHT - MARGIN_TOP - MARGIN_BOTTOM]);
+		if(this.state.visible){
+			let data = GraphData.getData(this.state.graphLabels);
+			let dayCount = data.values.length ? data.values[0].length : 0;
+			let width = Math.min(this.state.containerWidth, WIDTH);
 
 			return (
 				<div>
-					<h5></h5>
-					<div className="GraphDropdown" onChange={this.onYLabelChange.bind(this)}>
-						<select className="form-control">
-							<option>Infected</option>
-							<option>Susceptible</option>
-							<option>Immune</option>
-							<option>Dead</option>
-						</select>
+					<h5>{data.labels.join(" + ") || "(Nothing Selected)"}</h5>
+					{this.renderLabelButtons()}
+					<div ref={this.graphContainerRef}>
+						<div>
+							<LineChart
+								data={data.values}
+								width={width}
+								height={HEIGHT}
+								margin={{
+									top: MARGIN_TOP, bottom: MARGIN_BOTTOM,
+									left: MARGIN_LEFT, right: MARGIN_RIGHT
+								}}
+								axes
+								axisLabels={{x: "Days Elapsed", y: "People"}}
+								dataPoints={dayCount < 0} // enable this later
+								xDomainRange={[GraphData.startDay, GraphData.endDay]}
+								yDomainRange={[0, data.largestY]}
+								lineColors={data.labels.map(label => COLORS[label])}
+								clickHandler={this.onGraphClick.bind(this)}
+								style={{
+									".label": {fill: "black"},
+									".axis": {fontSize: "0.75em", fontFamily: "arial"}
+								}}
+							/>
+							<TrendLine max={data.largestY}/>
+						</div>
 					</div>
 					<div>
-						<LineChart
-							data={data}
-							axes
-							width={WIDTH}
-							height={HEIGHT}
-							margin={{
-								top: MARGIN_TOP, bottom: MARGIN_BOTTOM,
-								left: MARGIN_LEFT, right: MARGIN_RIGHT
-							}}
-							xAxis={{label: "Day"}}
-							yAxis={{label: this.state.yLabel}}
-							xScale={xScale}
-							yScale={yScale}
-							//tooltipHtml={(label, pt) => `Day ${pt.x} - ${pt.y} ${this.state.yLabel}`}
+						<GraphRange
+							min={0}
+							max={Simulator.data.length - 1 || 0}
 						/>
+					</div>
+					<div className="text-center">
+						{this.state.tooltip}
 					</div>
 				</div>
 			);
 		}
-		return null;
+		return <div ref={this.graphContainerRef}></div> // required for resize to work! 
 	}
-}
+} 

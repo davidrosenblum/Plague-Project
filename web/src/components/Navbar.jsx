@@ -1,5 +1,7 @@
 import React from "react";
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Navbar as RNavbar, NavItem, Collapse, NavbarToggler, Nav, NavLink } from "reactstrap";
 import { MailModal } from "./MailModal"
+import Simulator from "../Simulator";
 
 export class Navbar extends React.Component{
 
@@ -7,33 +9,64 @@ export class Navbar extends React.Component{
 		super(props);
 
 	    this.state = {
-	    	showModal: false,
-	    	closeModal:false
+			showNav: false,			// navbar collapse
+			showModal: false,		// mail modal visibility
+			showAdvanced: false		// advanced dropdown menu visibility
 	    };
 
 	}
 
+	// close the mail modal
 	closeModal(){
-		this.setState({showModal:false});
+		this.setState({showModal: false});
 	}
 
+	// show the mail modal
 	openModal(){
-		this.setState({showModal:true});
+		this.setState({showModal: true});
+	}
+
+	// toggles the navbar collapse state
+	toggleNavbar(){
+		this.setState(prev => ({showNav: !prev.showNav}));
+	}
+
+	// toggle advanced dropdown
+	toggleDropdown(){
+		this.setState(prev => ({showAdvanced: !prev.showAdvanced}));
+	}
+
+	// advanced dropdown error correction option toggle
+	toggleErrorCorrection(){
+		Simulator.isErrCorrecting = !Simulator.isErrCorrecting;
 	}
 
 	render(){
 		return (
 			<div>
-				<nav className="navbar navbar-expand-lg navbar-light bg-light">
-					<div className="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul className="navbar-nav mr-auto">
-		  					<li className="nav-item active">
-		    					<span className="nav-link" onClick={this.openModal.bind(this)}>Contact Us <span className="sr-only">(current)</span></span>
-		  					</li>
-		  				</ul>
-		  			</div>
-	      		</nav>
-	      		<MailModal showModal={this.state.showModal} closeModal={this.closeModal.bind(this)} />
+				<RNavbar color="light" light expand="md">
+					<NavbarToggler color="dark" onClick={this.toggleNavbar.bind(this)}/>
+					<Collapse isOpen={this.state.showNav} navbar>
+						<Nav navbar>
+							<NavItem>
+								<NavLink  className="pointer" selected onClick={this.openModal.bind(this)}>Contact Us</NavLink>
+							</NavItem>
+							<NavItem>
+								<Dropdown isOpen={this.state.showAdvanced} toggle={this.toggleDropdown.bind(this)}>
+										<DropdownToggle caret color="light">
+											Advanced
+										</DropdownToggle>
+										<DropdownMenu>
+											<DropdownItem onClick={this.toggleErrorCorrection.bind(this)}>
+												Toggle Error Correction (Currently {Simulator.isErrCorrecting ? "Enabled" : "Disabled"})
+											</DropdownItem>
+										</DropdownMenu>
+									</Dropdown>
+							</NavItem>
+						</Nav>
+					</Collapse>
+				</RNavbar>
+				<MailModal showModal={this.state.showModal} closeModal={this.closeModal.bind(this)} />
 	      	</div>
 		);
 	}

@@ -1,0 +1,39 @@
+.trend-line-container{
+    display: inline;
+    position: absolute;
+    bottom: 50%;
+    right: -50px;
+}
+
+
+.trend-slider{
+    -webkit-appearance: none;
+    appearance: none;
+    float: right;
+    height: 5px;
+    width: 200px;
+    border: 1px solid gray;
+    border-radius: 4px;
+    background-color: silver;
+    opacity: 0.75;
+    transform: rotate(270deg);
+}
+
+.trend-slider:focus{
+    outline: none; 
+}
+
+.trend-slider::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: steelblue;
+    border: 1px solid darkblue;
+    border-radius: 4px;
+    width: 15px;
+    height: 15px;
+}
+
+.trend-line-text{
+    transform: rotate(90deg);
+    margin-right: -30px;
+}

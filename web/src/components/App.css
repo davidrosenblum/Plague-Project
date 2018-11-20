@@ -22,6 +22,20 @@
     text-align: center;
 }
 
+.graph-button{
+    border: none;
+    background: transparent;
+    transition: 0.5s;
+}
+
+.graph-button:hover{
+    text-decoration: underline;
+}
+
+.graph-button:focus{
+    outline: none;
+}
+
 .Version{
     float: right;
     text-align: center;
@@ -33,8 +47,8 @@
     float:right;
 }
 
-/* CSS for the chart */
-{box-sizing: border-box;}
+/* CSS for the chart 
+{box-sizing: border-box;}*/
 
 .overflow-table table{
     width:100%;
@@ -71,11 +85,6 @@
     border-left: none;
 }
 
-.overflow-table tr td:nth-child(1){
-    font-weight: bold;
-    cursor: pointer;
-}
-
 /* Modal CSS */
 
 .modalHeader{
@@ -107,8 +116,7 @@
     height: 300px;
 }
 
-/* make cursor into pointer */
-.nav-link{
+.pointer{
     cursor: pointer;
 }
 
@@ -121,4 +129,31 @@ footer a{
 footer a:hover{
     color: orangered;
     text-decoration: none;
+}
+
+#inputs-header-container h5{
+    width: 75%;
+    margin: auto;
+    display: inline-block;
+}
+
+#inputs-header-container button{
+    width: 32px;
+    height: 32px;
+    border: 1px solid gray;
+    border-radius: 6px;
+    background-color: white;
+    transition: 0.5s;
+}
+
+#inputs-header-container button:hover{
+    background-color: black;
+    color: white;
+}
+
+.modal-text-area{
+    width: 100%;
+    height: 100%;
+    max-width: 650px;
+    max-height: 200px;
 }

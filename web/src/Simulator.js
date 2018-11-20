@@ -1,15 +1,15 @@
 import { Ajax } from "./Ajax";
 import { EventEmitter } from "./EventEmitter";
-import { SimulationUpdateEvent } from "./SimulationUpdateEvent";
 
 // singleton for holding simulation data
 // event-driven to keep chart + graph updated
-let Simulator = class Simulator extends EventEmitter{
+class Simulator extends EventEmitter{
     constructor(){
         super();
 
-        this.data = null;       // simulation data array
-        this._currentDay = 0;    // 'private' current simulation day
+        this.data = null;                   // simulation data array
+        this._firstInvalidDay = -1;         // first invalid day (-1 = no invalid days)
+        this._useErrCorrecting = true;      // use error correction?
     }
 
     // hits the API for data, signals progress
@@ -21,7 +21,8 @@ let Simulator = class Simulator extends EventEmitter{
             
             // CORS headers (use foreign domain)
             let headers = {
-                "Access-Control-Allow-Origin": window.location.origin
+                "Access-Control-Allow-Origin": window.location.origin,
+                "Error-Correction": this.isErrCorrecting
             };
 
             // ajax call with query string
@@ -34,6 +35,9 @@ let Simulator = class Simulator extends EventEmitter{
                         try{
                             // parse json
                             this.data = JSON.parse(xhr.response);
+
+                            // extract first invalid day
+                            this._firstInvalidDay = parseInt(xhr.getResponseHeader("First-Invalid-Day")) || -1;
                         }
                         catch(err){
                             // json parse error (should never happen)
@@ -61,58 +65,85 @@ let Simulator = class Simulator extends EventEmitter{
         });
     }
 
-    // async download
-    downloadCSV(query){
-        let url = window.location.href.includes("localhost") ? `http://localhost:8080/plague/csv` : `${window.location.origin}/plague/csv`;
-        return Ajax.get(url, null, query);
-    }
+    // asychronously downloads a csv file using ajax
+    downloadCSVFile(query){
+        return new Promise((resolve, reject) => {
+            // figure out endpoint origin
+            let origin = window.location.origin.includes("localhost") ? "http://localhost:8080" : window.location.origin;
 
-    // csv download url
-    createCSVDownloadURL(query){
-        let qs = Ajax.queryString(query);
-        return window.location.href.includes("localhost") ? `http://localhost:8080/plague/csv${qs}` : `${window.location.origin}/plague/csv${qs}`;
-    }
+            // figure out endpoint using origin
+            let url = `${origin}/plague`;
 
-    // simulation moves to the last day
-    // (triggers listeners)
-    autoRun(){
-        this.currentDay = this.data.length - 1; // auto emits update
-    }
+            // http request headers
+            let headers = {
+                "Access-Control-Allow-Origin": window.location.origin,
+                "Content-Type": "text/csv",
+                "Error-Correction": this.isErrCorrecting
+            };
 
-    // steps the simulation forward one day
-    // (triggers listeners)
-    nextDay(){
-        if(this.currentDay < this.data.length){
-            this.currentDay++;  // auto emits update
-        }
+            // get csv file via Ajax
+            Ajax.get(url, headers, query)
+                .then(xhr => {
+                    // server responded
+                    if(xhr.status === 200){
+                        // good http status - download
+                        // xhr.response = csv text
+                        // convert to blob
+                        let csvDataBlob = new Blob([xhr.response], {type: "octet/stream"});
+
+                        // create a 'secret' link using the blob
+                        let a = document.createElement("a");
+                        let url = window.URL.createObjectURL(csvDataBlob);
+                        
+                        // setup the link to download blob data
+                        a.setAttribute("download", `data_${Date.now()}.csv`);
+                        a.setAttribute("href", url);
+
+                        // click the link to download the file
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+
+                        // trigger any listeners
+                        resolve("File downloaded.");
+                    }
+                    else{
+                        // bad http status - trigger listeners with error
+                        console.log(xhr.response);
+                        reject(new Error("Error downloading CSV file."));
+                    }
+                })
+                .catch(err => {
+                    // server did not responed - trigger listeners with error
+                    console.log(err.message);
+                    reject(new Error("Unable to download CSV file."))
+                });
+        });
     }
 
     // resets simulation to day 0 and clears all stored data
     // (triggers listeners)
     reset(){
         this.data = null;
-        this.currentDay = 0;
         this.emit(new Event("reset"));
     }
 
-    // updates the graph day 
-    setGraphDay(day){
-        this.emit(new SimulationUpdateEvent("update-graph", day));
-    }
-
-    // always emit update
-    set currentDay(day){
-        let maxDays = this.hasData ? (this.data.length - 1) : 0;
-        this._currentDay = Math.min(day, maxDays); 
-        this.emit(new SimulationUpdateEvent("update", this.currentDay));
+    set isErrCorrecting(value){
+        if(typeof value === "boolean"){
+            this._useErrCorrecting = value;
+        }
+        else throw new Error("isErrCorrecting must be set to a boolean value.");
     }
 
     get hasData(){
         return this.data !== null;
     }
 
-    get currentDay(){
-        return this._currentDay;
+    get firstInvalidDay(){
+        return this._firstInvalidDay;
+    }
+
+    get isErrCorrecting(){
+        return this._useErrCorrecting;
     }
 }
 
