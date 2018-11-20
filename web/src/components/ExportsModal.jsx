@@ -15,7 +15,9 @@ export class ExportsModal extends React.Component{
         this.state = {
             exportOption: null,
             exportDropdown: false,
-            copyMessage: null
+            copyMessage: null,
+            csvMessage: null,
+            pending: false
         };
     }
     
@@ -23,26 +25,20 @@ export class ExportsModal extends React.Component{
     downloadCSV(){
         if(!this.state.pending){
             // disable buttons
-            this.setState({pending: true});
+            this.setState({pending: true, csvMessage: "Loading..."});
 
             // optional filename override
             let filename = this.csvFilenameElement ? this.csvFilenameElement.value : null;
 
             Simulator.downloadCSVFile(this.props.getInputsDictionary(), filename)
-                .catch(err => {
-                    // something went wrong (server did not respond or bad request)
-                    this.setState({message: err.message});
-                })
-                .then(() => {
-                    // (this fires when any response happens not successful only!)
-                    // always enable buttons
-                    this.setState({pending: false})
-                });
+                .then(() => this.setState({csvMessage: "Download complete."}))  // good
+                .catch(err => this.setState({csvMessage: err.message}))         // err - something went wrong (server did not respond or bad request)
+                .then(() => this.setState({pending: false}));                   // always - free buttons
         }
     }
 
     toggleModal(){
-        this.setState({exportOption: null, copyMessage: null});
+        this.setState({exportOption: null, copyMessage: null, csvMessage: null});
         this.props.toggle();
     }
 
@@ -93,7 +89,10 @@ export class ExportsModal extends React.Component{
                     </div>
                     <br/>
                     <div>
-                        <Button color="fade" onClick={this.downloadCSV.bind(this)}>Download CSV</Button>
+                        <Button color="fade" onClick={this.downloadCSV.bind(this)} disabled={this.state.pending}>Download CSV</Button>
+                        <span className="csv-text-container">
+                            {this.state.csvMessage}
+                        </span>
                     </div>
                 </div>
             );
