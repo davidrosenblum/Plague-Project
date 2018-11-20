@@ -1,0 +1,10 @@
+.copy-text-container, .csv-text-container{
+    float: right;
+}
+
+.modal-url-text{
+    width: 100%;
+    min-height: 125px;
+    border: 1px solid gray;
+    border-radius: 6px;
+}

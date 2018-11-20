@@ -66,7 +66,7 @@ class Simulator extends EventEmitter{
     }
 
     // asychronously downloads a csv file using ajax
-    downloadCSVFile(query){
+    downloadCSVFile(query, filename=null){
         return new Promise((resolve, reject) => {
             // figure out endpoint origin
             let origin = window.location.origin.includes("localhost") ? "http://localhost:8080" : window.location.origin;
@@ -80,6 +80,11 @@ class Simulator extends EventEmitter{
                 "Content-Type": "text/csv",
                 "Error-Correction": this.isErrCorrecting
             };
+
+            // make sure .csv
+            if(filename && filename.substring(filename.length - 4, filename.length) !== ".csv"){
+                filename += ".csv";
+            }
 
             // get csv file via Ajax
             Ajax.get(url, headers, query)
@@ -96,7 +101,7 @@ class Simulator extends EventEmitter{
                         let url = window.URL.createObjectURL(csvDataBlob);
                         
                         // setup the link to download blob data
-                        a.setAttribute("download", `data_${Date.now()}.csv`);
+                        a.setAttribute("download", filename || `data_${Date.now()}.csv`);
                         a.setAttribute("href", url);
 
                         // click the link to download the file

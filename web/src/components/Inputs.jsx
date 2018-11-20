@@ -1,7 +1,10 @@
 import React from "react";
+import { Row, Col, Form, FormGroup, Button, Input } from "reactstrap";
 import Simulator from "../Simulator";
 import ParamStorage from "../ParamStorage";
+import GraphData from "../GraphData";
 import { NumSlider } from "./NumSlider";
+import { ExportsModal } from "./ExportsModal";
 import preset from "../preset"
 
 // input range constraints (min, max, step)
@@ -30,9 +33,10 @@ export class Inputs extends React.Component{
         this.presetRef = React.createRef();
 
         this.state = {
-            pending: false,         // no new requests while pending (disable buttons)
-            message: null,          // message to display (errors)
-            isDisabled: false       // to disable/enable fields depending on what preset is selected
+            pending: false,             // no new requests while pending (disable buttons)
+            message: null,              // message to display (errors)
+            isDisabled: false,          // to disable/enable fields depending on what preset is selected
+            exportModalOpen: false      // export options modal visibility
         };
     }
 
@@ -117,25 +121,6 @@ export class Inputs extends React.Component{
         Simulator.reset();
     }
 
-    // downloads the csv file
-    downloadCSV(){
-        if(!this.state.pending){
-            // disable buttons
-            this.setState({pending: true});
-
-            Simulator.downloadCSVFile(this.getInputsDictionary())
-                .catch(err => {
-                    // something went wrong (server did not respond or bad request)
-                    this.setState({message: err.message});
-                })
-                .then(() => {
-                    // (this fires when any response happens not successful only!)
-                    // always enable buttons
-                    this.setState({pending: false})
-                });
-        }
-    }
-
     runSimulation(){
         // no simulation data - load it (first simulation or reset happened)
         if(!Simulator.hasData){
@@ -186,6 +171,10 @@ export class Inputs extends React.Component{
         }else{
             this.setState({isDisabled: false});
         }
+    }
+
+    toggleExportModal(){
+        this.setState(prev => ({exportModalOpen: !prev.exportModalOpen}));
     }
 
     // moves the parameter storage day & updates UI inputs
@@ -332,10 +321,15 @@ export class Inputs extends React.Component{
                     <div className="form-group text-center">
                         <button className="input-btn" disabled={this.state.pending}>Run</button>&nbsp;
                         <button onClick={this.onReset.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Reset</button>&nbsp;
-                        <button onClick={this.downloadCSV.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Export CSV</button>
+                        <button onClick={this.toggleExportModal.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Exports</button>
                     </div>
                 </form>
                 <div>{this.state.message}</div>
+                <ExportsModal
+                    isOpen={this.state.exportModalOpen}
+                    toggle={this.toggleExportModal.bind(this)}
+                    getInputsDictionary={this.getInputsDictionary.bind(this)}
+                />
             </div>
         );
     }
