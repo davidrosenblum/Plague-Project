@@ -29,9 +29,13 @@ export class TrendLine extends React.Component{
                     onChange={this.onSlide.bind(this)}
                 />
                 <div className="trend-line-text">
-                Trend Line
+                    Trend Line
                 </div>
             </div>
         )
+    }
+
+    get value(){
+        return this.rangeRef.current.value;
     }
 }

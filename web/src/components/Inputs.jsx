@@ -1,8 +1,10 @@
 import React from "react";
+import { Row, Col, Form, FormGroup, Modal, ModalBody, ModalHeader, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button } from "reactstrap";
 import Simulator from "../Simulator";
 import ParamStorage from "../ParamStorage";
 import { NumSlider } from "./NumSlider";
 import preset from "../preset"
+import GraphData from "../GraphData";
 
 // input range constraints (min, max, step)
 export const INPUT_RANGES = {
@@ -29,10 +31,16 @@ export class Inputs extends React.Component{
         this.daysRef = React.createRef();
         this.presetRef = React.createRef();
 
+        // export refs
+        this.exportUrlRef = React.createRef();
+
         this.state = {
             pending: false,         // no new requests while pending (disable buttons)
             message: null,          // message to display (errors)
-            isDisabled: false       // to disable/enable fields depending on what preset is selected
+            isDisabled: false,      // to disable/enable fields depending on what preset is selected
+            exportModal: false,     // export options modal visibility
+            exportOption: null,
+            exportDropdown: false
         };
     }
 
@@ -188,6 +196,14 @@ export class Inputs extends React.Component{
         }
     }
 
+    toggleExportModal(){
+        this.setState(prev => ({exportModal: !prev.exportModal}));
+    }
+
+    toggleExportDropdown(){
+        this.setState(prev => ({exportDropdown: !prev.exportDropdown}));
+    }
+
     // moves the parameter storage day & updates UI inputs
     switchParamSet(direction){
         // move the day
@@ -214,6 +230,68 @@ export class Inputs extends React.Component{
 
         this.presetRef.current.value = params.preset;
         this.onPresetChange();
+    }
+
+    getExportURL(){
+        let dict = this.getInputsDictionary();
+
+        let url = `${window.location.origin}?`;
+
+        for(let param in dict){
+            url += `${param}=${dict[param]}&`;
+        }
+
+        url += `trend_line=${GraphData.trendLineY}`;
+
+        return url;
+    }
+
+    copyLinkText(){
+        let elem = this.exportUrlRef.current;
+        if(elem){
+            elem.select();
+            document.execCommand("copy");
+        }
+    }
+
+    renderExportOptBody(){
+        if(this.state.exportOption === "csv"){
+            return (
+                <div>
+                    <div>
+                        Exports a comma separated value (.csv) file containing the results displayed in the table.
+                        This file is easily accesible in Excel. 
+                    </div>
+                    <br/>
+                    <div>
+                        <Button color="fade" onClick={this.downloadCSV.bind(this)}>Download CSV</Button>
+                    </div>
+                </div>
+            );
+        }
+        else if(this.state.exportOption === "sim-link"){
+            return (
+                <div>
+                    <div>
+                        Exports a URL for this application with preset values that can be shared.
+                    </div>
+                    <br/>
+                    <div>
+                        <textarea ref={this.exportUrlRef} className="modal-url-text" defaultValue={this.getExportURL()} readOnly>
+                        </textarea>
+                    </div>
+                    <br/>
+                    <div>
+                        <Button color="fade" onClick={this.copyLinkText.bind(this)}>Copy Link</Button>
+                    </div>
+                </div>
+            );
+        }
+        return (
+            <div>
+                Please select an export option.
+            </div>
+        )
     }
 
     render(){
@@ -332,10 +410,32 @@ export class Inputs extends React.Component{
                     <div className="form-group text-center">
                         <button className="input-btn" disabled={this.state.pending}>Run</button>&nbsp;
                         <button onClick={this.onReset.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Reset</button>&nbsp;
-                        <button onClick={this.downloadCSV.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Export CSV</button>
+                        <button onClick={this.toggleExportModal.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Exports</button>
                     </div>
                 </form>
                 <div>{this.state.message}</div>
+                <Modal isOpen={this.state.exportModal}>
+                    <ModalHeader toggle={this.toggleExportModal.bind(this)}>
+                        <Dropdown isOpen={this.state.exportDropdown} toggle={this.toggleExportDropdown.bind(this)}>
+                            <DropdownToggle color="fade" caret>
+                                Export Options
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem onClick={() => this.setState({exportOption: "csv"})}>
+                                    Table CSV
+                                </DropdownItem>
+                                <DropdownItem onClick={() => this.setState({exportOption: "sim-link"})}>
+                                    Simulation Link
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </ModalHeader>
+                    <ModalBody>
+                        <div>
+                            {this.renderExportOptBody()}
+                        </div>
+                    </ModalBody>
+                </Modal>
             </div>
         );
     }

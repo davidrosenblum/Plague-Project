@@ -157,3 +157,10 @@ footer a:hover{
     max-width: 650px;
     max-height: 200px;
 }
+
+.modal-url-text{
+    width: 100%;
+    min-height: 125px;
+    border: 1px solid gray;
+    border-radius: 6px;
+}
