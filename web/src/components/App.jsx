@@ -20,6 +20,7 @@ export class App extends React.Component{
                         <Card color="light">
                             <CardBody>
                                 <Row className="text-center input-graph-container">
+                                    <h1 className="d-none d-print-block">The Plague Project</h1>
                                     <Col lg={6}>
                                         <Inputs/>
                                     </Col>

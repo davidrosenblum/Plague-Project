@@ -11,24 +11,52 @@
     button, .num-slider-slider,
     .trend-line-container,
     .trend-slider, .trend-line-text {
-        display: none;
+        display: none !important;
     }
 
     .card-body, .card {
         border: none;
     }
 
-    .graph-container {
-        float: right !important;
+    select {
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 13px;
     }
 
     .input-container {
-        float: left !important;
+        width: 100% !important;
+        display: block !important;
+        margin: auto;
         font-size: 13px;
-        max-width: 20%;
-        margin: 10px;
+        padding: 0;
     }
 
-    .input-graph-container {
+    .input-container .row {
+        display: inline-block !important;
+    }
+
+    .input-container .row .form-group {
+        padding: 20px 40px 20px 40px;
+    }    
+
+    .input-container .row .form-group input {
+        width: 125px;
+        text-align: center;
+    }
+    
+    .graph-container {
+        display: block !important;
+        min-width: 650px;
+        padding: 100px 0 0 0;
+        margin: auto;
+    }
+
+    .input-graph-container h1 {
+        margin: auto;
+        padding: 30px 0 30px 0;
+    }
+
+    table {
+        page-break-before: always;
     }
 }
