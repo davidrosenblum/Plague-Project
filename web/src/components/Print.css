@@ -59,12 +59,23 @@
         margin-bottom: 15px;
     }
 
-    .input-graph-container h1 {
+    .print-title-containter {
+        display: block !important;
         margin: auto;
         padding: 30px 0 60px 0;
     }
 
+    .print-title-containter h1 {
+        font-family: 'Cabin Sketch';
+        font-weight: 700;
+    }
+
+    .input-graph-container h2 {
+        padding: 0 0 60px 0;
+    }
+
     table {
         page-break-before: always;
+        margin: auto;
     }
 }

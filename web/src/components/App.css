@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Cabin+Sketch');
+
 @media screen {
     .input-btn{
         width: 100px;
@@ -37,10 +39,48 @@
         outline: none;
     }
 
+/*
     .Version{
         float: right;
         text-align: center;
         color: gray;
+    }
+*/
+
+    nav {
+        padding-top: 20px;
+    }
+
+    .pp-heading {
+        font-family: 'Cabin Sketch';
+        padding-right: 0.5em;
+        padding-left: 5%;
+        font-size: 1.1em;
+        font-weight: 700;
+    }
+
+    .skull-icon {
+        font-size: 0.9em;
+    }
+
+    .navbar-brand a {
+        display: inline-block;
+        padding-left: 0.5em;
+        text-decoration: none;
+        color: slategray;
+    }
+
+    .navbar-brand a:hover {
+        color: darkslategray;
+        text-decoration: none;
+    }
+
+    .errCorrect {
+        color: slategray;
+    }
+
+    .errCorrect:hover {
+        color: darkslategray;
     }
 
     /* CSS for graph dropdown  */ 
@@ -121,14 +161,18 @@
         cursor: pointer;
     }
 
-    footer a{
-        color: black;
+    footer {
+        padding-bottom: 20px;
+    }
+
+    footer a {
+        color: slategray;
         text-decoration: none;
         transition: 0.5s;
     }
 
-    footer a:hover{
-        color: orangered;
+    footer a:hover {
+        color: darkslategray;
         text-decoration: none;
     }
 
