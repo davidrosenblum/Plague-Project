@@ -38,6 +38,7 @@
     .graph-button:focus{
         outline: none;
     }
+
 /*
     .Version{
         float: right;
@@ -45,9 +46,15 @@
         color: gray;
     }
 */
+
+    nav {
+        padding-top: 20px;
+    }
+
     .pp-heading {
         font-family: 'Cabin Sketch';
         padding-right: 0.5em;
+        padding-left: 10%;
         font-size: 1.1em;
         font-weight: 700;
     }
@@ -65,6 +72,7 @@
 
     .navbar-brand a:hover {
         color: darkslategray;
+        text-decoration: none;
     }
 
     /* CSS for graph dropdown  */ 
@@ -149,14 +157,14 @@
         padding-bottom: 20px;
     }
 
-    footer a{
-        color: black;
+    footer a {
+        color: slategray;
         text-decoration: none;
         transition: 0.5s;
     }
 
-    footer a:hover{
-        color: orangered;
+    footer a:hover {
+        color: darkslategray;
         text-decoration: none;
     }
 

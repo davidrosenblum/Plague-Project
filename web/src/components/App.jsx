@@ -9,10 +9,11 @@ import { Table } from "./Table";
 import { Graph } from "./Graph";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
-import { faAngleDoubleLeft, faAngleDoubleRight, faSkull } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDoubleLeft, faAngleDoubleRight, faSkull, faBalanceScale } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-library.add(fab, faAngleDoubleLeft, faAngleDoubleRight, faSkull);
+library.add(fab, faAngleDoubleLeft, faAngleDoubleRight, faSkull, faBalanceScale);
+let d = new Date();
 
 export class App extends React.Component{
     render(){
@@ -50,10 +51,30 @@ export class App extends React.Component{
                         <hr/>
                         <Row>
                             <Col lg={6}>
-                                Juall | Rosenblum | Pojero | Erry 
+                                Juall
+                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon></a>
+                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon></a>
+                                &nbsp;|&nbsp; 
+                                Rosenblum
+                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon></a>
+                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon></a>
+                                &nbsp;|&nbsp;
+                                Pojero
+                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon></a>
+                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon></a>
+                                &nbsp;|&nbsp;
+                                Erry
+                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon></a>
+                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon></a>
                             </Col>
-                            <Col lg={6}>
-                                <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>
+                            <Col lg={6}>                                
+                                <a href="https://github.com/davidrosenblum/Plague-Project/blob/master/LICENSE" target="_blank">
+                                    <FontAwesomeIcon icon="balance-scale" size="sm"></FontAwesomeIcon>
+                                    &nbsp;
+                                    MIT License
+                                    &copy;
+                                    { d.getFullYear() }
+                                </a>
                             </Col>
                         </Row>
                     </Container>
