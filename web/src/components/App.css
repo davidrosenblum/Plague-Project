@@ -75,6 +75,14 @@
         text-decoration: none;
     }
 
+    .errCorrect {
+        color: slategray;
+    }
+
+    .errCorrect:hover {
+        color: darkslategray;
+    }
+
     /* CSS for graph dropdown  */ 
     .GraphDropdown{
         float:right;

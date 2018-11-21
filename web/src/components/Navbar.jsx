@@ -69,8 +69,8 @@ export class Navbar extends React.Component{
 											Advanced
 										</DropdownToggle>
 										<DropdownMenu>
-											<DropdownItem onClick={this.toggleErrorCorrection.bind(this)}>
-												Toggle Error Correction (Currently {Simulator.isErrCorrecting ? "Enabled" : "Disabled"})
+											<DropdownItem className="errCorrect" onClick={this.toggleErrorCorrection.bind(this)}>
+											{Simulator.isErrCorrecting ? "Disable" : "Enable"}<br />Error Correction
 											</DropdownItem>
 										</DropdownMenu>
 									</Dropdown>
