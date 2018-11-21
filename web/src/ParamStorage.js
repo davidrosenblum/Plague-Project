@@ -1,8 +1,12 @@
+import { EventEmitter } from "./EventEmitter";
+
 // class for managing parameter data history using session storage
 const PARAM_STORAGE_LIMIT = 100;
 
-class ParamStorage{
+class ParamStorage extends EventEmitter{
     constructor(){
+        super();
+
         this._numParamSets = 0;
         this._lastParamSet = null;
         this._currDay = 0;
@@ -24,6 +28,8 @@ class ParamStorage{
             if(this.numParamSets > PARAM_STORAGE_LIMIT){
                 window.sessionStorage.removeItem(this.numParamSets - PARAM_STORAGE_LIMIT);
             }
+
+            this.emit(new Event("save"));
 
             return true;
         }
@@ -90,6 +96,14 @@ class ParamStorage{
             ++this._currDay;
             //this._lastParamSet = this.getSavedParams(++this._currDay);
         }
+    }
+
+    get hasPrevDay(){
+        return this._numParamSets > 0 && this.currentDay > 1;
+    }
+
+    get hasNextDay(){
+        return this._numParamSets > 0 && this.currentDay < this.numParamSets;
     }
 
     get firstStoredDay(){

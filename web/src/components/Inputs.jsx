@@ -44,6 +44,9 @@ export class Inputs extends React.Component{
     componentDidMount(){
         Simulator.on("load", this.onSimulatorLoad.bind(this));
         Simulator.on("error", this.onSimulatorError.bind(this));
+        
+        // re-render on param storage save - used for disabling the << >> buttons
+        ParamStorage.on("save", () => this.forceUpdate());
 
         // query string params?
         this.extractQueryStringParams();
@@ -217,11 +220,11 @@ export class Inputs extends React.Component{
         return (
             <div className="input-container">
                 <div id="inputs-header-container" className="text-center">
-                    <button onClick={() => this.switchParamSet("backwards")}>
+                    <button onClick={() => this.switchParamSet("backwards")} disabled={!ParamStorage.hasPrevDay}>
                         <FontAwesomeIcon icon="angle-double-left" />
                     </button>
                     <h5 className="text-center">Experimental Variables</h5>
-                    <button onClick={() => this.switchParamSet("forwards")}>
+                    <button onClick={() => this.switchParamSet("forwards")} disabled={!ParamStorage.hasNextDay}>
                         <FontAwesomeIcon icon="angle-double-right" />
                     </button>
                 </div>
