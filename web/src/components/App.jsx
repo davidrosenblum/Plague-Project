@@ -54,7 +54,7 @@ export class App extends React.Component{
                                 Juall
                                 &nbsp;
                                 <a href="https://github.com/rjuall">
-                                    <FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon>
+                                    <FontAwesomeIcon icon={['fab', 'github-square']}></FontAwesomeIcon>
                                 </a>
                                 &nbsp;
                                 <a href="https://www.linkedin.com/in/rjuall/">
@@ -64,7 +64,7 @@ export class App extends React.Component{
                                 Rosenblum
                                 &nbsp;
                                 <a href="/">
-                                    <FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon>
+                                    <FontAwesomeIcon icon={['fab', 'github-square']}></FontAwesomeIcon>
                                 </a>
                                 &nbsp;
                                 <a href="/">
@@ -74,7 +74,7 @@ export class App extends React.Component{
                                 Pojero
                                 &nbsp;
                                 <a href="/">
-                                    <FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon>
+                                    <FontAwesomeIcon icon={['fab', 'github-square']}></FontAwesomeIcon>
                                 </a>
                                 &nbsp;
                                 <a href="/">
@@ -84,7 +84,7 @@ export class App extends React.Component{
                                 Erry
                                 &nbsp;
                                 <a href="/">
-                                    <FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon>
+                                    <FontAwesomeIcon icon={['fab', 'github-square']}></FontAwesomeIcon>
                                 </a>
                                 &nbsp;
                                 <a href="/">
