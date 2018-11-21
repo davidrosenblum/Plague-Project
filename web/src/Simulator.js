@@ -77,8 +77,7 @@ class Simulator extends EventEmitter{
             // http request headers
             let headers = {
                 "Access-Control-Allow-Origin": window.location.origin,
-                "Content-Type": "text/csv",
-                "Error-Correction": this.isErrCorrecting
+                "Content-Type": "text/csv"
             };
 
             // make sure .csv
@@ -135,6 +134,7 @@ class Simulator extends EventEmitter{
     set isErrCorrecting(value){
         if(typeof value === "boolean"){
             this._useErrCorrecting = value;
+            this.emit(new Event("update"));
         }
         else throw new Error("isErrCorrecting must be set to a boolean value.");
     }

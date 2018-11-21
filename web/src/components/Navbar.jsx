@@ -18,6 +18,11 @@ export class Navbar extends React.Component{
 
 	}
 
+	componentDidMount(){
+		// error correction changed
+		Simulator.on("update", () => this.forceUpdate());
+	}
+
 	// close the mail modal
 	closeModal(){
 		this.setState({showModal: false});
