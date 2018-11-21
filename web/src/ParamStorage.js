@@ -37,7 +37,7 @@ class ParamStorage extends EventEmitter{
     }
 
     // saves parameters to session storage
-    saveParams(infectionLength, transmissionRate, virulence, initialPopulation, immunePercent, initialInfected, simulationLength, preset){
+    saveParams(infectionLength, transmissionRate, virulence, initialPopulation, immunePercent, initialInfected, simulationLength, preset, errCorrection){
         return this.saveParamsInputsDict({
             infection_length:   infectionLength,
             transmission_rate:  transmissionRate,
@@ -46,7 +46,8 @@ class ParamStorage extends EventEmitter{
             immune_percent:     immunePercent,
             initial_infected:   initialInfected,
             simulation_length:  simulationLength,
-            preset
+            preset,
+            error_correction:   errCorrection
         });
     }
 
@@ -60,7 +61,8 @@ class ParamStorage extends EventEmitter{
             immunePercent:      dict.immune_percent,
             initialInfected:    dict.initial_infected,
             simulationLength:   dict.simulation_length,
-            preset:             dict.preset
+            preset:             dict.preset,
+            errorCorrection:    dict.error_correction
         };
     }
 

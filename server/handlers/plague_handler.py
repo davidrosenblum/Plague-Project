@@ -14,7 +14,9 @@ class PlagueHandler(CORSHandler):
 
         # extract non-simulation parameters/headers
         content_type = self.request.headers.get("Content-Type", "text/json")
-        err_correction_opt = self.request.headers.get("Error-Correction", "true")
+
+        # optional error correction query string
+        err_correction_opt = self.get_argument("error_correction", True)
 
         # run simulation and store results
         try:

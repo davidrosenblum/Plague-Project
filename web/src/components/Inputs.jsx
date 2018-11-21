@@ -105,7 +105,8 @@ export class Inputs extends React.Component{
             initial_population =    this.intialPopRef.current.value,
             infection_length =      this.infectionLengthRef.current.value,
             simulation_length =     this.daysRef.current.value,
-            preset =                this.presetRef.current.value;
+            preset =                this.presetRef.current.value,
+            error_correction =      Simulator.isErrCorrecting
 
         // make sure infected <= population
         initial_infected = Math.min(initial_infected, initial_population);
@@ -115,7 +116,7 @@ export class Inputs extends React.Component{
         immune_percent = Math.min(immune_percent, healthy);
 
         // MUST match API expectations! 
-        return {immune_percent, transmission_rate, virulence, initial_infected, initial_population, infection_length, simulation_length, preset};
+        return {immune_percent, transmission_rate, virulence, initial_infected, initial_population, infection_length, simulation_length, preset, error_correction};
     }
 
     onSimulatorError(){
@@ -214,6 +215,10 @@ export class Inputs extends React.Component{
 
         this.presetRef.current.value = params.preset;
         this.onPresetChange();
+
+        if("errorCorrection" in params){
+            Simulator.isErrCorrecting = params.errorCorrection; 
+        }
     }
 
     render(){
@@ -335,8 +340,8 @@ export class Inputs extends React.Component{
                     </div>
                     <div className="form-group text-center">
                         <button className="input-btn" disabled={this.state.pending}>Run</button>&nbsp;
-                        <button onClick={this.onReset.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Reset</button>&nbsp;
-                        <button onClick={this.toggleExportModal.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Export</button>
+                        <button onClick={this.onReset.bind(this)} className="input-btn" disabled={this.state.pending} type="button">Reset</button>&nbsp;
+                        <button onClick={this.toggleExportModal.bind(this)} className="input-btn" disabled={this.state.pending} type="button">Export</button>
                     </div>
                 </form>
                 <div>{this.state.message}</div>
