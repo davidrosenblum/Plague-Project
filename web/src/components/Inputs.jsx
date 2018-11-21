@@ -6,6 +6,7 @@ import GraphData from "../GraphData";
 import { NumSlider } from "./NumSlider";
 import { ExportsModal } from "./ExportsModal";
 import preset from "../preset"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // input range constraints (min, max, step)
 export const INPUT_RANGES = {
@@ -209,9 +210,13 @@ export class Inputs extends React.Component{
         return (
             <div className="input-container">
                 <div id="inputs-header-container" className="text-center">
-                    <button onClick={() => this.switchParamSet("backwards")}>&larr;</button>
+                    <button onClick={() => this.switchParamSet("backwards")}>
+                        <FontAwesomeIcon icon="angle-double-left" />
+                    </button>
                     <h5 className="text-center">Experimental Variables</h5>
-                    <button onClick={() => this.switchParamSet("forwards")}>&rarr;</button>
+                    <button onClick={() => this.switchParamSet("forwards")}>
+                        <FontAwesomeIcon icon="angle-double-right" />
+                    </button>
                 </div>
                 <br/>
                 <form onSubmit={this.onSubmit.bind(this)}>
@@ -321,7 +326,7 @@ export class Inputs extends React.Component{
                     <div className="form-group text-center">
                         <button className="input-btn" disabled={this.state.pending}>Run</button>&nbsp;
                         <button onClick={this.onReset.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Reset</button>&nbsp;
-                        <button onClick={this.toggleExportModal.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Exports</button>
+                        <button onClick={this.toggleExportModal.bind(this)} className="input-btn" disabled={this.state.pending} type="button" >Export</button>
                     </div>
                 </form>
                 <div>{this.state.message}</div>

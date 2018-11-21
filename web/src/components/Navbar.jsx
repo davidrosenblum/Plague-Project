@@ -50,11 +50,16 @@ export class Navbar extends React.Component{
 					<NavbarBrand>
 						<span className="pp-heading">The Plague Project</span>
 						&nbsp;
+						<FontAwesomeIcon className="skull-icon" icon="skull"></FontAwesomeIcon>
+						&nbsp;
 						<a href='/'>Disease Simulator</a>
 					</NavbarBrand>
 					<NavbarToggler color="dark" onClick={this.toggleNavbar.bind(this)}/>
 					<Collapse isOpen={this.state.showNav} navbar>					
 						<Nav navbar>
+							<NavItem>
+								<NavLink className="pointer" >FAQ</NavLink>
+							</NavItem>
 							<NavItem>
 								<NavLink  className="pointer" selected onClick={this.openModal.bind(this)}>Contact Us</NavLink>
 							</NavItem>

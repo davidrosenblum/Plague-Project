@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Cabin+Sketch');
+
 @media screen {
     .input-btn{
         width: 100px;
@@ -44,11 +46,25 @@
     }
 */
     .pp-heading {
-        font-size: 0.8em;
+        font-family: 'Cabin Sketch';
+        padding-right: 0.5em;
+        font-size: 1.1em;
+        font-weight: 700;
     }
 
-    .NavbarBrand a {
+    .skull-icon {
+        font-size: 0.9em;
+    }
+
+    .navbar-brand a {
+        display: inline-block;
+        padding-left: 0.5em;
         text-decoration: none;
+        color: slategray;
+    }
+
+    .navbar-brand a:hover {
+        color: darkslategray;
     }
 
     /* CSS for graph dropdown  */ 

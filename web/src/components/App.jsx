@@ -9,10 +9,10 @@ import { Table } from "./Table";
 import { Graph } from "./Graph";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
-import {} from '@fortawesome/free-solid-svg-icons';
+import { faAngleDoubleLeft, faAngleDoubleRight, faSkull } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-library.add(fab);
+library.add(fab, faAngleDoubleLeft, faAngleDoubleRight, faSkull);
 
 export class App extends React.Component{
     render(){
@@ -25,7 +25,11 @@ export class App extends React.Component{
                         <Card color="light">
                             <CardBody>
                                 <Row className="text-center input-graph-container">
-                                    <h1 className="d-none d-print-block">The Plague Project</h1>
+                                    <div className="print-title-containter d-none d-print-block">
+                                        <h1>The Plague Project</h1>
+                                        <FontAwesomeIcon className="skull-icon" icon="skull" size="lg"></FontAwesomeIcon>
+                                        <h2>Disease Simulator</h2>                                        
+                                    </div>
                                     <Col lg={6}>
                                         <Inputs/>
                                     </Col>
