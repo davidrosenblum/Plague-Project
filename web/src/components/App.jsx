@@ -68,14 +68,10 @@ export class App extends React.Component{
                                 </a>
                                 &nbsp;|&nbsp;
                                 Pojero
-                                {/*&nbsp;
-                                <a href="/">
+                                &nbsp;
+                                <a href="https://github.com/jpojero">
                                     <FontAwesomeIcon icon={['fab', 'github-square']}></FontAwesomeIcon>
                                 </a>
-                                &nbsp;
-                                <a href="/">
-                                    <FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon>
-                                </a>*/}
                                 &nbsp;|&nbsp;
                                 Erry
                                 &nbsp;
