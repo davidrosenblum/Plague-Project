@@ -79,7 +79,7 @@ export class App extends React.Component{
                                 &nbsp;|&nbsp;
                                 Erry
                                 &nbsp;
-                                <a href="linkedin.com/in/karanerry">
+                                <a href="https://linkedin.com/in/karanerry">
                                     <FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon>
                                 </a>
                             </Col>
