@@ -4,6 +4,7 @@ import { NavbarBrand } from 'reactstrap';
 import { MailModal } from "./MailModal"
 import Simulator from "../Simulator";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import FaqModal from "./FaqModal"
 
 export class Navbar extends React.Component{
 
@@ -58,7 +59,7 @@ export class Navbar extends React.Component{
 					<Collapse isOpen={this.state.showNav} navbar>					
 						<Nav navbar  className="ml-auto">
 							<NavItem>
-								<NavLink className="pointer" >FAQ</NavLink>
+								<NavLink className="pointer faq-select" >FAQ</NavLink>
 							</NavItem>
 							<NavItem>
 								<NavLink  className="pointer" selected onClick={this.openModal.bind(this)}>Contact Us</NavLink>
