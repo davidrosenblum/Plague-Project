@@ -7,6 +7,12 @@ import { Inputs } from "./Inputs";
 import { Navbar } from "./Navbar";
 import { Table } from "./Table";
 import { Graph } from "./Graph";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fab } from '@fortawesome/free-brands-svg-icons';
+import {} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+library.add(fab);
 
 export class App extends React.Component{
     render(){
@@ -14,7 +20,6 @@ export class App extends React.Component{
             <div>
                 <Navbar/>
                 <br/>
-                <span className="Version">V0.2</span>
                 <main>
                     <Container>
                         <Card color="light">

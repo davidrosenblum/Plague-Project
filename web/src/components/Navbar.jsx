@@ -1,7 +1,9 @@
 import React from "react";
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Navbar as RNavbar, NavItem, Collapse, NavbarToggler, Nav, NavLink } from "reactstrap";
+import { NavbarBrand } from 'reactstrap';
 import { MailModal } from "./MailModal"
 import Simulator from "../Simulator";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export class Navbar extends React.Component{
 
@@ -45,8 +47,13 @@ export class Navbar extends React.Component{
 		return (
 			<div>
 				<RNavbar color="light" light expand="md">
+					<NavbarBrand>
+						<span className="pp-heading">The Plague Project</span>
+						&nbsp;
+						<a href='/'>Disease Simulator</a>
+					</NavbarBrand>
 					<NavbarToggler color="dark" onClick={this.toggleNavbar.bind(this)}/>
-					<Collapse isOpen={this.state.showNav} navbar>
+					<Collapse isOpen={this.state.showNav} navbar>					
 						<Nav navbar>
 							<NavItem>
 								<NavLink  className="pointer" selected onClick={this.openModal.bind(this)}>Contact Us</NavLink>
@@ -62,6 +69,13 @@ export class Navbar extends React.Component{
 											</DropdownItem>
 										</DropdownMenu>
 									</Dropdown>
+							</NavItem>
+							<NavItem>
+								<NavLink href='https://github.com/davidrosenblum/Plague-Project'>
+									<FontAwesomeIcon icon={['fab', 'github']} />
+									&nbsp;
+									<span className="Version">v0.2</span>
+								</NavLink>								
 							</NavItem>
 						</Nav>
 					</Collapse>

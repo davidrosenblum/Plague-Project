@@ -36,11 +36,19 @@
     .graph-button:focus{
         outline: none;
     }
-
+/*
     .Version{
         float: right;
         text-align: center;
         color: gray;
+    }
+*/
+    .pp-heading {
+        font-size: 0.8em;
+    }
+
+    .NavbarBrand a {
+        text-decoration: none;
     }
 
     /* CSS for graph dropdown  */ 
