@@ -52,20 +52,44 @@ export class App extends React.Component{
                         <Row>
                             <Col lg={6}>
                                 Juall
-                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon></a>
-                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon></a>
+                                &nbsp;
+                                <a href="https://github.com/rjuall">
+                                    <FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon>
+                                </a>
+                                &nbsp;
+                                <a href="https://www.linkedin.com/in/rjuall/">
+                                    <FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon>
+                                </a>
                                 &nbsp;|&nbsp; 
                                 Rosenblum
-                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon></a>
-                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon></a>
+                                &nbsp;
+                                <a href="/">
+                                    <FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon>
+                                </a>
+                                &nbsp;
+                                <a href="/">
+                                    <FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon>
+                                </a>
                                 &nbsp;|&nbsp;
                                 Pojero
-                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon></a>
-                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon></a>
+                                &nbsp;
+                                <a href="/">
+                                    <FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon>
+                                </a>
+                                &nbsp;
+                                <a href="/">
+                                    <FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon>
+                                </a>
                                 &nbsp;|&nbsp;
                                 Erry
-                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon></a>
-                                &nbsp;<a href=""><FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon></a>
+                                &nbsp;
+                                <a href="/">
+                                    <FontAwesomeIcon icon={['fab', 'github']}></FontAwesomeIcon>
+                                </a>
+                                &nbsp;
+                                <a href="/">
+                                    <FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon>
+                                </a>
                             </Col>
                             <Col lg={6}>                                
                                 <a href="https://github.com/davidrosenblum/Plague-Project/blob/master/LICENSE" target="_blank">
