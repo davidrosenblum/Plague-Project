@@ -68,6 +68,13 @@ export class Inputs extends React.Component{
         this.daysRef.current.value =            parseInt(qs.get("simulation_length")) || -1;
         this.infectionLengthRef.current.value = parseInt(qs.get("infection_length")) || -1;
         this.transmissionRef.current.value =    parseFloat(qs.get("transmission_rate")) || -1;
+
+        // preset query string
+        let preset = qs.get("preset");
+        if(preset){
+            this.presetRef.current.value = preset;
+            this.onPresetChange();
+        }
     }
 
     // changes the input parameters to predefined test values
