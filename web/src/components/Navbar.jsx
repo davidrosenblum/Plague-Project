@@ -4,7 +4,7 @@ import { NavbarBrand } from 'reactstrap';
 import { MailModal } from "./MailModal"
 import Simulator from "../Simulator";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import FaqModal from "./FaqModal"
+import { FaqModal } from "./FaqModal"
 
 export class Navbar extends React.Component{
 
@@ -14,7 +14,8 @@ export class Navbar extends React.Component{
 	    this.state = {
 			showNav: false,			// navbar collapse
 			showModal: false,		// mail modal visibility
-			showAdvanced: false		// advanced dropdown menu visibility
+			showAdvanced: false,		// advanced dropdown menu visibility
+			faqModalOpen: false
 	    };
 
 	}
@@ -44,6 +45,10 @@ export class Navbar extends React.Component{
 		Simulator.isErrCorrecting = !Simulator.isErrCorrecting;
 	}
 
+	toggleFaqModal() {
+		this.setState(prev => ({faqModalOpen: !prev.faqModalOpen}));
+	}
+
 	render(){
 		return (
 			<div>
@@ -59,7 +64,7 @@ export class Navbar extends React.Component{
 					<Collapse isOpen={this.state.showNav} navbar>					
 						<Nav navbar  className="ml-auto">
 							<NavItem>
-								<NavLink className="pointer faq-select" >FAQ</NavLink>
+								<NavLink className="pointer faq-select" onClick={this.toggleFaqModal.bind(this)}>FAQ</NavLink>
 							</NavItem>
 							<NavItem>
 								<NavLink  className="pointer" selected onClick={this.openModal.bind(this)}>Contact Us</NavLink>
@@ -87,6 +92,10 @@ export class Navbar extends React.Component{
 					</Collapse>
 				</RNavbar>
 				<MailModal showModal={this.state.showModal} closeModal={this.closeModal.bind(this)} />
+				<FaqModal 
+					isOpen={this.state.faqModalOpen}
+					toggle={this.toggleFaqModal.bind(this)}
+				/>
 	      	</div>
 		);
 	}
