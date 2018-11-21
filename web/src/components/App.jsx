@@ -78,14 +78,10 @@ export class App extends React.Component{
                                 </a>*/}
                                 &nbsp;|&nbsp;
                                 Erry
-                                {/*&nbsp;
-                                <a href="/">
-                                    <FontAwesomeIcon icon={['fab', 'github-square']}></FontAwesomeIcon>
-                                </a>
                                 &nbsp;
-                                <a href="/">
+                                <a href="linkedin.com/in/karanerry">
                                     <FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon>
-                                </a>*/}
+                                </a>
                             </Col>
                             <Col lg={6}>                                
                                 <a href="https://github.com/davidrosenblum/Plague-Project/blob/master/LICENSE" target="_blank">
