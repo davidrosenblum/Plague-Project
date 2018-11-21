@@ -57,9 +57,9 @@ export class Navbar extends React.Component{
 					<NavbarToggler color="dark" onClick={this.toggleNavbar.bind(this)}/>
 					<Collapse isOpen={this.state.showNav} navbar>					
 						<Nav navbar  className="ml-auto">
-							<NavItem>
+							{/*<NavItem>
 								<NavLink className="pointer" >FAQ</NavLink>
-							</NavItem>
+							</NavItem>*/}
 							<NavItem>
 								<NavLink  className="pointer" selected onClick={this.openModal.bind(this)}>Contact Us</NavLink>
 							</NavItem>
