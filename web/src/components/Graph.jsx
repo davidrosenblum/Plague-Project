@@ -174,7 +174,7 @@ export class Graph extends React.Component{
 
 			return (
 				<div className="graph-container">
-					<h5>{data.labels.join(" + ") || "(Nothing Selected)"}</h5>
+					<h5>{data.labels.length === 4 ? "All" : data.labels.join(" + ") || "(Nothing Selected)"}</h5>
 					{this.renderLabelButtons()}
 					<div ref={this.graphContainerRef}>
 						<div>
