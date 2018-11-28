@@ -14,8 +14,8 @@ class PlagueParams():
                  init_infected):
         # Save parameters as properties, as Decimal objects
         self._infection_length    = Dec(infection_length)
-        self._transmission_rate    = Dec(transmission_rate)
-        self._virulence       = Dec(virulence)
+        self._transmission_rate   = Dec(transmission_rate)
+        self._virulence           = Dec(virulence)
         self._initial_pop         = Dec(init_pop)
         self._immune_percent      = Dec(immune_percent)
         self._initial_infected    = Dec(init_infected)
