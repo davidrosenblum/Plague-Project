@@ -1,12 +1,11 @@
 import json
 import smtplib
+import os
 import tornado.ioloop
 from . import CORSHandler
 
 
 class MailHandler(CORSHandler):
-    email = "plaguesim@gmail.com"
-
     def post(self):
         # read request json
         message_data = json.loads(self.request.body)
@@ -26,13 +25,19 @@ class MailHandler(CORSHandler):
 
     # sends a gmail message (warning: synchronous call)
     def gmail_smtp(self, subject, message):
-        server = smtplib.SMTP("smtp.gmail.com", 587)
-        server.ehlo()
-        server.starttls()
-        server.login(MailHandler.email, "PsSupport123#")
+        # extract environment variables for gmail & gmail password
+        email = os.environ.get("gmail", None)
+        password = os.environ.get("gmail_password", None)
 
-        msg_str = "Subject: {s}\n\n{m}".format(s=subject, m=message)
+        # send email if environment variables are provided
+        if email is not None and password is not None:
+            server = smtplib.SMTP("smtp.gmail.com", 587)
+            server.ehlo()
+            server.starttls()
+            server.login(email, password)
 
-        server.sendmail(MailHandler.email, MailHandler.email, msg_str)
-        server.quit()
+            msg_str = "Subject: {s}\n\n{m}".format(s=subject, m=message)
+
+            server.sendmail(email, email, msg_str)
+            server.quit()
 
