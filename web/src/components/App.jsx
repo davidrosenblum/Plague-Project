@@ -72,6 +72,10 @@ export class App extends React.Component{
                                 <a href="https://github.com/jpojero">
                                     <FontAwesomeIcon icon={['fab', 'github-square']}></FontAwesomeIcon>
                                 </a>
+                                &nbsp;
+                                <a href="https://www.linkedin.com/in/joseph-t-pojero-6795b717a/">
+                                    <FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon>
+                                </a>
                                 &nbsp;|&nbsp;
                                 Erry
                                 &nbsp;

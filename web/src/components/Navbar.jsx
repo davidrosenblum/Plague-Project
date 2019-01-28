@@ -1,9 +1,10 @@
 import React from "react";
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Navbar as RNavbar, NavItem, Collapse, NavbarToggler, Nav, NavLink } from "reactstrap";
 import { NavbarBrand } from 'reactstrap';
-import { MailModal } from "./MailModal"
+import { MailModal } from "./MailModal";
 import Simulator from "../Simulator";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faqModal } from "./faqModal";
 
 export class Navbar extends React.Component{
 
@@ -13,7 +14,8 @@ export class Navbar extends React.Component{
 	    this.state = {
 			showNav: false,			// navbar collapse
 			showModal: false,		// mail modal visibility
-			showAdvanced: false		// advanced dropdown menu visibility
+			showAdvanced: false,		// advanced dropdown menu visibility
+			showHelp: false				// visibility for the FAQ modal
 	    };
 
 	}
@@ -31,6 +33,16 @@ export class Navbar extends React.Component{
 	// show the mail modal
 	openModal(){
 		this.setState({showModal: true});
+	}
+
+	// open the FAQ Modal
+	openHelp(){
+		this.setState({showHelp: true});
+	}
+
+	// open the FAQ Modal
+	closeHelp(){
+		this.setState({showHelp: false});
 	}
 
 	// toggles the navbar collapse state
@@ -63,7 +75,7 @@ export class Navbar extends React.Component{
 					<Collapse isOpen={this.state.showNav} navbar>					
 						<Nav navbar  className="ml-auto">
 							{/*<NavItem>
-								<NavLink className="pointer" >FAQ</NavLink>
+								<NavLink className="pointer" selected onClick={this.openHelp.bind(this)}>FAQ</NavLink>
 							</NavItem>*/}
 							<NavItem>
 								<NavLink  className="pointer" selected onClick={this.openModal.bind(this)}>Contact Us</NavLink>
@@ -90,6 +102,7 @@ export class Navbar extends React.Component{
 						</Nav>
 					</Collapse>
 				</RNavbar>
+				<faqModal showModal={this.state.showHelp} closeModal={this.closeHelp.bind(this)}/>
 				<MailModal showModal={this.state.showModal} closeModal={this.closeModal.bind(this)} />
 	      	</div>
 		);
